@@ -1,0 +1,49 @@
+name: AutoPublish Media Reconstruct
+
+on:
+  push:
+    paths:
+      - 'autopublish_payload/manifest.json'
+
+permissions:
+  contents: write
+
+jobs:
+  reconstruct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Reconstruct MP4 from Base64 chunks
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64, hashlib, json, pathlib
+          root = pathlib.Path('autopublish_payload')
+          manifest = json.loads((root/'manifest.json').read_text())
+          parts = []
+          for name in manifest['chunks']:
+              parts.append((root/name).read_text().strip())
+          payload = ''.join(parts)
+          raw = base64.b64decode(payload, validate=True)
+          sha = hashlib.sha256(raw).hexdigest()
+          assert len(raw) == manifest['size_bytes'], (len(raw), manifest['size_bytes'])
+          assert sha == manifest['sha256'], (sha, manifest['sha256'])
+          out = pathlib.Path(manifest['output_path'])
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_bytes(raw)
+          print({'size': len(raw), 'sha256': sha, 'output': str(out)})
+          PY
+      - name: Commit reconstructed media
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add autopublish_media/
+          if git diff --cached --quiet; then
+            echo 'No media changes to commit.'
+          else
+            git commit -m 'autopublish: reconstruct Shorts media'
+            git push origin HEAD:main
+          fi
