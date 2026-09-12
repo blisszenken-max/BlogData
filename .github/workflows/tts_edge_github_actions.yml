@@ -1,0 +1,92 @@
+name: Generate Korean TTS
+
+on:
+  workflow_dispatch:
+    inputs:
+      text:
+        description: Korean TTS script
+        required: true
+        type: string
+      voice:
+        description: Edge TTS voice
+        required: false
+        default: ko-KR-SunHiNeural
+        type: string
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  synthesize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install TTS and audio tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install edge-tts==7.2.8
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Generate Korean MP3
+        env:
+          TTS_TEXT: ${{ inputs.text }}
+          TTS_VOICE: ${{ inputs.voice }}
+        run: |
+          python - <<'PY'
+          import asyncio, os
+          import edge_tts
+
+          text = os.environ['TTS_TEXT']
+          voice = os.environ['TTS_VOICE']
+          out = 'narration.mp3'
+
+          async def main():
+              communicate = edge_tts.Communicate(text=text, voice=voice)
+              await communicate.save(out)
+
+          asyncio.run(main())
+          PY
+
+      - name: Verify MP3
+        run: |
+          test -s narration.mp3
+          ffprobe -v error \
+            -show_entries format=duration,size \
+            -show_entries stream=codec_name,codec_type,sample_rate,channels \
+            -of json narration.mp3 | tee ffprobe.json
+          python - <<'PY'
+          import json, os
+          with open('ffprobe.json', encoding='utf-8') as f:
+              d = json.load(f)
+          streams = d.get('streams', [])
+          aud = [s for s in streams if s.get('codec_type') == 'audio']
+          assert aud, 'No audio stream'
+          duration = float(d['format']['duration'])
+          size = int(d['format']['size'])
+          assert duration > 0.2, f'Invalid duration: {duration}'
+          assert size > 1000, f'Invalid file size: {size}'
+          print({'duration': duration, 'size': size, 'audio': aud[0]})
+          PY
+
+      - name: Upload MP3 artifact
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: korean-tts-${{ github.run_id }}
+          path: |
+            narration.mp3
+            ffprobe.json
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Print artifact metadata
+        run: |
+          echo "artifact_id=${{ steps.upload.outputs.artifact-id }}"
+          echo "artifact_url=${{ steps.upload.outputs.artifact-url }}"
+          echo "artifact_digest=${{ steps.upload.outputs.artifact-digest }}"
