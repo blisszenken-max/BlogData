@@ -1,11 +1,14 @@
 name: Generate Korean TTS
 
 on:
+  push:
+    paths:
+      - 'tts_requests/**'
   workflow_dispatch:
     inputs:
       text:
         description: Korean TTS script
-        required: true
+        required: false
         type: string
       voice:
         description: Edge TTS voice
@@ -21,6 +24,11 @@ jobs:
   synthesize:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -35,22 +43,45 @@ jobs:
 
       - name: Generate Korean MP3
         env:
-          TTS_TEXT: ${{ inputs.text }}
-          TTS_VOICE: ${{ inputs.voice }}
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_TEXT: ${{ inputs.text }}
+          DISPATCH_VOICE: ${{ inputs.voice }}
         run: |
           python - <<'PY'
-          import asyncio, os
+          import asyncio, json, os, pathlib, subprocess
           import edge_tts
 
-          text = os.environ['TTS_TEXT']
-          voice = os.environ['TTS_VOICE']
-          out = 'narration.mp3'
+          event = os.environ.get('EVENT_NAME', '')
+          voice = os.environ.get('DISPATCH_VOICE') or 'ko-KR-SunHiNeural'
+          request_id = None
+          request_path = None
+
+          if event == 'push':
+              before = subprocess.check_output(['git','rev-parse','HEAD^'], text=True).strip()
+              head = subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip()
+              changed = subprocess.check_output(['git','diff','--name-only',before,head,'--','tts_requests/*.json'], text=True).splitlines()
+              if not changed:
+                  raise SystemExit('No tts_requests JSON changed in triggering commit')
+              request_path = changed[-1]
+              data = json.loads(pathlib.Path(request_path).read_text(encoding='utf-8'))
+              text = data['text']
+              voice = data.get('voice') or voice
+              request_id = data.get('request_id')
+          else:
+              text = os.environ.get('DISPATCH_TEXT','').strip()
+              if not text:
+                  raise SystemExit('workflow_dispatch requires text input')
 
           async def main():
-              communicate = edge_tts.Communicate(text=text, voice=voice)
-              await communicate.save(out)
+              await edge_tts.Communicate(text=text, voice=voice).save('narration.mp3')
 
           asyncio.run(main())
+          pathlib.Path('request_meta.json').write_text(json.dumps({
+              'request_id': request_id,
+              'request_path': request_path,
+              'voice': voice,
+              'event': event,
+          }, ensure_ascii=False, indent=2), encoding='utf-8')
           PY
 
       - name: Verify MP3
@@ -61,17 +92,13 @@ jobs:
             -show_entries stream=codec_name,codec_type,sample_rate,channels \
             -of json narration.mp3 | tee ffprobe.json
           python - <<'PY'
-          import json, os
+          import json
           with open('ffprobe.json', encoding='utf-8') as f:
               d = json.load(f)
-          streams = d.get('streams', [])
-          aud = [s for s in streams if s.get('codec_type') == 'audio']
+          aud = [s for s in d.get('streams', []) if s.get('codec_type') == 'audio']
           assert aud, 'No audio stream'
-          duration = float(d['format']['duration'])
-          size = int(d['format']['size'])
-          assert duration > 0.2, f'Invalid duration: {duration}'
-          assert size > 1000, f'Invalid file size: {size}'
-          print({'duration': duration, 'size': size, 'audio': aud[0]})
+          assert float(d['format']['duration']) > 0.2
+          assert int(d['format']['size']) > 1000
           PY
 
       - name: Upload MP3 artifact
@@ -82,6 +109,7 @@ jobs:
           path: |
             narration.mp3
             ffprobe.json
+            request_meta.json
           if-no-files-found: error
           retention-days: 1
 
