@@ -23,8 +23,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install edge-tts
-        run: python -m pip install --upgrade edge-tts
+      - name: Install ffmpeg and edge-tts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          python -m pip install --upgrade edge-tts
 
       - name: Generate Korean MP3
         run: |
