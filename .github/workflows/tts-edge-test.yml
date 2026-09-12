@@ -34,18 +34,6 @@ jobs:
         run: |
           test -s narration.mp3
           ffprobe -v error -select_streams a:0 -show_entries stream=codec_name,sample_rate,channels -show_entries format=duration,size -of json narration.mp3 | tee ffprobe.json
-          DURATION=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 narration.mp3)
-          python - <<'PY'
-          import json, os
-          d=float(os.environ['DURATION'])
-          assert d > 0.1, f'Invalid duration: {d}'
-          print('TTS_VALIDATE_PASS duration=', d)
-          PY
-        env:
-          DURATION: ${{ steps.none.outputs.duration }}
-
-      - name: Validate duration robustly
-        run: |
           python - <<'PY'
           import json
           with open('ffprobe.json', encoding='utf-8') as f:
