@@ -1,0 +1,74 @@
+name: Korean Edge TTS E2E Test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tts-edge-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TTS_TEXT: "오늘 미국 증시는 기술주와 금리 흐름에 주목하고 있습니다. 이것은 GitHub Actions 한국어 음성 자동화 검증 테스트입니다."
+  TTS_VOICE: "ko-KR-SunHiNeural"
+
+jobs:
+  tts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install edge-tts
+        run: python -m pip install --upgrade edge-tts
+
+      - name: Generate Korean MP3
+        run: |
+          edge-tts --voice "$TTS_VOICE" --text "$TTS_TEXT" --write-media narration.mp3
+
+      - name: Validate MP3
+        run: |
+          test -s narration.mp3
+          ffprobe -v error -select_streams a:0 -show_entries stream=codec_name,sample_rate,channels -show_entries format=duration,size -of json narration.mp3 | tee ffprobe.json
+          DURATION=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 narration.mp3)
+          python - <<'PY'
+          import json, os
+          d=float(os.environ['DURATION'])
+          assert d > 0.1, f'Invalid duration: {d}'
+          print('TTS_VALIDATE_PASS duration=', d)
+          PY
+        env:
+          DURATION: ${{ steps.none.outputs.duration }}
+
+      - name: Validate duration robustly
+        run: |
+          python - <<'PY'
+          import json
+          with open('ffprobe.json', encoding='utf-8') as f:
+              data=json.load(f)
+          duration=float(data['format']['duration'])
+          size=int(data['format']['size'])
+          streams=data.get('streams',[])
+          assert streams, 'No audio stream'
+          assert duration > 0.1, duration
+          assert size > 1000, size
+          print(f'FULL_AUDIO_VALIDATION_PASS duration={duration:.3f}s size={size} bytes codec={streams[0].get("codec_name")}')
+          PY
+
+      - name: SHA256
+        run: sha256sum narration.mp3 | tee narration.sha256
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: korean-tts-test
+          path: |
+            narration.mp3
+            ffprobe.json
+            narration.sha256
+          if-no-files-found: error
+          retention-days: 1
