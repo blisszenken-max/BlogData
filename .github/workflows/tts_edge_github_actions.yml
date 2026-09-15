@@ -41,7 +41,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ffmpeg
 
-      - name: Generate Korean MP3
+      - name: Generate Korean MP3 and speech timeline
         env:
           EVENT_NAME: ${{ github.event_name }}
           DISPATCH_TEXT: ${{ inputs.text }}
@@ -73,7 +73,40 @@ jobs:
                   raise SystemExit('workflow_dispatch requires text input')
 
           async def main():
-              await edge_tts.Communicate(text=text, voice=voice).save('narration.mp3')
+              communicate = edge_tts.Communicate(text=text, voice=voice)
+              boundaries = []
+              idx = 0
+              with open('narration.mp3', 'wb') as audio_out:
+                  async for chunk in communicate.stream():
+                      ctype = chunk.get('type')
+                      if ctype == 'audio':
+                          audio_out.write(chunk['data'])
+                      elif ctype in ('WordBoundary', 'SentenceBoundary'):
+                          offset = int(chunk.get('offset', 0))
+                          duration = int(chunk.get('duration', 0))
+                          start_sec = offset / 10_000_000.0
+                          end_sec = (offset + duration) / 10_000_000.0
+                          boundaries.append({
+                              'boundary_id': idx,
+                              'type': ctype,
+                              'text': chunk.get('text', ''),
+                              'start_sec': round(start_sec, 6),
+                              'end_sec': round(end_sec, 6),
+                              'duration_sec': round(duration / 10_000_000.0, 6),
+                              'source_offset_or_index': offset,
+                          })
+                          idx += 1
+
+              if not boundaries:
+                  raise SystemExit('No edge-tts boundary metadata produced')
+              pathlib.Path('speech_timeline.json').write_text(json.dumps({
+                  'request_id': request_id,
+                  'request_path': request_path,
+                  'voice': voice,
+                  'edge_tts_version': '7.2.8',
+                  'boundary_count': len(boundaries),
+                  'boundaries': boundaries,
+              }, ensure_ascii=False, indent=2), encoding='utf-8')
 
           asyncio.run(main())
           pathlib.Path('request_meta.json').write_text(json.dumps({
@@ -84,9 +117,10 @@ jobs:
           }, ensure_ascii=False, indent=2), encoding='utf-8')
           PY
 
-      - name: Verify MP3
+      - name: Verify MP3 and timeline
         run: |
           test -s narration.mp3
+          test -s speech_timeline.json
           ffprobe -v error \
             -show_entries format=duration,size \
             -show_entries stream=codec_name,codec_type,sample_rate,channels \
@@ -97,8 +131,18 @@ jobs:
               d = json.load(f)
           aud = [s for s in d.get('streams', []) if s.get('codec_type') == 'audio']
           assert aud, 'No audio stream'
-          assert float(d['format']['duration']) > 0.2
+          duration = float(d['format']['duration'])
+          assert duration > 0.2
           assert int(d['format']['size']) > 1000
+          with open('speech_timeline.json', encoding='utf-8') as f:
+              t = json.load(f)
+          b = t.get('boundaries', [])
+          assert b, 'No speech boundaries'
+          starts = [float(x['start_sec']) for x in b]
+          ends = [float(x['end_sec']) for x in b]
+          assert starts == sorted(starts), 'Non-monotonic starts'
+          assert all(e >= s for s, e in zip(starts, ends)), 'Invalid boundary duration'
+          assert max(ends) <= duration + 1.0, 'Boundary exceeds narration duration'
           PY
 
       - name: Upload MP3 artifact
@@ -108,6 +152,7 @@ jobs:
           name: korean-tts-${{ github.run_id }}
           path: |
             narration.mp3
+            speech_timeline.json
             ffprobe.json
             request_meta.json
           if-no-files-found: error
