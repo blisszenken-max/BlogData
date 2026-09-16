@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OFFMUSE — Blogger Automation</title>
+  <meta name="description" content="OFFMUSE Blogger Automation is a private publishing utility that connects Google Blogger with an automated publishing workflow." />
+  <style>
+    :root{--bg:#0d0d0f;--panel:#17171b;--text:#f5f5f3;--muted:#a6a6ad;--line:#2a2a31;--accent:#d8ff5f;}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6}
+    .wrap{max-width:980px;margin:0 auto;padding:28px 22px 64px}.nav{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px}.brand{font-weight:800;letter-spacing:.12em}.nav a{color:var(--muted);text-decoration:none}.hero{padding:96px 0 72px}.eyebrow{color:var(--accent);font-size:.82rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}.hero h1{font-size:clamp(3rem,8vw,6.6rem);line-height:.95;margin:14px 0 24px;letter-spacing:-.05em}.hero p{max-width:720px;font-size:1.16rem;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}.card h2{font-size:1rem;margin:0 0 8px}.card p{margin:0;color:var(--muted);font-size:.95rem}.section{margin-top:64px}.section h2{font-size:2rem;margin-bottom:12px}.section p,.section li{color:var(--muted)}.notice{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:28px}.footer{margin-top:80px;padding-top:22px;border-top:1px solid var(--line);display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}.footer a{color:var(--text)}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.hero{padding:68px 0 52px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav"><div class="brand">OFFMUSE</div><a href="/privacy">Privacy</a></nav>
+
+    <section class="hero">
+      <div class="eyebrow">Private publishing utility</div>
+      <h1>Blogger, without the repetitive steps.</h1>
+      <p>OFFMUSE Blogger Automation is a private publishing workflow that connects Google Blogger to an automated content pipeline. It is designed to help the account owner prepare, create, and publish Blogger posts with fewer manual steps.</p>
+    </section>
+
+    <section class="grid" aria-label="How it works">
+      <article class="card"><h2>1. Connect</h2><p>The owner authorizes access to Google Blogger using Google OAuth.</p></article>
+      <article class="card"><h2>2. Prepare</h2><p>The workflow prepares post content and publishing metadata for a selected Blogger site.</p></article>
+      <article class="card"><h2>3. Publish</h2><p>The automation can create Blogger drafts or publish posts through the official Blogger API.</p></article>
+    </section>
+
+    <section class="section">
+      <h2>Why Google data is requested</h2>
+      <p>The OAuth application associated with this service may request the Blogger scope so it can identify Blogger accounts and managed blogs, and create or publish posts on blogs that the account owner controls. OFFMUSE does not use Blogger access for advertising, profiling, or selling user data.</p>
+      <div class="notice"><strong>OAuth app name:</strong> Blogger_자동등록_FINAL</div>
+    </section>
+
+    <section class="section">
+      <h2>Data handling at a glance</h2>
+      <ul>
+        <li>Google Blogger data is used only to operate the publishing workflow requested by the account owner.</li>
+        <li>The public OFFMUSE website does not receive or store Google OAuth access tokens.</li>
+        <li>Operational metadata such as blog IDs, post IDs, timestamps, status values, and error logs may be stored within the owner's Google Apps Script or Google Drive environment when configured.</li>
+        <li>Google user data is not sold or shared with advertisers.</li>
+      </ul>
+      <p>For full details, see the <a href="/privacy" style="color:var(--text)">Privacy Policy</a>.</p>
+    </section>
+
+    <footer class="footer"><span>© OFFMUSE</span><a href="/privacy">Privacy Policy</a></footer>
+  </main>
+</body>
+</html>
