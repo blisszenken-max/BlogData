@@ -55,6 +55,10 @@ jobs:
           voice = os.environ.get('DISPATCH_VOICE') or 'ko-KR-SunHiNeural'
           request_id = None
           request_path = None
+          rate = '+20%'
+          pitch = '+0Hz'
+          volume = '+0%'
+          boundary = 'WordBoundary'
 
           if event == 'push':
               before = subprocess.check_output(['git','rev-parse','HEAD^'], text=True).strip()
@@ -72,8 +76,18 @@ jobs:
               if not text:
                   raise SystemExit('workflow_dispatch requires text input')
 
+          if voice != 'ko-KR-SunHiNeural':
+              raise SystemExit(f'Voice profile mismatch: {voice}')
+
           async def main():
-              communicate = edge_tts.Communicate(text=text, voice=voice)
+              communicate = edge_tts.Communicate(
+                  text=text,
+                  voice=voice,
+                  rate=rate,
+                  pitch=pitch,
+                  volume=volume,
+                  boundary=boundary,
+              )
               boundaries = []
               idx = 0
               with open('narration.mp3', 'wb') as audio_out:
@@ -81,7 +95,7 @@ jobs:
                       ctype = chunk.get('type')
                       if ctype == 'audio':
                           audio_out.write(chunk['data'])
-                      elif ctype in ('WordBoundary', 'SentenceBoundary'):
+                      elif ctype == 'WordBoundary':
                           offset = int(chunk.get('offset', 0))
                           duration = int(chunk.get('duration', 0))
                           start_sec = offset / 10_000_000.0
@@ -98,11 +112,17 @@ jobs:
                           idx += 1
 
               if not boundaries:
-                  raise SystemExit('No edge-tts boundary metadata produced')
+                  raise SystemExit('No WordBoundary metadata produced')
+              if any(x.get('type') != 'WordBoundary' for x in boundaries):
+                  raise SystemExit('Non-WordBoundary metadata detected')
               pathlib.Path('speech_timeline.json').write_text(json.dumps({
                   'request_id': request_id,
                   'request_path': request_path,
                   'voice': voice,
+                  'rate': rate,
+                  'pitch': pitch,
+                  'volume': volume,
+                  'boundary': boundary,
                   'edge_tts_version': '7.2.8',
                   'boundary_count': len(boundaries),
                   'boundaries': boundaries,
@@ -113,6 +133,10 @@ jobs:
               'request_id': request_id,
               'request_path': request_path,
               'voice': voice,
+              'rate': rate,
+              'pitch': pitch,
+              'volume': volume,
+              'boundary': boundary,
               'event': event,
           }, ensure_ascii=False, indent=2), encoding='utf-8')
           PY
@@ -133,11 +157,18 @@ jobs:
           assert aud, 'No audio stream'
           duration = float(d['format']['duration'])
           assert duration > 0.2
+          assert duration <= 55.0, f'Narration duration over max: {duration}'
           assert int(d['format']['size']) > 1000
           with open('speech_timeline.json', encoding='utf-8') as f:
               t = json.load(f)
+          assert t.get('voice') == 'ko-KR-SunHiNeural'
+          assert t.get('rate') == '+20%'
+          assert t.get('pitch') == '+0Hz'
+          assert t.get('volume') == '+0%'
+          assert t.get('boundary') == 'WordBoundary'
           b = t.get('boundaries', [])
           assert b, 'No speech boundaries'
+          assert all(x.get('type') == 'WordBoundary' for x in b), 'Boundary type mismatch'
           starts = [float(x['start_sec']) for x in b]
           ends = [float(x['end_sec']) for x in b]
           assert starts == sorted(starts), 'Non-monotonic starts'
