@@ -1,0 +1,11 @@
+{
+  "request_id": "20260918_usmkt_260917_6ca4fa020a5c",
+  "text": "Fed는 25bp 금리를 올렸지만, 9월 17일 나스닥은 1.69% 올랐습니다. 이유는 장기금리와 유가가 함께 내려왔기 때문입니다. 10년물은 5% 아래, Brent는 0.95% 하락했습니다. 한국장은 반도체, 원달러, 에너지비용을 보세요. 오늘은 BOJ 결정과 미국 산업생산이 다음 방향을 확인합니다.",
+  "voice": "ko-KR-SunHiNeural",
+  "rate": "+20%",
+  "pitch": "+0Hz",
+  "volume": "+0%",
+  "boundary": "WordBoundary",
+  "edge_tts_version": "7.2.8",
+  "tts_generation_fingerprint": "6ca4fa020a5cbbf68fcfb254edbec457de85816ddd32f7cac97e7c3c739c09f9"
+}
