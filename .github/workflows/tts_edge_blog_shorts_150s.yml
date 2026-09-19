@@ -1,0 +1,200 @@
+name: Generate Blog Shorts Korean TTS 150s
+
+on:
+  push:
+    paths:
+      - 'tts_requests_blog_shorts/**'
+  workflow_dispatch:
+    inputs:
+      text:
+        description: Korean blog Shorts TTS script
+        required: false
+        type: string
+      voice:
+        description: Edge TTS voice
+        required: false
+        default: ko-KR-SunHiNeural
+        type: string
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  synthesize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install TTS and audio tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install edge-tts==7.2.8
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Generate Korean MP3 and speech timeline
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_TEXT: ${{ inputs.text }}
+          DISPATCH_VOICE: ${{ inputs.voice }}
+        run: |
+          python - <<'PY'
+          import asyncio, json, os, pathlib, subprocess
+          import edge_tts
+
+          event = os.environ.get('EVENT_NAME', '')
+          voice = os.environ.get('DISPATCH_VOICE') or 'ko-KR-SunHiNeural'
+          request_id = None
+          request_path = None
+          rate = '+20%'
+          pitch = '+0Hz'
+          volume = '+0%'
+          boundary = 'WordBoundary'
+          max_duration_sec = 150.0
+
+          if event == 'push':
+              before = subprocess.check_output(['git','rev-parse','HEAD^'], text=True).strip()
+              head = subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip()
+              changed = subprocess.check_output(['git','diff','--name-only',before,head,'--','tts_requests_blog_shorts/*.json'], text=True).splitlines()
+              if not changed:
+                  raise SystemExit('No tts_requests_blog_shorts JSON changed in triggering commit')
+              request_path = changed[-1]
+              data = json.loads(pathlib.Path(request_path).read_text(encoding='utf-8'))
+              text = data['text']
+              voice = data.get('voice') or voice
+              request_id = data.get('request_id')
+          else:
+              text = os.environ.get('DISPATCH_TEXT','').strip()
+              if not text:
+                  raise SystemExit('workflow_dispatch requires text input')
+
+          if voice != 'ko-KR-SunHiNeural':
+              raise SystemExit(f'Voice profile mismatch: {voice}')
+
+          async def main():
+              communicate = edge_tts.Communicate(
+                  text=text,
+                  voice=voice,
+                  rate=rate,
+                  pitch=pitch,
+                  volume=volume,
+                  boundary=boundary,
+              )
+              boundaries = []
+              idx = 0
+              with open('narration.mp3', 'wb') as audio_out:
+                  async for chunk in communicate.stream():
+                      ctype = chunk.get('type')
+                      if ctype == 'audio':
+                          audio_out.write(chunk['data'])
+                      elif ctype == 'WordBoundary':
+                          offset = int(chunk.get('offset', 0))
+                          duration = int(chunk.get('duration', 0))
+                          start_sec = offset / 10_000_000.0
+                          end_sec = (offset + duration) / 10_000_000.0
+                          boundaries.append({
+                              'boundary_id': idx,
+                              'type': ctype,
+                              'text': chunk.get('text', ''),
+                              'start_sec': round(start_sec, 6),
+                              'end_sec': round(end_sec, 6),
+                              'duration_sec': round(duration / 10_000_000.0, 6),
+                              'source_offset_or_index': offset,
+                          })
+                          idx += 1
+
+              if not boundaries:
+                  raise SystemExit('No WordBoundary metadata produced')
+              if any(x.get('type') != 'WordBoundary' for x in boundaries):
+                  raise SystemExit('Non-WordBoundary metadata detected')
+              pathlib.Path('speech_timeline.json').write_text(json.dumps({
+                  'request_id': request_id,
+                  'request_path': request_path,
+                  'voice': voice,
+                  'rate': rate,
+                  'pitch': pitch,
+                  'volume': volume,
+                  'boundary': boundary,
+                  'edge_tts_version': '7.2.8',
+                  'max_duration_sec': max_duration_sec,
+                  'boundary_count': len(boundaries),
+                  'boundaries': boundaries,
+              }, ensure_ascii=False, indent=2), encoding='utf-8')
+
+          asyncio.run(main())
+          pathlib.Path('request_meta.json').write_text(json.dumps({
+              'request_id': request_id,
+              'request_path': request_path,
+              'voice': voice,
+              'rate': rate,
+              'pitch': pitch,
+              'volume': volume,
+              'boundary': boundary,
+              'max_duration_sec': max_duration_sec,
+              'event': event,
+          }, ensure_ascii=False, indent=2), encoding='utf-8')
+          PY
+
+      - name: Verify MP3 and timeline
+        run: |
+          test -s narration.mp3
+          test -s speech_timeline.json
+          ffprobe -v error \
+            -show_entries format=duration,size \
+            -show_entries stream=codec_name,codec_type,sample_rate,channels \
+            -of json narration.mp3 | tee ffprobe.json
+          python - <<'PY'
+          import json
+          with open('ffprobe.json', encoding='utf-8') as f:
+              d = json.load(f)
+          aud = [s for s in d.get('streams', []) if s.get('codec_type') == 'audio']
+          assert aud, 'No audio stream'
+          duration = float(d['format']['duration'])
+          assert duration > 0.2
+          assert duration <= 150.0, f'Narration duration over blog Shorts max 150s: {duration}'
+          assert int(d['format']['size']) > 1000
+          with open('speech_timeline.json', encoding='utf-8') as f:
+              t = json.load(f)
+          assert t.get('voice') == 'ko-KR-SunHiNeural'
+          assert t.get('rate') == '+20%'
+          assert t.get('pitch') == '+0Hz'
+          assert t.get('volume') == '+0%'
+          assert t.get('boundary') == 'WordBoundary'
+          assert float(t.get('max_duration_sec')) == 150.0
+          b = t.get('boundaries', [])
+          assert b, 'No speech boundaries'
+          assert all(x.get('type') == 'WordBoundary' for x in b), 'Boundary type mismatch'
+          starts = [float(x['start_sec']) for x in b]
+          ends = [float(x['end_sec']) for x in b]
+          assert starts == sorted(starts), 'Non-monotonic starts'
+          assert all(e >= s for s, e in zip(starts, ends)), 'Invalid boundary duration'
+          assert max(ends) <= duration + 1.0, 'Boundary exceeds narration duration'
+          PY
+
+      - name: Upload MP3 artifact
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: blog-shorts-korean-tts-${{ github.run_id }}
+          path: |
+            narration.mp3
+            speech_timeline.json
+            ffprobe.json
+            request_meta.json
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Print artifact metadata
+        run: |
+          echo "artifact_id=${{ steps.upload.outputs.artifact-id }}"
+          echo "artifact_url=${{ steps.upload.outputs.artifact-url }}"
+          echo "artifact_digest=${{ steps.upload.outputs.artifact-digest }}"
