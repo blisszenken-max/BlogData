@@ -1,0 +1,10 @@
+{
+  "request_id": "hairloss-v2387-stage3-20260929",
+  "assets": [
+    {"id": "V04_crown", "url": "https://upload.wikimedia.org/wikipedia/commons/3/34/Male_pattern_baldness_viewed_from_behind.jpg"},
+    {"id": "V05_m_hairline", "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Receding_Hairline.png"},
+    {"id": "V06_female_part", "url": "https://upload.wikimedia.org/wikipedia/commons/9/99/Stages_of_Female_Pattern_Baldness.png"},
+    {"id": "V07_areata", "url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Alopecia_areata_bald_spot.jpg"},
+    {"id": "V08_inflammatory", "url": "https://upload.wikimedia.org/wikipedia/commons/9/99/Foliculitis_declavane_new_photo_to_avoid_wrong_diagnosis.jpg"}
+  ]
+}
