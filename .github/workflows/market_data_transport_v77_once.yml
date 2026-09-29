@@ -1,0 +1,50 @@
+name: market-data-transport-v77-once
+on:
+  push:
+    paths:
+      - '.github/workflows/market_data_transport_v77_once.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch official market data
+        shell: python
+        run: |
+          import requests, datetime as dt, csv, io
+          def jget(url, **kw):
+              r=requests.get(url, timeout=30, headers={'User-Agent':'Mozilla/5.0'}, **kw)
+              print('HTTP', r.status_code, url)
+              r.raise_for_status(); return r.json()
+          for product in ['BTC-USD','ETH-USD']:
+              t=jget(f'https://api.exchange.coinbase.com/products/{product}/ticker')
+              price=float(t['price']); ts=t['time']; trade=t['trade_id']
+              pdt=dt.datetime.fromisoformat(ts.replace('Z','+00:00'))
+              target=pdt-dt.timedelta(hours=24)
+              start=target-dt.timedelta(minutes=5); end=target+dt.timedelta(minutes=5)
+              params={'granularity':60,'start':start.isoformat().replace('+00:00','Z'),'end':end.isoformat().replace('+00:00','Z')}
+              candles=jget(f'https://api.exchange.coinbase.com/products/{product}/candles', params=params)
+              eligible=[]
+              for row in candles:
+                  candle_start=dt.datetime.fromtimestamp(row[0],dt.timezone.utc)
+                  candle_end=candle_start+dt.timedelta(seconds=60)
+                  if candle_end<=target: eligible.append((candle_end,float(row[4])))
+              eligible.sort()
+              base_ts,base_price=eligible[-1]
+              drift=(target-base_ts).total_seconds()
+              ch=(price/base_price-1)*100
+              print(f'COINBASE {product} price={price} time={ts} trade_id={trade} base_price={base_price} base_ts={base_ts.isoformat()} drift_sec={drift:.6f} change_pct={ch:.9f}')
+          url='https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv'
+          r=requests.get(url,timeout=30,headers={'User-Agent':'Mozilla/5.0'}); print('HTTP',r.status_code,url);r.raise_for_status()
+          rows=list(csv.DictReader(io.StringIO(r.text)))
+          for row in rows[-8:]:
+              if row['DATE'] in ('09/25/2026','09/28/2026'):
+                  print('VIX',row)
+          url='https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?type=daily_treasury_yield_curve&field_tdr_date_value=2026&page&_format=csv'
+          r=requests.get(url,timeout=30,headers={'User-Agent':'Mozilla/5.0'}); print('HTTP',r.status_code,url);r.raise_for_status()
+          rows=list(csv.DictReader(io.StringIO(r.text)))
+          for row in rows:
+              if row.get('Date') in ('09/25/2026','09/28/2026'):
+                  print('TREASURY',row)
