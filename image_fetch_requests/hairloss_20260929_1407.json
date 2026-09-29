@@ -1,0 +1,13 @@
+{
+  "request_id": "hairloss_20260929_1407",
+  "assets": [
+    {
+      "id": "V02a_male_pattern_real",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Male-pattern_hair_loss.jpg"
+    },
+    {
+      "id": "V02b_female_pattern_real",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/9/99/Stages_of_Female_Pattern_Baldness.png"
+    }
+  ]
+}
