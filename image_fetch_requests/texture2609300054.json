@@ -1,0 +1,17 @@
+{
+  "request_id": "texture2609300054",
+  "assets": [
+    {
+      "id": "v01_bakery_layers",
+      "url": "https://images.unsplash.com/photo-1568254183919-78a4f43a2877?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=yeh-xintong-go3DT3PpIw4-unsplash.jpg"
+    },
+    {
+      "id": "v02_crisp_cream",
+      "url": "https://images.unsplash.com/photo-1555507036-ab1f4038808a?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=mae-mu-m9pzwmxm2rk-unsplash.jpg"
+    },
+    {
+      "id": "v03_chewy_pop",
+      "url": "https://images.unsplash.com/photo-1745883949374-baeba0ed57c3?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=malcolm-brostrom-OFPGkd2swUM-unsplash.jpg"
+    }
+  ]
+}
