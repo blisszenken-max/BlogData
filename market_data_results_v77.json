@@ -1,0 +1,114 @@
+[
+  {
+    "kind": "HTTP",
+    "status": 200,
+    "url": "https://api.exchange.coinbase.com/products/BTC-USD/ticker"
+  },
+  {
+    "kind": "HTTP",
+    "status": 200,
+    "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-09-28T07%3A45%3A55.574482Z&end=2026-09-28T07%3A55%3A55.574482Z"
+  },
+  {
+    "kind": "COINBASE",
+    "product": "BTC-USD",
+    "price": 84020.99,
+    "time": "2026-09-29T07:50:55.574482945Z",
+    "trade_id": 1099889993,
+    "base_price": 82936.26,
+    "base_ts": "2026-09-28T07:50:00+00:00",
+    "drift_sec": 55.574482,
+    "change_pct": 1.3079080247891728
+  },
+  {
+    "kind": "HTTP",
+    "status": 200,
+    "url": "https://api.exchange.coinbase.com/products/ETH-USD/ticker"
+  },
+  {
+    "kind": "HTTP",
+    "status": 200,
+    "url": "https://api.exchange.coinbase.com/products/ETH-USD/candles?granularity=60&start=2026-09-28T07%3A45%3A55.227604Z&end=2026-09-28T07%3A55%3A55.227604Z"
+  },
+  {
+    "kind": "COINBASE",
+    "product": "ETH-USD",
+    "price": 2711.36,
+    "time": "2026-09-29T07:50:55.227604775Z",
+    "trade_id": 845985637,
+    "base_price": 2644.33,
+    "base_ts": "2026-09-28T07:50:00+00:00",
+    "drift_sec": 55.227604,
+    "change_pct": 2.5348576009802226
+  },
+  {
+    "kind": "HTTP",
+    "status": 200,
+    "url": "https://cdn-api.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv"
+  },
+  {
+    "kind": "VIX",
+    "row": {
+      "DATE": "09/25/2026",
+      "OPEN": "15.610000",
+      "HIGH": "15.940000",
+      "LOW": "14.680000",
+      "CLOSE": "14.870000"
+    }
+  },
+  {
+    "kind": "VIX",
+    "row": {
+      "DATE": "09/28/2026",
+      "OPEN": "16.160000",
+      "HIGH": "16.620000",
+      "LOW": "15.680000",
+      "CLOSE": "16.070000"
+    }
+  },
+  {
+    "kind": "HTTP",
+    "status": 200,
+    "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?type=daily_treasury_yield_curve&field_tdr_date_value=2026&page&_format=csv"
+  },
+  {
+    "kind": "TREASURY",
+    "row": {
+      "Date": "09/28/2026",
+      "1 Mo": "4.04",
+      "1.5 Month": "4.14",
+      "2 Mo": "4.20",
+      "3 Mo": "4.28",
+      "4 Mo": "4.33",
+      "6 Mo": "4.41",
+      "1 Yr": "4.59",
+      "2 Yr": "4.92",
+      "3 Yr": "5.01",
+      "5 Yr": "5.06",
+      "7 Yr": "5.15",
+      "10 Yr": "5.24",
+      "20 Yr": "5.60",
+      "30 Yr": "5.56"
+    }
+  },
+  {
+    "kind": "TREASURY",
+    "row": {
+      "Date": "09/25/2026",
+      "1 Mo": "4.04",
+      "1.5 Month": "4.14",
+      "2 Mo": "4.20",
+      "3 Mo": "4.24",
+      "4 Mo": "4.32",
+      "6 Mo": "4.33",
+      "1 Yr": "4.50",
+      "2 Yr": "4.81",
+      "3 Yr": "4.94",
+      "5 Yr": "4.98",
+      "7 Yr": "5.06",
+      "10 Yr": "5.17",
+      "20 Yr": "5.54",
+      "30 Yr": "5.49"
+    }
+  }
+]
