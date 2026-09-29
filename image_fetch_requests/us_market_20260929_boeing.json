@@ -1,0 +1,9 @@
+{
+  "request_id": "us-market-20260929-boeing",
+  "assets": [
+    {
+      "id": "boeing_737max",
+      "url": "https://www.boeing.com/content/dam/boeing/v2/products/737max/Hero_Mobile_737MAX.jpg"
+    }
+  ]
+}
