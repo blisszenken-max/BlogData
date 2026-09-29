@@ -1,0 +1,13 @@
+{
+  "request_id": "260929_1418_antiblush",
+  "assets": [
+    {
+      "id": "v02_neutral_makeup",
+      "url": "https://images.pexels.com/photos/34459993/pexels-photo-34459993.jpeg?cs=srgb&dl=pexels-shahin-mren-92379627-34459993.jpg&fm=jpg"
+    },
+    {
+      "id": "v03_subtle_blush",
+      "url": "https://images.pexels.com/photos/6651650/pexels-photo-6651650.jpeg?cs=srgb&dl=pexels-cottonbro-6651650.jpg&fm=jpg"
+    }
+  ]
+}
