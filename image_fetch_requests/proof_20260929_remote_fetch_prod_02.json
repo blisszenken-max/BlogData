@@ -1,0 +1,13 @@
+{
+  "request_id": "proof_20260929_remote_fetch_prod_02",
+  "assets": [
+    {
+      "id": "WIKIMEDIA_SEORAKSAN",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Seoraksan_in_the_Fall_1-_%EC%84%A4%EC%95%85%EC%82%B0_%EB%8B%A8%ED%92%8D.jpg"
+    },
+    {
+      "id": "SALOMON_XT6_GTX",
+      "url": "https://cdn.shopify.com/s/files/1/0580/9035/6875/files/XT-6_GTX__2.jpg?v=1772523573"
+    }
+  ]
+}
