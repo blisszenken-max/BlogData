@@ -1,0 +1,13 @@
+{
+  "request_id": "v77_usmarket_20260929",
+  "assets": [
+    {
+      "id": "VIS_POS_NVIDIA",
+      "url": "https://iprsoftwaremedia.com/219/files/202601/202601301946/jensen-huang-headshot-black-background.jpg?download=true"
+    },
+    {
+      "id": "VIS_NEG_BOEING",
+      "url": "https://www.boeing.com/content/theboeingcompany/us/en/features/2026/07/737-10-completes-final-certification-flight/_jcr_content/root/container/story_truncator/section/image.coreimg.jpeg/1784927680857/737-10-completes-image-1.jpeg"
+    }
+  ]
+}
