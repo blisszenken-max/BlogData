@@ -12,36 +12,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo '===BTC_TICKER===' 
-          curl -fsSL 'https://api.exchange.coinbase.com/products/BTC-USD/ticker'
-          echo
-          echo '===ETH_TICKER===' 
-          curl -fsSL 'https://api.exchange.coinbase.com/products/ETH-USD/ticker'
-          echo
-          python - <<'PY'
-          import json, urllib.request, datetime
-          for prod in ['BTC-USD','ETH-USD']:
-              with urllib.request.urlopen(f'https://api.exchange.coinbase.com/products/{prod}/ticker',timeout=20) as r:
-                  t=json.load(r)
-              ts=datetime.datetime.fromisoformat(t['time'].replace('Z','+00:00'))
-              target=ts-datetime.timedelta(hours=24)
-              start=(target-datetime.timedelta(minutes=3)).isoformat().replace('+00:00','Z')
-              end=(target+datetime.timedelta(minutes=3)).isoformat().replace('+00:00','Z')
-              url=f'https://api.exchange.coinbase.com/products/{prod}/candles?granularity=60&start={start}&end={end}'
-              with urllib.request.urlopen(url,timeout=20) as r:
-                  candles=json.load(r)
-              completed=[]
-              for c in candles:
-                  start_ts=datetime.datetime.fromtimestamp(c[0],tz=datetime.timezone.utc)
-                  end_ts=start_ts+datetime.timedelta(seconds=60)
-                  if end_ts <= target:
-                      completed.append((end_ts,c[4]))
-              completed.sort()
-              base_ts,base_price=completed[-1]
-              drift=(target-base_ts).total_seconds()
-              ch=(float(t['price'])/float(base_price)-1)*100
-              print(f'==={prod}_24H===')
-              print(json.dumps({'price':t['price'],'time':t['time'],'trade_id':t['trade_id'],'base_price':base_price,'base_ts':base_ts.isoformat().replace('+00:00','Z'),'drift_sec':drift,'change_pct':ch},ensure_ascii=False))
-          PY
-          echo '===VIX_CSV_TAIL===' 
-          curl -fsSL 'https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv' | tail -n 5
+          for P in BTC-USD ETH-USD; do
+            echo "===${P}_TICKER==="
+            curl -A 'Mozilla/5.0' -fsSL "https://api.exchange.coinbase.com/products/${P}/ticker"
+            echo
+            echo "===${P}_STATS==="
+            curl -A 'Mozilla/5.0' -fsSL "https://api.exchange.coinbase.com/products/${P}/stats"
+            echo
+          done
+          echo '===VIX_CSV_TAIL==='
+          curl -A 'Mozilla/5.0' -fsSL 'https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv' | tail -n 5
