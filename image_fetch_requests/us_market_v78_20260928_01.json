@@ -1,0 +1,13 @@
+{
+  "request_id": "us_market_v78_20260928_01",
+  "assets": [
+    {
+      "id": "vis_s08_nvidia_hq",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/33/2788-2888_San_Tomas_Expressway.jpg"
+    },
+    {
+      "id": "vis_s09_boeing_737max10",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/6/62/C-FMWY_B737_MAX_10%2C_WestJet%2C_Grant_County_06-13-26.jpg"
+    }
+  ]
+}
