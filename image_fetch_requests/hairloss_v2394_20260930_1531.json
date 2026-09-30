@@ -1,0 +1,13 @@
+{
+  "request_id": "hairloss_v2394_20260930_1531",
+  "assets": [
+    {
+      "id": "V04_male_pattern",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Male-pattern_hair_loss.jpg"
+    },
+    {
+      "id": "V05_alopecia_areata",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Alopecia_areata_bald_spot.jpg"
+    }
+  ]
+}
