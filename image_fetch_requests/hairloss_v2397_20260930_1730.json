@@ -1,0 +1,13 @@
+{
+  "request_id": "hairloss_v2397_20260930_1730",
+  "assets": [
+    {
+      "id": "V03_male_pattern_real",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Male-pattern_hair_loss.jpg"
+    },
+    {
+      "id": "V04_alopecia_areata_real",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/38/Allopecia_areata.JPG"
+    }
+  ]
+}
