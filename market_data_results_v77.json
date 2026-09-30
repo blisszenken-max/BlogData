@@ -7,18 +7,18 @@
   {
     "kind": "HTTP",
     "status": 200,
-    "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-09-29T09%3A12%3A20.328424Z&end=2026-09-29T09%3A22%3A20.328424Z"
+    "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-09-29T09%3A28%3A30.516277Z&end=2026-09-29T09%3A38%3A30.516277Z"
   },
   {
     "kind": "COINBASE",
     "product": "BTC-USD",
-    "price": 83247.5,
-    "time": "2026-09-30T09:17:20.328424708Z",
-    "trade_id": 1100343415,
-    "base_price": 83759.57,
-    "base_ts": "2026-09-29T09:17:00+00:00",
-    "drift_sec": 20.328424,
-    "change_pct": -0.6113570067277196
+    "price": 83709.76,
+    "time": "2026-09-30T09:33:30.516277429Z",
+    "trade_id": 1100348751,
+    "base_price": 83910.9,
+    "base_ts": "2026-09-29T09:33:00+00:00",
+    "drift_sec": 30.516277,
+    "change_pct": -0.23970664121109042
   },
   {
     "kind": "HTTP",
@@ -28,18 +28,18 @@
   {
     "kind": "HTTP",
     "status": 200,
-    "url": "https://api.exchange.coinbase.com/products/ETH-USD/candles?granularity=60&start=2026-09-29T09%3A12%3A20.978891Z&end=2026-09-29T09%3A22%3A20.978891Z"
+    "url": "https://api.exchange.coinbase.com/products/ETH-USD/candles?granularity=60&start=2026-09-29T09%3A28%3A30.482940Z&end=2026-09-29T09%3A38%3A30.482940Z"
   },
   {
     "kind": "COINBASE",
     "product": "ETH-USD",
-    "price": 2676.01,
-    "time": "2026-09-30T09:17:20.978891197Z",
-    "trade_id": 846185214,
-    "base_price": 2704.06,
-    "base_ts": "2026-09-29T09:17:00+00:00",
-    "drift_sec": 20.978891,
-    "change_pct": -1.0373290533494006
+    "price": 2693.74,
+    "time": "2026-09-30T09:33:30.482940486Z",
+    "trade_id": 846187733,
+    "base_price": 2708.12,
+    "base_ts": "2026-09-29T09:33:00+00:00",
+    "drift_sec": 30.48294,
+    "change_pct": -0.5309956722744924
   },
   {
     "kind": "HTTP",
