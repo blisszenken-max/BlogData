@@ -1,0 +1,25 @@
+name: market-data-v710-temp
+on:
+  push:
+    paths:
+      - '.github/workflows/market_data_v710_temp.yml'
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Coinbase latest trades
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '=== BTC_TICKER ==='
+          curl -fsSL --retry 2 --max-time 20 'https://api.exchange.coinbase.com/products/BTC-USD/ticker'
+          echo
+          echo '=== ETH_TICKER ==='
+          curl -fsSL --retry 2 --max-time 20 'https://api.exchange.coinbase.com/products/ETH-USD/ticker'
+          echo
+          echo '=== BTC_STATS ==='
+          curl -fsSL --retry 2 --max-time 20 'https://api.exchange.coinbase.com/products/BTC-USD/stats'
+          echo
+          echo '=== ETH_STATS ==='
+          curl -fsSL --retry 2 --max-time 20 'https://api.exchange.coinbase.com/products/ETH-USD/stats'
+          echo
