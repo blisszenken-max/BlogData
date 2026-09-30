@@ -1,0 +1,13 @@
+{
+  "request_id": "bookclub_260930_1254",
+  "assets": [
+    {
+      "id": "bookclub_group",
+      "url": "https://images.unsplash.com/photo-1520273821658-bdb3f0c6de7b?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=3000"
+    },
+    {
+      "id": "bookclub_cafe",
+      "url": "https://images.unsplash.com/photo-1535688391459-479d308104f8?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=3000"
+    }
+  ]
+}
