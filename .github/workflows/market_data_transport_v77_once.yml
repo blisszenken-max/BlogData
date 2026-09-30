@@ -41,20 +41,20 @@ jobs:
           url='https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv'
           rows=list(csv.DictReader(io.StringIO(get(url).text)))
           for row in rows:
-              if row['DATE'] in ('09/25/2026','09/28/2026'):
+              if row['DATE'] in ('09/28/2026','09/29/2026'):
                   out.append({'kind':'VIX','row':row})
           url='https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?type=daily_treasury_yield_curve&field_tdr_date_value=2026&page&_format=csv'
           rows=list(csv.DictReader(io.StringIO(get(url).text)))
           for row in rows:
-              if row.get('Date') in ('09/25/2026','09/28/2026'):
+              if row.get('Date') in ('09/28/2026','09/29/2026'):
                   out.append({'kind':'TREASURY','row':row})
           open('market_data_results_v77.json','w').write(json.dumps(out,ensure_ascii=False,indent=2))
       - name: Commit result
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.email '41898289+github-actions[bot]@users.noreply.github.com'
           git add market_data_results_v77.json
-          git commit -m 'temp: market data results v7.7' || exit 0
+          git commit -m 'temp: market data results v7.12 run' || exit 0
           git push
-# trigger 2026-09-29T20:48+09:00 v7.8 run
+# trigger 2026-09-30T16:04+09:00 v7.12 run
