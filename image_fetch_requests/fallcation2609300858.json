@@ -1,0 +1,17 @@
+{
+  "request_id": "fallcation2609300858",
+  "assets": [
+    {
+      "id": "v01_autumn_mountain",
+      "url": "https://images.unsplash.com/photo-1761158957966-a15a8ac77fcc?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=3000"
+    },
+    {
+      "id": "v02_airport_travelers",
+      "url": "https://images.unsplash.com/photo-1783768815176-52c08e1de7ed?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=3000"
+    },
+    {
+      "id": "v03_autumn_roadtrip",
+      "url": "https://images.unsplash.com/photo-1699720904098-728c2f75920b?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=3000"
+    }
+  ]
+}
