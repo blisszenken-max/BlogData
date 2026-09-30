@@ -1,0 +1,49 @@
+name: market-data-v78-once
+on:
+  push:
+    paths:
+      - '.github/workflows/market_data_transport_v78_once.yml'
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch official market data
+        shell: python
+        run: |
+          import json, urllib.request, urllib.parse, datetime, csv, io
+          def get_json(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  return json.loads(r.read().decode())
+          out={}
+          for product in ['BTC-USD','ETH-USD']:
+              t=get_json(f'https://api.exchange.coinbase.com/products/{product}/ticker')
+              pts=datetime.datetime.fromisoformat(t['time'].replace('Z','+00:00'))
+              target=pts-datetime.timedelta(hours=24)
+              start=target-datetime.timedelta(minutes=3)
+              end=target+datetime.timedelta(minutes=3)
+              q=urllib.parse.urlencode({'start':start.isoformat(),'end':end.isoformat(),'granularity':60})
+              candles=get_json(f'https://api.exchange.coinbase.com/products/{product}/candles?{q}')
+              # candle: [time,low,high,open,close,volume], time=bucket start unix sec
+              eligible=[]
+              for c in candles:
+                  cend=datetime.datetime.fromtimestamp(c[0],datetime.timezone.utc)+datetime.timedelta(seconds=60)
+                  if cend<=target:
+                      eligible.append((cend,c))
+              eligible.sort(key=lambda x:x[0])
+              if eligible:
+                  cend,c=eligible[-1]
+                  base=float(c[4]); latest=float(t['price'])
+                  drift=(target-cend).total_seconds()
+                  change=(latest/base-1)*100
+              else:
+                  base=None; cend=None; drift=None; change=None
+              out[product]={'price':t['price'],'time':t['time'],'trade_id':t['trade_id'],'base_price':base,'base_ts':cend.isoformat() if cend else None,'drift_sec':drift,'change_pct':change}
+          url='https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+          with urllib.request.urlopen(req,timeout=30) as r:
+              text=r.read().decode('utf-8-sig')
+          rows=list(csv.DictReader(io.StringIO(text)))
+          keep=[r for r in rows if r.get('DATE') in ('09/28/2026','09/29/2026')]
+          out['VIX']=keep
+          print('MARKET_JSON='+json.dumps(out,separators=(',',':')))
