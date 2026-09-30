@@ -1,0 +1,13 @@
+{
+  "request_id": "ai_pricing_260930_1702",
+  "assets": [
+    {
+      "id": "mcd_kiosk_front",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/c/ce/McDonalds_order_kiosk.jpg"
+    },
+    {
+      "id": "mcd_kiosk_store",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/0/03/Denton_House_LI_03_-_Order_kiosk.jpg"
+    }
+  ]
+}
