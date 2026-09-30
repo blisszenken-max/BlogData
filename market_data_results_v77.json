@@ -7,18 +7,18 @@
   {
     "kind": "HTTP",
     "status": 200,
-    "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-09-28T11%3A53%3A40.830776Z&end=2026-09-28T12%3A03%3A40.830776Z"
+    "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-09-29T07%3A02%3A14.136138Z&end=2026-09-29T07%3A12%3A14.136138Z"
   },
   {
     "kind": "COINBASE",
     "product": "BTC-USD",
-    "price": 84372.49,
-    "time": "2026-09-29T11:58:40.830776551Z",
-    "trade_id": 1099955849,
-    "base_price": 83061.06,
-    "base_ts": "2026-09-28T11:58:00+00:00",
-    "drift_sec": 40.830776,
-    "change_pct": 1.5788746254863595
+    "price": 82979.6,
+    "time": "2026-09-30T07:07:14.136138179Z",
+    "trade_id": 1100313413,
+    "base_price": 83960.0,
+    "base_ts": "2026-09-29T07:07:00+00:00",
+    "drift_sec": 14.136138,
+    "change_pct": -1.167698904240111
   },
   {
     "kind": "HTTP",
@@ -28,33 +28,23 @@
   {
     "kind": "HTTP",
     "status": 200,
-    "url": "https://api.exchange.coinbase.com/products/ETH-USD/candles?granularity=60&start=2026-09-28T11%3A53%3A41.062031Z&end=2026-09-28T12%3A03%3A41.062031Z"
+    "url": "https://api.exchange.coinbase.com/products/ETH-USD/candles?granularity=60&start=2026-09-29T07%3A02%3A15.256797Z&end=2026-09-29T07%3A12%3A15.256797Z"
   },
   {
     "kind": "COINBASE",
     "product": "ETH-USD",
-    "price": 2733.33,
-    "time": "2026-09-29T11:58:41.062031560Z",
-    "trade_id": 846018827,
-    "base_price": 2668.3,
-    "base_ts": "2026-09-28T11:58:00+00:00",
-    "drift_sec": 41.062031,
-    "change_pct": 2.437132256492891
+    "price": 2661.62,
+    "time": "2026-09-30T07:07:15.256797179Z",
+    "trade_id": 846175189,
+    "base_price": 2705.71,
+    "base_ts": "2026-09-29T07:07:00+00:00",
+    "drift_sec": 15.256797,
+    "change_pct": -1.6295168366159074
   },
   {
     "kind": "HTTP",
     "status": 200,
     "url": "https://cdn-api.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv"
-  },
-  {
-    "kind": "VIX",
-    "row": {
-      "DATE": "09/25/2026",
-      "OPEN": "15.610000",
-      "HIGH": "15.940000",
-      "LOW": "14.680000",
-      "CLOSE": "14.870000"
-    }
   },
   {
     "kind": "VIX",
@@ -67,9 +57,39 @@
     }
   },
   {
+    "kind": "VIX",
+    "row": {
+      "DATE": "09/29/2026",
+      "OPEN": "16.170000",
+      "HIGH": "16.440000",
+      "LOW": "15.730000",
+      "CLOSE": "16.040000"
+    }
+  },
+  {
     "kind": "HTTP",
     "status": 200,
     "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?type=daily_treasury_yield_curve&field_tdr_date_value=2026&page&_format=csv"
+  },
+  {
+    "kind": "TREASURY",
+    "row": {
+      "Date": "09/29/2026",
+      "1 Mo": "4.04",
+      "1.5 Month": "4.14",
+      "2 Mo": "4.18",
+      "3 Mo": "4.25",
+      "4 Mo": "4.30",
+      "6 Mo": "4.36",
+      "1 Yr": "4.58",
+      "2 Yr": "4.89",
+      "3 Yr": "4.98",
+      "5 Yr": "5.06",
+      "7 Yr": "5.16",
+      "10 Yr": "5.26",
+      "20 Yr": "5.64",
+      "30 Yr": "5.59"
+    }
   },
   {
     "kind": "TREASURY",
@@ -89,26 +109,6 @@
       "10 Yr": "5.24",
       "20 Yr": "5.60",
       "30 Yr": "5.56"
-    }
-  },
-  {
-    "kind": "TREASURY",
-    "row": {
-      "Date": "09/25/2026",
-      "1 Mo": "4.04",
-      "1.5 Month": "4.14",
-      "2 Mo": "4.20",
-      "3 Mo": "4.24",
-      "4 Mo": "4.32",
-      "6 Mo": "4.33",
-      "1 Yr": "4.50",
-      "2 Yr": "4.81",
-      "3 Yr": "4.94",
-      "5 Yr": "4.98",
-      "7 Yr": "5.06",
-      "10 Yr": "5.17",
-      "20 Yr": "5.54",
-      "30 Yr": "5.49"
     }
   }
 ]
