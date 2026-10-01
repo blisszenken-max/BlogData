@@ -1,0 +1,33 @@
+{
+  "request_id": "overseas_261002_colordrench_f09",
+  "request_path": "image_fetch_requests/overseas_261002_colordrench_f09.json",
+  "request_commit": "f64317bba076ca29adc73956ff612deabd399f39",
+  "assets": [
+    {
+      "id": "V01_REAL",
+      "url": "https://cdn.mos.cms.futurecdn.net/UKDQSNTC4DLM5Dr4k9nkSK.jpeg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://cdn.mos.cms.futurecdn.net/UKDQSNTC4DLM5Dr4k9nkSK.jpeg",
+      "format": "JPEG",
+      "size_bytes": 4986412,
+      "sha256": "d24715c3f41a5e3fb697db875638d7dcc1f6110b815f7a62c50ae2571bf198c7",
+      "file": "image_fetch_results/overseas_261002_colordrench_f09/V01_REAL.jpg"
+    },
+    {
+      "id": "V02_REAL",
+      "url": "https://cdn.mos.cms.futurecdn.net/JNXAiTtuNkj8ur7NznuFRS.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://cdn.mos.cms.futurecdn.net/JNXAiTtuNkj8ur7NznuFRS.jpg",
+      "format": "JPEG",
+      "size_bytes": 9149907,
+      "sha256": "fae928945a93184c401ea7b018d899844b221b0924e47b5e4dc1726c94bd2aa3",
+      "file": "image_fetch_results/overseas_261002_colordrench_f09/V02_REAL.jpg"
+    }
+  ],
+  "pass_count": 2,
+  "fail_count": 0
+}
