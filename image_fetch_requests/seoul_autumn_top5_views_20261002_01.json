@@ -1,0 +1,25 @@
+{
+  "request_id": "seoul_autumn_top5_views_20261002_01",
+  "assets": [
+    {
+      "id": "seoul_forest_view",
+      "url": "https://parks.seoul.go.kr/file/info/view.do?bIdx=2787&field=thumbnail&tableName=GALLERY_LIST"
+    },
+    {
+      "id": "namsan_view",
+      "url": "https://cdn.shopify.com/s/files/1/0609/9376/5551/files/namsan-mountain-tower-cable-car-seoul_11.jpg?v=1733278094"
+    },
+    {
+      "id": "changdeokgung_pose",
+      "url": "https://dsj1e5gc359pm.cloudfront.net/uploads/products/223/contents/59f1d337-04-%ED%95%9C%EB%B3%B5%EC%A2%85%EB%A5%98-%EC%84%A4%EB%AA%85%28%EC%98%81%EB%AC%B8%29%EC%B6%94%EA%B0%80-%282%29.jpg"
+    },
+    {
+      "id": "bukhansan_pose",
+      "url": "https://static.wixstatic.com/media/0505b9_d1b3da21721d4d4580623e0660a0383f~mv2.jpg/v1/fill/w_665%2Ch_565%2Cal_c%2Cq_85%2Cenc_auto/0505b9_d1b3da21721d4d4580623e0660a0383f~mv2.jpg"
+    },
+    {
+      "id": "olympic_view",
+      "url": "https://static.wixstatic.com/media/0505b9_0b8eb64e17c341e9b75b2b98c915050e~mv2.jpg/v1/fill/w_886%2Ch_664%2Cal_c%2Cq_85%2Cenc_avif%2Cquality_auto/0505b9_0b8eb64e17c341e9b75b2b98c915050e~mv2.jpg"
+    }
+  ]
+}
