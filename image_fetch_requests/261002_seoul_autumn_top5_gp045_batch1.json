@@ -1,0 +1,25 @@
+{
+  "request_id": "261002_seoul_autumn_top5_gp045_batch1",
+  "assets": [
+    {
+      "id": "V01_BUKHANSAN",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/d/d3/Landscape_of_Bukhansan_with_colored_leaves_in_September_%28from_southern_side%29.jpg"
+    },
+    {
+      "id": "V02_CHANGDEOK",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/a/af/Changdeokgung_Secret_Garden_%281509168035%29.jpg"
+    },
+    {
+      "id": "V03_NAMSAN",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/b/b5/N-Seoul-Tower_and_Namsan_Park_%2826876783888%29.jpg"
+    },
+    {
+      "id": "V04_SEOULFOREST",
+      "url": "https://parks.seoul.go.kr/file/info/view.do?bIdx=2787&field=thumbnail&tableName=GALLERY_LIST"
+    },
+    {
+      "id": "V05_OLYMPIC",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Autumn_in_Olympic_Park%2C_Seoul.jpg"
+    }
+  ]
+}
