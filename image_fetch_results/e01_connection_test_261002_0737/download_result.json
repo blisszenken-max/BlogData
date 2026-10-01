@@ -1,0 +1,15 @@
+{
+  "request_id": "e01_connection_test_261002_0737",
+  "request_path": "image_fetch_requests/e01_connection_test_261002_0737.json",
+  "request_commit": "02320f337ca34d73aa8c3ab0dae830795f33e531",
+  "assets": [
+    {
+      "id": "TEST01",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Example.jpg/320px-Example.jpg",
+      "status": "FAIL",
+      "error": "HTTPError: 400 Client Error: Use thumbnail sizes listed on https://w.wiki/GHai for url: https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Example.jpg/320px-Example.jpg"
+    }
+  ],
+  "pass_count": 0,
+  "fail_count": 1
+}
