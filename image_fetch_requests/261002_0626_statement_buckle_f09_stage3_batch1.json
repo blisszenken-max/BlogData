@@ -1,0 +1,17 @@
+{
+  "request_id": "261002_0626_statement_buckle_f09_stage3_batch1",
+  "assets": [
+    {
+      "id": "V01_BG",
+      "url": "https://images.pexels.com/photos/6371786/pexels-photo-6371786.jpeg?cs=srgb&dl=pexels-pavel-danilyuk-6371786.jpg&fm=jpg"
+    },
+    {
+      "id": "V02_BG",
+      "url": "https://images.pexels.com/photos/33505918/pexels-photo-33505918.jpeg?cs=srgb&dl=pexels-mert-coskun-386432351-33505918.jpg&fm=jpg"
+    },
+    {
+      "id": "V03_BG",
+      "url": "https://images.pexels.com/photos/157568/belts-buckle-jeans-buttons-157568.jpeg?cs=srgb&dl=pexels-pixabay-157568.jpg&fm=jpg"
+    }
+  ]
+}
