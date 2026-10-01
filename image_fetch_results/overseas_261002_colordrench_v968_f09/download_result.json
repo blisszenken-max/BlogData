@@ -1,0 +1,21 @@
+{
+  "request_id": "overseas_261002_colordrench_v968_f09",
+  "request_path": "image_fetch_requests/overseas_261002_colordrench_v968_f09.json",
+  "request_commit": "89ee985d379de93d4b065da3989d58f6826e5ef8",
+  "assets": [
+    {
+      "id": "V02_REAL",
+      "url": "https://ey2msiqxj7z.exactdn.com/wp-content/uploads/2025/07/29150815/Urbanology-Designs_Matti-Gresham_Cottage-406-1024x683.jpg?strip=all",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://ey2msiqxj7z.exactdn.com/wp-content/uploads/2025/07/29150815/Urbanology-Designs_Matti-Gresham_Cottage-406-1024x683.jpg?strip=all",
+      "format": "JPEG",
+      "size_bytes": 96791,
+      "sha256": "c12de8d9f7af03848bb7738947db26304b0958c10c9501754ff5be2e23766756",
+      "file": "image_fetch_results/overseas_261002_colordrench_v968_f09/V02_REAL.jpg"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 0
+}
