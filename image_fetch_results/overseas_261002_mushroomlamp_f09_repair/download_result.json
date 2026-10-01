@@ -1,0 +1,21 @@
+{
+  "request_id": "overseas_261002_mushroomlamp_f09_repair",
+  "request_path": "image_fetch_requests/overseas_261002_mushroomlamp_f09_repair.json",
+  "request_commit": "ed2110d4716b03c1f1d0826483ba19844f90867e",
+  "assets": [
+    {
+      "id": "V02_REAL",
+      "url": "https://openaccess-cdn.clevelandart.org/2018.288/2018.288_print.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://openaccess-cdn.clevelandart.org/2018.288/2018.288_print.jpg",
+      "format": "JPEG",
+      "size_bytes": 621260,
+      "sha256": "42dbe1e5d3e985af69fcf8877b14686743a98eed14fc30ee5bcf3cf0624ccd74",
+      "file": "image_fetch_results/overseas_261002_mushroomlamp_f09_repair/V02_REAL.jpg"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 0
+}
