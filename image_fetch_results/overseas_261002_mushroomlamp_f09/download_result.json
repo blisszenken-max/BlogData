@@ -1,0 +1,27 @@
+{
+  "request_id": "overseas_261002_mushroomlamp_f09",
+  "request_path": "image_fetch_requests/overseas_261002_mushroomlamp_f09.json",
+  "request_commit": "04372ab7041122c39705d53d378ab58d94481fad",
+  "assets": [
+    {
+      "id": "V01_REAL",
+      "url": "https://openaccess-cdn.clevelandart.org/2018.288/2018.288_print.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://openaccess-cdn.clevelandart.org/2018.288/2018.288_print.jpg",
+      "format": "JPEG",
+      "size_bytes": 621260,
+      "sha256": "42dbe1e5d3e985af69fcf8877b14686743a98eed14fc30ee5bcf3cf0624ccd74",
+      "file": "image_fetch_results/overseas_261002_mushroomlamp_f09/V01_REAL.jpg"
+    },
+    {
+      "id": "V02_REAL",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Tiffany_glass_%26_decoirating_co.%2C_lampada_da_notte_fungo%2C_1896-1900_ca.jpg",
+      "status": "FAIL",
+      "error": "HTTPError: 429 Client Error: Too Many Requests (015d12c) for url: https://upload.wikimedia.org/wikipedia/commons/4/4f/Tiffany_glass_%26_decoirating_co.%2C_lampada_da_notte_fungo%2C_1896-1900_ca.jpg"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 1
+}
