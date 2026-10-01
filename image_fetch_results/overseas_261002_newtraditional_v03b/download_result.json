@@ -1,0 +1,21 @@
+{
+  "request_id": "overseas_261002_newtraditional_v03b",
+  "request_path": "image_fetch_requests/overseas_261002_newtraditional_v03b.json",
+  "request_commit": "6cc777d0ed89454a57944743c002fa7aa8d2412e",
+  "assets": [
+    {
+      "id": "V03_REAL_B",
+      "url": "https://st.hzcdn.com/simgs/pictures/living-rooms/clean-traditional-ty-larkins-interiors-img~ce514fdf036aa074_9-7639-1-a37427d.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://st.hzcdn.com/simgs/pictures/living-rooms/clean-traditional-ty-larkins-interiors-img~ce514fdf036aa074_9-7639-1-a37427d.jpg",
+      "format": "JPEG",
+      "size_bytes": 212442,
+      "sha256": "390064dab743638ff263d1bc074ea131f5356cb0c2a4c03e6b77aa8378b4f894",
+      "file": "image_fetch_results/overseas_261002_newtraditional_v03b/V03_REAL_B.jpg"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 0
+}
