@@ -2,228 +2,112 @@ name: Fetch Web Image Assets
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'image_fetch_requests/**'
 
 permissions:
-  contents: read
-  actions: write
+  contents: write
+
+concurrency:
+  group: image-fetch-${{ github.sha }}
+  cancel-in-progress: false
 
 jobs:
   fetch-images:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 2
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - run: python -m pip install requests pillow
 
-      - name: Install fetch validators
-        run: |
-          python -m pip install requests pillow
-
-      - name: Download and validate requested images
+      - name: Download validate and publish correlated result
         run: |
           python - <<'PY'
           import hashlib, io, ipaddress, json, pathlib, socket, subprocess, time, urllib.parse
           import requests
           from PIL import Image
 
-          before = subprocess.check_output(['git','rev-parse','HEAD^'], text=True).strip()
-          head = subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip()
-          changed = subprocess.check_output([
-              'git','diff','--name-only',before,head,'--','image_fetch_requests/*.json'
-          ], text=True).splitlines()
-          if not changed:
-              raise SystemExit('No image_fetch_requests JSON changed in triggering commit')
+          before=subprocess.check_output(['git','rev-parse','HEAD^'],text=True).strip()
+          head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          changed=subprocess.check_output(['git','diff','--name-only',before,head,'--','image_fetch_requests/*.json'],text=True).splitlines()
+          if not changed: raise SystemExit('No image_fetch_requests JSON changed')
+          request_path=changed[-1]
+          data=json.loads(pathlib.Path(request_path).read_text(encoding='utf-8'))
+          request_id=str(data.get('request_id') or '').strip()
+          assets=data.get('assets') or []
+          if not request_id or not (1 <= len(assets) <= 5): raise SystemExit('bad request')
+          if any(c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-' for c in request_id):
+              raise SystemExit('unsafe request_id')
 
-          request_path = changed[-1]
-          data = json.loads(pathlib.Path(request_path).read_text(encoding='utf-8'))
-          request_id = str(data.get('request_id') or '').strip()
-          assets = data.get('assets') or []
-          if not request_id:
-              raise SystemExit('Missing request_id')
-          if not (1 <= len(assets) <= 5):
-              raise SystemExit('assets count must be 1..5')
+          outdir=pathlib.Path('image_fetch_results')/request_id
+          outdir.mkdir(parents=True,exist_ok=True)
+          result={'request_id':request_id,'request_path':request_path,'request_commit':head,'assets':[],'pass_count':0,'fail_count':0}
+          session=requests.Session(); session.headers.update({'User-Agent':'BlogDataImageFetcher/1.2'})
 
-          outdir = pathlib.Path('image_fetch_output')
-          outdir.mkdir(exist_ok=True)
-          result = {
-              'request_id': request_id,
-              'request_path': request_path,
-              'assets': [],
-              'pass_count': 0,
-              'fail_count': 0,
-          }
-
-          session = requests.Session()
-          session.headers.update({
-              'User-Agent': 'BlogDataImageFetcher/1.1 (https://github.com/blisszenken-max/BlogData)'
-          })
-
-          def assert_public_https(url: str):
-              p = urllib.parse.urlparse(url)
-              if p.scheme != 'https' or not p.hostname:
-                  raise ValueError('Only public https URLs are allowed')
-              infos = socket.getaddrinfo(p.hostname, p.port or 443, type=socket.SOCK_STREAM)
-              ips = sorted({x[4][0] for x in infos})
-              if not ips:
-                  raise ValueError('DNS returned no address')
+          def public_https(url):
+              p=urllib.parse.urlparse(url)
+              if p.scheme!='https' or not p.hostname: raise ValueError('Only public https URLs allowed')
+              ips=sorted({x[4][0] for x in socket.getaddrinfo(p.hostname,p.port or 443,type=socket.SOCK_STREAM)})
+              if not ips: raise ValueError('DNS returned no address')
               for raw in ips:
-                  ip = ipaddress.ip_address(raw)
-                  if not ip.is_global:
-                      raise ValueError(f'Non-public target blocked: {raw}')
-              return ips
-
-          def get_with_retry(url: str):
-              retryable_status = {429, 500, 502, 503, 504}
-              current_url = url
-              total_attempts = 0
-              max_redirects = 5
-
-              for redirect_hops in range(max_redirects + 1):
-                  # Validate every hop BEFORE making a request so redirect targets
-                  # cannot silently switch the runner to localhost/private/internal hosts.
-                  assert_public_https(current_url)
-                  next_url = None
-                  last_error = None
-
-                  for attempt in range(1, 4):
-                      total_attempts += 1
+                  if not ipaddress.ip_address(raw).is_global: raise ValueError('Non-public target blocked')
+          def get(url):
+              current=url; total=0
+              for hops in range(6):
+                  public_https(current)
+                  for attempt in range(1,4):
+                      total+=1
                       try:
-                          r = session.get(
-                              current_url,
-                              timeout=(10, 25),
-                              allow_redirects=False,
-                              stream=True,
-                          )
-
-                          if r.status_code in retryable_status and attempt < 3:
-                              retry_after = r.headers.get('Retry-After')
-                              try:
-                                  delay = min(float(retry_after), 8.0) if retry_after else (2.0 * attempt)
-                              except Exception:
-                                  delay = 2.0 * attempt
-                              r.close()
-                              time.sleep(delay)
-                              continue
-
+                          r=session.get(current,timeout=(10,25),allow_redirects=False,stream=True)
+                          if r.status_code in {429,500,502,503,504} and attempt<3:
+                              r.close(); time.sleep(2*attempt); continue
                           if 300 <= r.status_code < 400:
-                              location = r.headers.get('Location')
-                              if not location:
-                                  raise ValueError(f'Redirect without Location: HTTP {r.status_code}')
-                              if redirect_hops >= max_redirects:
-                                  raise ValueError(f'Too many redirects: >{max_redirects}')
-                              candidate = urllib.parse.urljoin(current_url, location)
-                              # Validate redirect target before following it.
-                              assert_public_https(candidate)
-                              r.close()
-                              next_url = candidate
-                              break
-
-                          r.raise_for_status()
-                          return r, total_attempts, redirect_hops
-
-                      except (requests.Timeout, requests.ConnectionError) as e:
-                          last_error = e
-                          if attempt < 3:
-                              time.sleep(2.0 * attempt)
-                              continue
+                              loc=r.headers.get('Location')
+                              if not loc or hops>=5: raise ValueError('bad redirect')
+                              nxt=urllib.parse.urljoin(current,loc); public_https(nxt); r.close(); current=nxt; break
+                          r.raise_for_status(); return r,total,hops
+                      except (requests.Timeout,requests.ConnectionError):
+                          if attempt<3: time.sleep(2*attempt); continue
                           raise
-                      except requests.HTTPError as e:
-                          last_error = e
-                          raise
-
-                  if next_url is not None:
-                      current_url = next_url
-                      continue
-
-                  raise last_error or RuntimeError('remote fetch failed')
-
-              raise RuntimeError('remote fetch redirect loop exhausted')
+                  else: continue
+                  continue
+              raise RuntimeError('redirect loop')
 
           for item in assets:
-              asset_id = str(item.get('id') or '').strip()
-              url = str(item.get('url') or '').strip()
-              rec = {'id': asset_id, 'url': url, 'status': 'FAIL'}
+              asset_id=str(item.get('id') or item.get('asset_id') or '').strip()
+              url=str(item.get('url') or '').strip()
+              rec={'id':asset_id,'url':url,'status':'FAIL'}
               try:
-                  if not asset_id or not url:
-                      raise ValueError('id/url missing')
-                  assert_public_https(url)
-                  r, attempts, redirect_hops = get_with_retry(url)
-                  assert_public_https(r.url)
-
-                  chunks = []
-                  total = 0
-                  max_bytes = 15 * 1024 * 1024
-                  for chunk in r.iter_content(chunk_size=65536):
-                      if not chunk:
-                          continue
-                      total += len(chunk)
-                      if total > max_bytes:
-                          raise ValueError('Image exceeds 15 MB limit')
-                      chunks.append(chunk)
-                  raw = b''.join(chunks)
-                  if len(raw) < 256:
-                      raise ValueError('Downloaded file too small')
-
-                  img = Image.open(io.BytesIO(raw))
-                  img.verify()
-                  fmt = (img.format or '').upper()
-                  # Publication transport contract accepts only these decoded formats.
-                  ext_map = {'JPEG':'.jpg','PNG':'.png','WEBP':'.webp'}
-                  if fmt not in ext_map:
-                      raise ValueError(f'Unsupported decoded image format: {fmt}')
-
-                  filename = f'{asset_id}{ext_map[fmt]}'
-                  path = outdir / filename
-                  path.write_bytes(raw)
-                  rec.update({
-                      'status': 'PASS',
-                      'attempts': attempts,
-                      'redirect_hops': redirect_hops,
-                      'final_url': r.url,
-                      'http_status': r.status_code,
-                      'content_type': r.headers.get('content-type'),
-                      'format': fmt,
-                      'size_bytes': len(raw),
-                      'sha256': hashlib.sha256(raw).hexdigest(),
-                      'file': str(path),
-                  })
-                  result['pass_count'] += 1
+                  if not asset_id or not url: raise ValueError('id/url missing')
+                  public_https(url); r,attempts,hops=get(url); public_https(r.url)
+                  raw=b''; maxb=15*1024*1024
+                  for chunk in r.iter_content(65536):
+                      if chunk:
+                          raw+=chunk
+                          if len(raw)>maxb: raise ValueError('Image exceeds 15 MB')
+                  if len(raw)<256: raise ValueError('too small')
+                  img=Image.open(io.BytesIO(raw)); img.verify(); fmt=(img.format or '').upper()
+                  ext={'JPEG':'.jpg','PNG':'.png','WEBP':'.webp'}.get(fmt)
+                  if not ext: raise ValueError('unsupported format')
+                  path=outdir/f'{asset_id}{ext}'; path.write_bytes(raw)
+                  rec.update(status='PASS',attempts=attempts,redirect_hops=hops,final_url=r.url,format=fmt,size_bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest(),file=str(path))
+                  result['pass_count']+=1
               except Exception as e:
-                  rec['error'] = f'{type(e).__name__}: {e}'
-                  result['fail_count'] += 1
+                  rec['error']=f'{type(e).__name__}: {e}'; result['fail_count']+=1
               result['assets'].append(rec)
-
-          pathlib.Path('download_result.json').write_text(
-              json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8'
-          )
-          print(json.dumps(result, ensure_ascii=False, indent=2))
-          # Individual asset failures are data, not a transport-level job failure.
-          # The caller consumes PASS assets and advances unresolved assets to the next source lane.
+          (outdir/'download_result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
           PY
 
-      - name: Upload image fetch artifact
-        id: upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: image-fetch-${{ github.run_id }}
-          path: |
-            image_fetch_output/
-            download_result.json
-          if-no-files-found: error
-          retention-days: 1
-
-      - name: Print artifact metadata
+      - name: Commit result by request_id
         run: |
-          echo "artifact_id=${{ steps.upload.outputs.artifact-id }}"
-          echo "artifact_url=${{ steps.upload.outputs.artifact-url }}"
-          echo "artifact_digest=${{ steps.upload.outputs.artifact-digest }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add image_fetch_results/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "image fetch result ${GITHUB_SHA}"
+          git push
