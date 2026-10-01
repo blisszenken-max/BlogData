@@ -1,0 +1,33 @@
+{
+  "request_id": "overseas_261002_v966_f09_belt01",
+  "request_path": "image_fetch_requests/overseas_261002_v966_f09_belt01.json",
+  "request_commit": "092542404ceb814f0c903949ce58a3f0fd2dbc26",
+  "assets": [
+    {
+      "id": "V01_BG",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/20250831-DSCF0039.jpg/1280px-20250831-DSCF0039.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/20250831-DSCF0039.jpg/1280px-20250831-DSCF0039.jpg",
+      "format": "JPEG",
+      "size_bytes": 443250,
+      "sha256": "1d997c1f78668a8d19b6349bcb724895f82c85c0736e009aa9e53a5909ad4ca4",
+      "file": "image_fetch_results/overseas_261002_v966_f09_belt01/V01_BG.jpg"
+    },
+    {
+      "id": "V02_BG",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Methow_Valley_Rodeo_-_Belt_Buckly_-_Montana_and_Pixi.jpg/1280px-Methow_Valley_Rodeo_-_Belt_Buckly_-_Montana_and_Pixi.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Methow_Valley_Rodeo_-_Belt_Buckly_-_Montana_and_Pixi.jpg/1280px-Methow_Valley_Rodeo_-_Belt_Buckly_-_Montana_and_Pixi.jpg",
+      "format": "JPEG",
+      "size_bytes": 365024,
+      "sha256": "0c61758f91c9e668b6987e15e554df05e3127a669eadfc34002e27354b5b0aea",
+      "file": "image_fetch_results/overseas_261002_v966_f09_belt01/V02_BG.jpg"
+    }
+  ],
+  "pass_count": 2,
+  "fail_count": 0
+}
