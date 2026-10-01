@@ -1,0 +1,33 @@
+{
+  "request_id": "overseas_261002_newtraditional_f09",
+  "request_path": "image_fetch_requests/overseas_261002_newtraditional_f09.json",
+  "request_commit": "55d67dd350384a3d16ff2e676480f7b77d5a3b7b",
+  "assets": [
+    {
+      "id": "V02_REAL",
+      "url": "https://cdn.mos.cms.futurecdn.net/spANYkESVfDpPQ3ejPWVF9-1280-80.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://cdn.mos.cms.futurecdn.net/spANYkESVfDpPQ3ejPWVF9-1280-80.jpg",
+      "format": "JPEG",
+      "size_bytes": 159286,
+      "sha256": "db237a64231a48d5f0c4e52baa577f52e7d86d57b8dd38d8729ee922480c165b",
+      "file": "image_fetch_results/overseas_261002_newtraditional_f09/V02_REAL.jpg"
+    },
+    {
+      "id": "V03_REAL",
+      "url": "https://cdn.mos.cms.futurecdn.net/bvg7P42vZWaoNx2uLCNNcF.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://cdn.mos.cms.futurecdn.net/bvg7P42vZWaoNx2uLCNNcF.jpg",
+      "format": "JPEG",
+      "size_bytes": 2780689,
+      "sha256": "855cf47996f410876aa3880fe2187243671f5167e672917b99f6319461dd8639",
+      "file": "image_fetch_results/overseas_261002_newtraditional_f09/V03_REAL.jpg"
+    }
+  ],
+  "pass_count": 2,
+  "fail_count": 0
+}
