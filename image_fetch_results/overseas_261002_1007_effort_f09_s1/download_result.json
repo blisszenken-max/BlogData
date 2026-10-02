@@ -1,0 +1,24 @@
+{
+  "request_id": "overseas_261002_1007_effort_f09_s1",
+  "request_path": "image_fetch_requests/overseas_261002_1007_effort_f09_s1.json",
+  "request_commit": "d19a255911a681d59d490b183783f985c9947ff2",
+  "assets": [
+    {
+      "id": "V03_REAL",
+      "url": "https://d1io3yog0oux5.cloudfront.net/_d4e6516391e7a29b8f572b54c9bd7951/michaelsnewsroom/db/446/5000/asset_file/_K8A1449-Edit.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://d1io3yog0oux5.cloudfront.net/_d4e6516391e7a29b8f572b54c9bd7951/michaelsnewsroom/db/446/5000/asset_file/_K8A1449-Edit.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 3000,
+      "height": 2001,
+      "size_bytes": 5268641,
+      "sha256": "2e03a2fbdb42e073aae11a7de308e98e1869059a314696172c3b28668634726b",
+      "file": "image_fetch_results/overseas_261002_1007_effort_f09_s1/V03_REAL.jpg"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 0
+}
