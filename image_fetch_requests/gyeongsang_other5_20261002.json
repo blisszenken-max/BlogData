@@ -1,0 +1,25 @@
+{
+  "request_id": "gyeongsang_other5_20261002",
+  "assets": [
+    {
+      "id": "jinju",
+      "url": "https://wimg.sedaily.com/news/cms/2026/05/19/news-p.v1.20260519.0d4bf456f94b4a2da75904873211170b_P1.jpg"
+    },
+    {
+      "id": "masan",
+      "url": "https://www.knnews.co.kr/edb/nimages/2016/11/20161109.01010104000007.01L.jpg"
+    },
+    {
+      "id": "busan_fireworks",
+      "url": "https://localm.kr/data/photo/2511/20251112170637_7f61deb725ec9f85a48b5214048f5afa_nw00.jpg"
+    },
+    {
+      "id": "daegu_tteok",
+      "url": "https://www.buk.daegu.kr/cmsh/tour/images/tteokbokki_09.jpg"
+    },
+    {
+      "id": "andong_alt",
+      "url": "https://image.newdaily.co.kr/site/data/img/2022/09/26/2022092600229_0.jpg"
+    }
+  ]
+}
