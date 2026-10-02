@@ -1,0 +1,21 @@
+{
+  "request_id": "gyeongsang_gb_supplement_20261002",
+  "assets": [
+    {
+      "id": "andong_real2",
+      "url": "https://image.newdaily.co.kr/site/data/img/2022/09/26/2022092600229_0.jpg"
+    },
+    {
+      "id": "andong_real3",
+      "url": "https://jpn.clubrichtour.co.kr/data_multilang/file/datagokr_Eng/3076524006_4b938371_2689901_image2_1.png"
+    },
+    {
+      "id": "yeongju_real2",
+      "url": "https://umq1gm7a8386.edge.naverncp.com/data2/content/image/2025/10/19/.cache/512/20251019500209.png"
+    },
+    {
+      "id": "yeongju_real3",
+      "url": "https://m.kukinews.com/data/kuk/image/2025/10/18/kuk20251018000084.jpg"
+    }
+  ]
+}
