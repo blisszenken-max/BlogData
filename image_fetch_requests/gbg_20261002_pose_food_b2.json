@@ -1,0 +1,25 @@
+{
+  "request_id": "gbg_20261002_pose_food_b2",
+  "assets": [
+    {
+      "id": "pose_hanbok01",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Gyeongbokgung%20Hanbok%2001%20%2832928645842%29.jpg?width=1920"
+    },
+    {
+      "id": "pose_hanbok02",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Gyeongbokgung%20Hanbok%2002%20%2832957994181%29.jpg?width=1920"
+    },
+    {
+      "id": "pose_couple",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Couple%20waring%20traditional%20Korean%20costumes%20in%20Gyeongbokgung%2Cthe%20Seoul%20palace%2005.jpg?width=1920"
+    },
+    {
+      "id": "food_samgyetang",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Samgye%20tang.jpg?width=1920"
+    },
+    {
+      "id": "food_makguksu",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Mak-guksu.jpg?width=1920"
+    }
+  ]
+}
