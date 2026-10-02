@@ -1,0 +1,25 @@
+{
+  "request_id": "gp045_v23111_gyeongbokgung_top2_20261002_run01_b",
+  "assets": [
+    {
+      "id": "V06_KALGUKSU",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Korean%20noodles-Kalguksu-01.jpg?width=1280"
+    },
+    {
+      "id": "V07_MAKGUKSU",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Korean%20noodles-Makguksu%20yuksu.jpg?width=1280"
+    },
+    {
+      "id": "V08_HOE",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Korean.food-Hoe-02.jpg?width=1280"
+    },
+    {
+      "id": "V09_ORANGE_CHICKEN",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Golden%20Chopsticks%20orange%20chicken.jpg?width=1280"
+    },
+    {
+      "id": "V10_GALBI",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Korean%20barbecue-Galbi-01.jpg?width=1280"
+    }
+  ]
+}
