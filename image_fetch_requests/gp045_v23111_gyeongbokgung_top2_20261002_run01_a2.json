@@ -1,0 +1,25 @@
+{
+  "request_id": "gp045_v23111_gyeongbokgung_top2_20261002_run01_a2",
+  "assets": [
+    {
+      "id": "V01_HYANGWONJEONG_AUTUMN",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/%EA%B0%80%EC%9D%84%EC%86%8D%EC%9D%98%20%ED%96%A5%EC%9B%90%EC%A0%95.jpg?width=1200"
+    },
+    {
+      "id": "V02_GYEONGHOERU",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Gyeongbokgung%20Gyeonghoeru.png?width=1200"
+    },
+    {
+      "id": "V03_GEUNJEONGJEON",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Gyeongbokgung-GeunJeongJeon.jpg?width=1200"
+    },
+    {
+      "id": "V04_HANBOK_POSE",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Gyeongbokgung%20Mar%202025%20118.jpg?width=1200"
+    },
+    {
+      "id": "V05_SAMGYETANG",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Korean%20chicken%20soup-Samgyetang-01.jpg?width=1200"
+    }
+  ]
+}
