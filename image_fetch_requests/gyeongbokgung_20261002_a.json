@@ -1,0 +1,25 @@
+{
+  "request_id": "gyeongbokgung_20261002_a",
+  "assets": [
+    {
+      "id": "hyangwonjeong_autumn",
+      "url": "https://img.seoul.co.kr/img/upload/2025/10/22/SSC_20251022142125.jpg.webp"
+    },
+    {
+      "id": "gyeonghoeru_autumn",
+      "url": "https://scontent.ccdn.cloud/image/vivitravels-it/5b6eab2e-e829-40a5-8906-a60383b04a15/maxw-960.jpg"
+    },
+    {
+      "id": "gyeongbokgung_aerial_autumn",
+      "url": "https://www.chosun.com/resizer/v2/4KJY3DWWFRHDNAIAGHJYVR324Y.jpg?auth=6150134f1862192c4fb3ec9ba107a75b0e76b9fd2c7cb54f45dcc2283b81deba&height=711&smart=true&width=1264"
+    },
+    {
+      "id": "geunjeongjeon_autumn",
+      "url": "https://ak-d.tripcdn.com/images/1mi5212000qrojyd2B937.jpg?proc=source%2Ftrip"
+    },
+    {
+      "id": "gwanghwamun_autumn",
+      "url": "https://st4.depositphotos.com/19085394/38190/i/450/depositphotos_381904088-stock-photo-seoul-korea-november-2019-gwanghwamun.jpg"
+    }
+  ]
+}
