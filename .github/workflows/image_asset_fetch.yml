@@ -91,11 +91,11 @@ jobs:
                           raw+=chunk
                           if len(raw)>maxb: raise ValueError('Image exceeds 15 MB')
                   if len(raw)<256: raise ValueError('too small')
-                  img=Image.open(io.BytesIO(raw)); img.verify(); fmt=(img.format or '').upper()
+                  img=Image.open(io.BytesIO(raw)); width,height=img.size; fmt=(img.format or '').upper(); img.verify()
                   ext={'JPEG':'.jpg','PNG':'.png','WEBP':'.webp'}.get(fmt)
                   if not ext: raise ValueError('unsupported format')
                   path=outdir/f'{asset_id}{ext}'; path.write_bytes(raw)
-                  rec.update(status='PASS',attempts=attempts,redirect_hops=hops,final_url=r.url,format=fmt,size_bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest(),file=str(path))
+                  rec.update(status='PASS',attempts=attempts,redirect_hops=hops,final_url=r.url,format=fmt,decode_status='PASS',width=width,height=height,size_bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest(),file=str(path))
                   result['pass_count']+=1
               except Exception as e:
                   rec['error']=f'{type(e).__name__}: {e}'; result['fail_count']+=1
