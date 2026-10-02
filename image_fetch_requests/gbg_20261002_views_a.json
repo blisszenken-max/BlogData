@@ -1,0 +1,25 @@
+{
+  "request_id": "gbg_20261002_views_a",
+  "assets": [
+    {
+      "id": "view_hyangwonjeong",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/%EA%B0%80%EC%9D%84%EC%98%B7%EC%9D%84%20%EC%9E%85%EC%9D%80%20%ED%96%A5%EC%9B%90%EC%A0%95.jpg?width=1920"
+    },
+    {
+      "id": "view_gyeonghoeru",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Gyeonghoeru%2C%20Gyeongbokgung.jpg?width=1920"
+    },
+    {
+      "id": "view_geunjeongjeon",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Geunjeongjeon%20Seoul.jpg?width=1920"
+    },
+    {
+      "id": "view_amisan",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Ondol%20Chimneys%20in%20the%20Amisan%20Garden%20of%20Gyeongbokgung%20IMG%202062.jpg?width=1920"
+    },
+    {
+      "id": "pose_female_hanbok",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Female%20Hanbok%20From%20South%20Korea.jpg?width=1920"
+    }
+  ]
+}
