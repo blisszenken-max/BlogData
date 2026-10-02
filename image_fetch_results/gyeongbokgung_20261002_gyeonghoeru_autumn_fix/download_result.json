@@ -1,0 +1,24 @@
+{
+  "request_id": "gyeongbokgung_20261002_gyeonghoeru_autumn_fix",
+  "request_path": "image_fetch_requests/gyeongbokgung_20261002_gyeonghoeru_autumn_fix.json",
+  "request_commit": "1f68725e284f09540f0b75ad494c358d451ac3e0",
+  "assets": [
+    {
+      "id": "gyeonghoeru_autumn_fixed",
+      "url": "https://mediahub.seoul.go.kr/uploads/mediahub/2024/11/WNnUnVkROuWhDBwOcKLVmUPxMeqzrkbh.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://mediahub.seoul.go.kr/uploads/mediahub/2024/11/WNnUnVkROuWhDBwOcKLVmUPxMeqzrkbh.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1200,
+      "height": 800,
+      "size_bytes": 253923,
+      "sha256": "ad6e6c206135ae9385ae084a6a43d5909bccdf6566dd0cdeefc9913b04ebdece",
+      "file": "image_fetch_results/gyeongbokgung_20261002_gyeonghoeru_autumn_fix/gyeonghoeru_autumn_fixed.jpg"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 0
+}
