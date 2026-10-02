@@ -1,0 +1,24 @@
+{
+  "request_id": "gyeongbokgung_20261002_food_b",
+  "request_path": "image_fetch_requests/gyeongbokgung_20261002_food_b.json",
+  "request_commit": "1d226b05c2d04b53e4df1a253134380082afc438",
+  "assets": [
+    {
+      "id": "haemok_hitsumabushi",
+      "url": "https://d12zq4w4guyljn.cloudfront.net/750_750_20250208052522525_photo_c59b452c7ed1.webp",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://d12zq4w4guyljn.cloudfront.net/750_750_20250208052522525_photo_c59b452c7ed1.webp",
+      "format": "WEBP",
+      "decode_status": "PASS",
+      "width": 750,
+      "height": 750,
+      "size_bytes": 106894,
+      "sha256": "a353bb5bb43d2d2c142cc48b8a05dcc75d219dc42175180a9b1b638cddced4fc",
+      "file": "image_fetch_results/gyeongbokgung_20261002_food_b/haemok_hitsumabushi.webp"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 0
+}
