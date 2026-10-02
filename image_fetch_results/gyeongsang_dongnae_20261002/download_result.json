@@ -1,0 +1,24 @@
+{
+  "request_id": "gyeongsang_dongnae_20261002",
+  "request_path": "image_fetch_requests/gyeongsang_dongnae_20261002.json",
+  "request_commit": "1fc7b99ee6ddcf3cf2a6990532c7b41b1366ba82",
+  "assets": [
+    {
+      "id": "dongnae",
+      "url": "https://www.dongnae.go.kr/upload_data/board_data/BBS_0000391/176310875895376.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://www.dongnae.go.kr/upload_data/board_data/BBS_0000391/176310875895376.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 2160,
+      "height": 1379,
+      "size_bytes": 1117268,
+      "sha256": "02abfc28825f291180c2156055ce6926f5c66a4b2d7b42fac94df376a89d4cd2",
+      "file": "image_fetch_results/gyeongsang_dongnae_20261002/dongnae.jpg"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 0
+}
