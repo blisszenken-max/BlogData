@@ -1,0 +1,24 @@
+{
+  "request_id": "autumn_capital_20261002_stage2",
+  "request_path": "image_fetch_requests/autumn_capital_20261002_stage2.json",
+  "request_commit": "2cca007b3f162f66d86cc3bf45a9470ffe5bdf8c",
+  "assets": [
+    {
+      "id": "V1",
+      "url": "https://tong.visitkorea.or.kr/cms/resource_photo/55/4063055_image2_1.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://tong.visitkorea.or.kr/cms/resource_photo/55/4063055_image2_1.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 940,
+      "height": 588,
+      "size_bytes": 89334,
+      "sha256": "2388961a3b96780d93459d34963c981f5ba9a5a2e58892483dbe8ebfc8e117ae",
+      "file": "image_fetch_results/autumn_capital_20261002_stage2/V1.jpg"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 0
+}
