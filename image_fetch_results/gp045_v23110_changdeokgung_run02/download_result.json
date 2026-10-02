@@ -1,0 +1,69 @@
+{
+  "request_id": "gp045_v23110_changdeokgung_run02",
+  "request_path": "image_fetch_requests/gp045_v23110_changdeokgung_run02.json",
+  "request_commit": "c20900a39221b6d20792c6e5b49172886bdc4fda",
+  "assets": [
+    {
+      "id": "VIEW_01_BUYONGJI_JUHAMNU",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Juhamnu-001.jpg/1280px-Juhamnu-001.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Juhamnu-001.jpg/1280px-Juhamnu-001.jpg",
+      "format": "JPEG",
+      "size_bytes": 374298,
+      "sha256": "4f0c53adf4cf1124ab1ba6357d72d3d4bcfa5b89e72ee38d9cc2685226ca4a9a",
+      "file": "image_fetch_results/gp045_v23110_changdeokgung_run02/VIEW_01_BUYONGJI_JUHAMNU.jpg"
+    },
+    {
+      "id": "VIEW_02_AERYEONJEONG",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Aeryeonjeong_pavilion_%282017-04-23%29.jpg/1280px-Aeryeonjeong_pavilion_%282017-04-23%29.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Aeryeonjeong_pavilion_%282017-04-23%29.jpg/1280px-Aeryeonjeong_pavilion_%282017-04-23%29.jpg",
+      "format": "JPEG",
+      "size_bytes": 1129860,
+      "sha256": "709f09ed1aca911296cc1600ba8b5e71d92d67bcbcbe4fa9e97e8a53f8605c15",
+      "file": "image_fetch_results/gp045_v23110_changdeokgung_run02/VIEW_02_AERYEONJEONG.jpg"
+    },
+    {
+      "id": "VIEW_03_GWALLAM_JONDEOK",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Changdeokgung_-_Gwanramjeong.jpg/1280px-Changdeokgung_-_Gwanramjeong.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Changdeokgung_-_Gwanramjeong.jpg/1280px-Changdeokgung_-_Gwanramjeong.jpg",
+      "format": "JPEG",
+      "size_bytes": 1010054,
+      "sha256": "d79e5ace63629aa852fac12a5233c711855a1e758fb49100530c0dfb72db7243",
+      "file": "image_fetch_results/gp045_v23110_changdeokgung_run02/VIEW_03_GWALLAM_JONDEOK.jpg"
+    },
+    {
+      "id": "VIEW_04_YEONGYEONGDANG",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Korea-Seoul-Changdeokgung-Yeongyeongdang-01.jpg/1280px-Korea-Seoul-Changdeokgung-Yeongyeongdang-01.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Korea-Seoul-Changdeokgung-Yeongyeongdang-01.jpg/1280px-Korea-Seoul-Changdeokgung-Yeongyeongdang-01.jpg",
+      "format": "JPEG",
+      "size_bytes": 561533,
+      "sha256": "0f4c8646a9cc1174505bac345bf31933aa85a783e4a73e05805a491a596c19f1",
+      "file": "image_fetch_results/gp045_v23110_changdeokgung_run02/VIEW_04_YEONGYEONGDANG.jpg"
+    },
+    {
+      "id": "VIEW_05_HUWON_FOREST",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Biwon_Huwon_of_Changdeokgung.jpg/1280px-Biwon_Huwon_of_Changdeokgung.jpg",
+      "status": "PASS",
+      "attempts": 3,
+      "redirect_hops": 0,
+      "final_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Biwon_Huwon_of_Changdeokgung.jpg/1280px-Biwon_Huwon_of_Changdeokgung.jpg",
+      "format": "JPEG",
+      "size_bytes": 405256,
+      "sha256": "6eb0aefb61a63dc0b861ae77a56ecf44949637267df0df8fa686be5fcb7f5335",
+      "file": "image_fetch_results/gp045_v23110_changdeokgung_run02/VIEW_05_HUWON_FOREST.jpg"
+    }
+  ],
+  "pass_count": 5,
+  "fail_count": 0
+}
