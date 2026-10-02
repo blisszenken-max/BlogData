@@ -1,0 +1,13 @@
+{
+  "request_id": "gyeongsang_andong_20261002",
+  "assets": [
+    {
+      "id": "andong_poster",
+      "url": "https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/644495a7-65e3-42ef-8993-e18e2e71a8bd_57.png"
+    },
+    {
+      "id": "andong_real",
+      "url": "https://cdn.visitkorea.or.kr/kfes/upload/contents/db/644495a7-65e3-42ef-8993-e18e2e71a8bd_1.png"
+    }
+  ]
+}
