@@ -1,0 +1,13 @@
+{
+  "request_id": "gyeongbokgung_20261002_pose_commons",
+  "assets": [
+    {
+      "id": "pose_gwanghwamun_commons",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Tourists_in_Gwanghwamun_to_dress_Hanbok%2C_Korean_traditional_clothes.jpg?width=1600"
+    },
+    {
+      "id": "pose_geunjeongjeon_commons",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Gyeongbokgung_Mar_2025_118.jpg?width=1600"
+    }
+  ]
+}
