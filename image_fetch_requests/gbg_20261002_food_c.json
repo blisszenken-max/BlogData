@@ -1,0 +1,21 @@
+{
+  "request_id": "gbg_20261002_food_c",
+  "assets": [
+    {
+      "id": "food_janchiguksu",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Korean%20noodles-Janchi%20guksu-01.jpg?width=1920"
+    },
+    {
+      "id": "food_squid",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Korean%20stirfried%20dried%20shredded%20squid-Ojingeochae%20bokkeum.jpg?width=1920"
+    },
+    {
+      "id": "food_temple",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Korean%20temple%20cuisine-Sanchon-01.jpg?width=1920"
+    },
+    {
+      "id": "food_coffee",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Coffee%20latte.jpg?width=1920"
+    }
+  ]
+}
