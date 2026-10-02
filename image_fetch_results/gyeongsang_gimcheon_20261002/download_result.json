@@ -1,0 +1,45 @@
+{
+  "request_id": "gyeongsang_gimcheon_20261002",
+  "request_path": "image_fetch_requests/gyeongsang_gimcheon_20261002.json",
+  "request_commit": "40312dc2d0f981f53dce73ab109dbc249c511ba7",
+  "assets": [
+    {
+      "id": "gimcheon_poster",
+      "url": "https://news.nateimg.co.kr/orgImg/cz/2025/10/08/cz_1759870911004_575713_0.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://news.nateimg.co.kr/orgImg/cz/2025/10/08/cz_1759870911004_575713_0.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1712,
+      "height": 2331,
+      "size_bytes": 350900,
+      "sha256": "1da15243086216b6768b38afdf26bd19ba03c4377f6702e8d671934508a32ad5",
+      "file": "image_fetch_results/gyeongsang_gimcheon_20261002/gimcheon_poster.jpg"
+    },
+    {
+      "id": "gimcheon_food",
+      "url": "https://img.seoul.co.kr/img/upload/2025/10/26/SSC_20251026132216_O2.png.webp",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://img.seoul.co.kr/img/upload/2025/10/26/SSC_20251026132216_O2.png.webp",
+      "format": "WEBP",
+      "decode_status": "PASS",
+      "width": 1200,
+      "height": 853,
+      "size_bytes": 428950,
+      "sha256": "d8855a26ee76d9219f466f10f8106d29ac7545752eccc2c96fc8faf22cc78e0c",
+      "file": "image_fetch_results/gyeongsang_gimcheon_20261002/gimcheon_food.webp"
+    },
+    {
+      "id": "gimcheon_crowd",
+      "url": "https://japanese.korea.net/upload/content/editImage/20241101104938725_9TQK9UUE.jpg",
+      "status": "FAIL",
+      "error": "ValueError: unsupported format"
+    }
+  ],
+  "pass_count": 2,
+  "fail_count": 1
+}
