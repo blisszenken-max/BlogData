@@ -1,0 +1,69 @@
+{
+  "request_id": "gbg_20261002_food_c",
+  "request_path": "image_fetch_requests/gbg_20261002_food_c.json",
+  "request_commit": "ac80b152490714e0a7c1753c1bf79226a8e8c590",
+  "assets": [
+    {
+      "id": "food_janchiguksu",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Korean%20noodles-Janchi%20guksu-01.jpg?width=1920",
+      "status": "PASS",
+      "attempts": 2,
+      "redirect_hops": 1,
+      "final_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Korean_noodles-Janchi_guksu-01.jpg/1920px-Korean_noodles-Janchi_guksu-01.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1920,
+      "height": 1285,
+      "size_bytes": 342019,
+      "sha256": "e93b152165d502ed73ef1d04458c2db112436a7725fe133a5ba11ede1d3e2e18",
+      "file": "image_fetch_results/gbg_20261002_food_c/food_janchiguksu.jpg"
+    },
+    {
+      "id": "food_squid",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Korean%20stirfried%20dried%20shredded%20squid-Ojingeochae%20bokkeum.jpg?width=1920",
+      "status": "PASS",
+      "attempts": 2,
+      "redirect_hops": 1,
+      "final_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Korean_stirfried_dried_shredded_squid-Ojingeochae_bokkeum.jpg/1920px-Korean_stirfried_dried_shredded_squid-Ojingeochae_bokkeum.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1920,
+      "height": 1280,
+      "size_bytes": 616060,
+      "sha256": "1cd252c53dbe41a4ebfc110cb5f59ab493c6db8686343f7c24ba38a131003213",
+      "file": "image_fetch_results/gbg_20261002_food_c/food_squid.jpg"
+    },
+    {
+      "id": "food_temple",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Korean%20temple%20cuisine-Sanchon-01.jpg?width=1920",
+      "status": "PASS",
+      "attempts": 2,
+      "redirect_hops": 1,
+      "final_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Korean_temple_cuisine-Sanchon-01.jpg/1920px-Korean_temple_cuisine-Sanchon-01.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1920,
+      "height": 1440,
+      "size_bytes": 1282183,
+      "sha256": "98593643d6d9d9d95e5c3d380c012d606df0bd4f692eb62a21f4925c569ef20a",
+      "file": "image_fetch_results/gbg_20261002_food_c/food_temple.jpg"
+    },
+    {
+      "id": "food_coffee",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Coffee%20latte.jpg?width=1920",
+      "status": "PASS",
+      "attempts": 2,
+      "redirect_hops": 1,
+      "final_url": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Coffee_latte.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 892,
+      "height": 789,
+      "size_bytes": 111599,
+      "sha256": "e46222253df46dd1396583ff16deba481a7cbbfd7ea0ff8c9c2aa66e7344a17d",
+      "file": "image_fetch_results/gbg_20261002_food_c/food_coffee.jpg"
+    }
+  ],
+  "pass_count": 4,
+  "fail_count": 0
+}
