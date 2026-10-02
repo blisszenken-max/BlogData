@@ -1,0 +1,25 @@
+{
+  "request_id": "gyeongbokgung_20261002_food_a2",
+  "assets": [
+    {
+      "id": "tosokchon_samgyetang",
+      "url": "https://livedoor.blogimg.jp/junocuisine/imgs/7/6/767c73ad.jpg"
+    },
+    {
+      "id": "hwangsaengga_kalguksu",
+      "url": "https://img1.daumcdn.net/thumb/R800x0/?fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbL9c3%2FbtrslVZ11n1%2F1OZXePXMpkoQMfAKGBvAJK%2Fimg.jpg&scode=mtistory2"
+    },
+    {
+      "id": "jalppajin_maemil",
+      "url": "https://cf.creatrip.com/original/spot/11701/IMG_5391.JPG"
+    },
+    {
+      "id": "chebudong_janchijip",
+      "url": "https://img.siksinhot.com/place/1579077627523934.jpg"
+    },
+    {
+      "id": "kanda_soba",
+      "url": "https://media.triple.guide/triple-cms/c_limit%2Cf_auto%2Ch_1024%2Cw_1024/0856d978-c451-4e9c-a655-8298c78ebc69.jpeg"
+    }
+  ]
+}
