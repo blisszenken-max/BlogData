@@ -1,0 +1,39 @@
+{
+  "request_id": "autumn_capital_20261002_stage3",
+  "request_path": "image_fetch_requests/autumn_capital_20261002_stage3.json",
+  "request_commit": "dac5f384bf54196f5471acef795bbc5724cd229f",
+  "assets": [
+    {
+      "id": "V2",
+      "url": "https://www.yugacrewapp.com/images/cms/gyeonggi_october_festival_2026_02_6a537faaa5.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://www.yugacrewapp.com/images/cms/gyeonggi_october_festival_2026_02_6a537faaa5.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1400,
+      "height": 933,
+      "size_bytes": 386862,
+      "sha256": "389ee4c07cd15d7dc6acbc737ef8395e4300ff2d235ff4d00f55caf7c04a9848",
+      "file": "image_fetch_results/autumn_capital_20261002_stage3/V2.jpg"
+    },
+    {
+      "id": "V5",
+      "url": "https://www.yugacrewapp.com/images/cms/incheon_october_festival_2026_01_7a871af0b8.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://www.yugacrewapp.com/images/cms/incheon_october_festival_2026_01_7a871af0b8.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1400,
+      "height": 1050,
+      "size_bytes": 294053,
+      "sha256": "91aa1780ee06b84a20125074793a40e223973373e2dfdffaa9267df2bad6e953",
+      "file": "image_fetch_results/autumn_capital_20261002_stage3/V5.jpg"
+    }
+  ],
+  "pass_count": 2,
+  "fail_count": 0
+}
