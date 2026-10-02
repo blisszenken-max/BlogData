@@ -1,0 +1,17 @@
+{
+  "request_id": "autumn_capital_20261002_stage3",
+  "assets": [
+    {
+      "id": "V2",
+      "url": "https://www.yugacrewapp.com/images/cms/gyeonggi_october_festival_2026_02_6a537faaa5.jpg",
+      "license": "KOGL-3",
+      "source_page": "https://www.yugacrew.com/crewletter/gyeonggi-october-festival-2026"
+    },
+    {
+      "id": "V5",
+      "url": "https://www.yugacrewapp.com/images/cms/incheon_october_festival_2026_01_7a871af0b8.jpg",
+      "license": "KOGL-3",
+      "source_page": "https://www.yugacrew.com/crewletter/incheon-october-festival-2026"
+    }
+  ]
+}
