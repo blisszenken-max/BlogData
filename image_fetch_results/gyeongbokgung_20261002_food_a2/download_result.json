@@ -1,0 +1,75 @@
+{
+  "request_id": "gyeongbokgung_20261002_food_a2",
+  "request_path": "image_fetch_requests/gyeongbokgung_20261002_food_a2.json",
+  "request_commit": "53bc29bd549f6dcbcb1ea708d0bab19a0a2a20e1",
+  "assets": [
+    {
+      "id": "tosokchon_samgyetang",
+      "url": "https://livedoor.blogimg.jp/junocuisine/imgs/7/6/767c73ad.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://livedoor.blogimg.jp/junocuisine/imgs/7/6/767c73ad.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1024,
+      "height": 1024,
+      "size_bytes": 149814,
+      "sha256": "025dba33084a6f6000f38be6d289a61640ee245ffaba91b2fe4e04d302dae462",
+      "file": "image_fetch_results/gyeongbokgung_20261002_food_a2/tosokchon_samgyetang.jpg"
+    },
+    {
+      "id": "hwangsaengga_kalguksu",
+      "url": "https://img1.daumcdn.net/thumb/R800x0/?fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbL9c3%2FbtrslVZ11n1%2F1OZXePXMpkoQMfAKGBvAJK%2Fimg.jpg&scode=mtistory2",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://img1.daumcdn.net/thumb/R800x0/?fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbL9c3%2FbtrslVZ11n1%2F1OZXePXMpkoQMfAKGBvAJK%2Fimg.jpg&scode=mtistory2",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 800,
+      "height": 600,
+      "size_bytes": 187941,
+      "sha256": "277a7d3c63f70c723027bfb5c27f1e2b2955d3a5dc3e90db5cca9169f3711dd3",
+      "file": "image_fetch_results/gyeongbokgung_20261002_food_a2/hwangsaengga_kalguksu.jpg"
+    },
+    {
+      "id": "jalppajin_maemil",
+      "url": "https://cf.creatrip.com/original/spot/11701/IMG_5391.JPG",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://cf.creatrip.com/original/spot/11701/IMG_5391.JPG",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 2800,
+      "height": 2100,
+      "size_bytes": 521607,
+      "sha256": "7b80c4d828fc502a053cbdab4016e73699a899276fa165d6a56929777b6ce426",
+      "file": "image_fetch_results/gyeongbokgung_20261002_food_a2/jalppajin_maemil.jpg"
+    },
+    {
+      "id": "chebudong_janchijip",
+      "url": "https://img.siksinhot.com/place/1579077627523934.jpg",
+      "status": "FAIL",
+      "error": "HTTPError: 403 Client Error: Forbidden for url: https://img.siksinhot.com/place/1579077627523934.jpg"
+    },
+    {
+      "id": "kanda_soba",
+      "url": "https://media.triple.guide/triple-cms/c_limit%2Cf_auto%2Ch_1024%2Cw_1024/0856d978-c451-4e9c-a655-8298c78ebc69.jpeg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://media.triple.guide/triple-cms/c_limit%2Cf_auto%2Ch_1024%2Cw_1024/0856d978-c451-4e9c-a655-8298c78ebc69.jpeg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1000,
+      "height": 750,
+      "size_bytes": 164729,
+      "sha256": "73ade98aa271e779c9a07015dc85286389eaf6e0490621cd3d13aeedb0d620d7",
+      "file": "image_fetch_results/gyeongbokgung_20261002_food_a2/kanda_soba.jpg"
+    }
+  ],
+  "pass_count": 4,
+  "fail_count": 1
+}
