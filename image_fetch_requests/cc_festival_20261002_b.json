@@ -1,0 +1,17 @@
+{
+  "request_id": "cc_festival_20261002_b",
+  "assets": [
+    {
+      "id": "daejeon_bread",
+      "url": "https://daejeontour.co.kr/data/editor/2510/1760402260_68e17a88a6ae4f31_01.2024%EB%8C%80%EC%A0%84%20%EB%B9%B5%EC%B6%95%EC%A0%9C%20%284%29.jpg"
+    },
+    {
+      "id": "yuseong",
+      "url": "https://dn.joongdo.co.kr/mnt/images/file/2025y/10m/15d/2025101401000692000029491.jpg"
+    },
+    {
+      "id": "sejong",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/44/3389444_image2_1.jpg"
+    }
+  ]
+}
