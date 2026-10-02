@@ -1,0 +1,69 @@
+{
+  "request_id": "gyeongsang_gb_supplement_20261002",
+  "request_path": "image_fetch_requests/gyeongsang_gb_supplement_20261002.json",
+  "request_commit": "1fd0f1dbb09f4d5966da19c23f087b124cc2d495",
+  "assets": [
+    {
+      "id": "andong_real2",
+      "url": "https://image.newdaily.co.kr/site/data/img/2022/09/26/2022092600229_0.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://image.newdaily.co.kr/site/data/img/2022/09/26/2022092600229_0.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 640,
+      "height": 395,
+      "size_bytes": 144460,
+      "sha256": "85d69c27f356d43ccb7fd66bc88298ad3d03c9b28be3756d0a30538067d9c71f",
+      "file": "image_fetch_results/gyeongsang_gb_supplement_20261002/andong_real2.jpg"
+    },
+    {
+      "id": "andong_real3",
+      "url": "https://jpn.clubrichtour.co.kr/data_multilang/file/datagokr_Eng/3076524006_4b938371_2689901_image2_1.png",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://jpn.clubrichtour.co.kr/data_multilang/file/datagokr_Eng/3076524006_4b938371_2689901_image2_1.png",
+      "format": "PNG",
+      "decode_status": "PASS",
+      "width": 760,
+      "height": 505,
+      "size_bytes": 765309,
+      "sha256": "46da1fed0ab1b00a7efc5e5b3f7a080a453ef802924b2ebd93a82b4ecf066843",
+      "file": "image_fetch_results/gyeongsang_gb_supplement_20261002/andong_real3.png"
+    },
+    {
+      "id": "yeongju_real2",
+      "url": "https://umq1gm7a8386.edge.naverncp.com/data2/content/image/2025/10/19/.cache/512/20251019500209.png",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://umq1gm7a8386.edge.naverncp.com/data2/content/image/2025/10/19/.cache/512/20251019500209.png",
+      "format": "PNG",
+      "decode_status": "PASS",
+      "width": 1014,
+      "height": 675,
+      "size_bytes": 1327968,
+      "sha256": "8ea603fbcb947fceb14e717a4a2619785926f504706db51a6a6725c01eb9e711",
+      "file": "image_fetch_results/gyeongsang_gb_supplement_20261002/yeongju_real2.png"
+    },
+    {
+      "id": "yeongju_real3",
+      "url": "https://m.kukinews.com/data/kuk/image/2025/10/18/kuk20251018000084.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://m.kukinews.com/data/kuk/image/2025/10/18/kuk20251018000084.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1920,
+      "height": 1278,
+      "size_bytes": 2526254,
+      "sha256": "457dc1a0f2ab41d939e9bb0dae6d912548f3c5a5057c0eb7e5167622c2a28101",
+      "file": "image_fetch_results/gyeongsang_gb_supplement_20261002/yeongju_real3.jpg"
+    }
+  ],
+  "pass_count": 4,
+  "fail_count": 0
+}
