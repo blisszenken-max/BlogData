@@ -1,0 +1,39 @@
+{
+  "request_id": "gyeongbokgung_20261002_pose_commons",
+  "request_path": "image_fetch_requests/gyeongbokgung_20261002_pose_commons.json",
+  "request_commit": "da733f10d901935374c5efc68a8b06029f975b26",
+  "assets": [
+    {
+      "id": "pose_gwanghwamun_commons",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Tourists_in_Gwanghwamun_to_dress_Hanbok%2C_Korean_traditional_clothes.jpg?width=1600",
+      "status": "PASS",
+      "attempts": 2,
+      "redirect_hops": 1,
+      "final_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Tourists_in_Gwanghwamun_to_dress_Hanbok%2C_Korean_traditional_clothes.jpg/1920px-Tourists_in_Gwanghwamun_to_dress_Hanbok%2C_Korean_traditional_clothes.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1920,
+      "height": 1280,
+      "size_bytes": 521045,
+      "sha256": "e133c35c11d7be8cfd42e3b87037eaa7ac00b6130df713528464f703f1f606cc",
+      "file": "image_fetch_results/gyeongbokgung_20261002_pose_commons/pose_gwanghwamun_commons.jpg"
+    },
+    {
+      "id": "pose_geunjeongjeon_commons",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Gyeongbokgung_Mar_2025_118.jpg?width=1600",
+      "status": "PASS",
+      "attempts": 2,
+      "redirect_hops": 1,
+      "final_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/Gyeongbokgung_Mar_2025_118.jpg/1920px-Gyeongbokgung_Mar_2025_118.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1920,
+      "height": 1440,
+      "size_bytes": 554967,
+      "sha256": "a87edcfd11a8cb0cb6d9f3b928d7584410405386397f93bafda1fc042b739f7f",
+      "file": "image_fetch_results/gyeongbokgung_20261002_pose_commons/pose_geunjeongjeon_commons.jpg"
+    }
+  ],
+  "pass_count": 2,
+  "fail_count": 0
+}
