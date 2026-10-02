@@ -1,0 +1,21 @@
+{
+  "request_id": "overseas_261002_colordrench_v969_v02",
+  "request_path": "image_fetch_requests/overseas_261002_colordrench_v969_v02.json",
+  "request_commit": "0cbbfd5be52ab62e9005781f8930462d4792c4bc",
+  "assets": [
+    {
+      "id": "V02_REAL",
+      "url": "https://images.pexels.com/photos/19736666/pexels-photo-19736666.jpeg?cs=srgb&dl=pexels-jan-van-der-wolf-11680885-19736666.jpg&fm=jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://images.pexels.com/photos/19736666/pexels-photo-19736666.jpeg?cs=srgb&dl=pexels-jan-van-der-wolf-11680885-19736666.jpg&fm=jpg",
+      "format": "JPEG",
+      "size_bytes": 2388409,
+      "sha256": "3b5e8fbad793832f5c3a2e8de2e4b9348b5ab2f123001fbfb381b4298d8c9bfe",
+      "file": "image_fetch_results/overseas_261002_colordrench_v969_v02/V02_REAL.jpg"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 0
+}
