@@ -1,0 +1,17 @@
+{
+  "request_id": "gyeongsang_gimcheon_20261002",
+  "assets": [
+    {
+      "id": "gimcheon_poster",
+      "url": "https://news.nateimg.co.kr/orgImg/cz/2025/10/08/cz_1759870911004_575713_0.jpg"
+    },
+    {
+      "id": "gimcheon_food",
+      "url": "https://img.seoul.co.kr/img/upload/2025/10/26/SSC_20251026132216_O2.png.webp"
+    },
+    {
+      "id": "gimcheon_crowd",
+      "url": "https://japanese.korea.net/upload/content/editImage/20241101104938725_9TQK9UUE.jpg"
+    }
+  ]
+}
