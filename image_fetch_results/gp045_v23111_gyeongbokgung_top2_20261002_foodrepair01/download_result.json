@@ -1,0 +1,39 @@
+{
+  "request_id": "gp045_v23111_gyeongbokgung_top2_20261002_foodrepair01",
+  "request_path": "image_fetch_requests/gp045_v23111_gyeongbokgung_top2_20261002_foodrepair01.json",
+  "request_commit": "45ce631030d4313ca788b39cfee1f72983a21549",
+  "assets": [
+    {
+      "id": "V06_KALGUKSU_REPAIR",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Korean%20cuisine-Kalguksu%20and%20mandu.jpg?width=1280",
+      "status": "PASS",
+      "attempts": 2,
+      "redirect_hops": 1,
+      "final_url": "https://upload.wikimedia.org/wikipedia/commons/9/94/Korean_cuisine-Kalguksu_and_mandu.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1024,
+      "height": 659,
+      "size_bytes": 367738,
+      "sha256": "a43a5bf596f2c63d7d42a1250d9e4a9b4b1ad954db1878d322618470bc73b4e4",
+      "file": "image_fetch_results/gp045_v23111_gyeongbokgung_top2_20261002_foodrepair01/V06_KALGUKSU_REPAIR.jpg"
+    },
+    {
+      "id": "V07_MAKGUKSU_REPAIR",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Korean%20noodles-Makguksu-01.jpg?width=1280",
+      "status": "PASS",
+      "attempts": 2,
+      "redirect_hops": 1,
+      "final_url": "https://upload.wikimedia.org/wikipedia/commons/d/da/Korean_noodles-Makguksu-01.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 800,
+      "height": 600,
+      "size_bytes": 96679,
+      "sha256": "443af449e4b3e7e784da23bfc86f859f87b9b308f6473fbca946fb43c49d8eee",
+      "file": "image_fetch_results/gp045_v23111_gyeongbokgung_top2_20261002_foodrepair01/V07_MAKGUKSU_REPAIR.jpg"
+    }
+  ],
+  "pass_count": 2,
+  "fail_count": 0
+}
