@@ -1,0 +1,24 @@
+{
+  "request_id": "gyeongbokgung_20261002_geun_fix2",
+  "request_path": "image_fetch_requests/gyeongbokgung_20261002_geun_fix2.json",
+  "request_commit": "02f813c2c079c8923a29d95f52a1e26149edec72",
+  "assets": [
+    {
+      "id": "geunjeongjeon_fixed2",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/%EA%B2%BD%EB%B3%B5%EA%B6%81_%EA%B7%BC%EC%A0%95%EC%A0%84_%EA%B7%BC%EC%A0%95%EC%A0%84_%EC%A0%84%EA%B2%BD%28%EA%B6%81%EB%8A%A5%EC%9C%A0%EC%A0%81%EB%B3%B8%EB%B6%80%29-min.jpg",
+      "status": "PASS",
+      "attempts": 2,
+      "redirect_hops": 1,
+      "final_url": "https://upload.wikimedia.org/wikipedia/commons/e/e6/%EA%B2%BD%EB%B3%B5%EA%B6%81_%EA%B7%BC%EC%A0%95%EC%A0%84_%EA%B7%BC%EC%A0%95%EC%A0%84_%EC%A0%84%EA%B2%BD%28%EA%B6%81%EB%8A%A5%EC%9C%A0%EC%A0%81%EB%B3%B8%EB%B6%80%29-min.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 2000,
+      "height": 1013,
+      "size_bytes": 797225,
+      "sha256": "36268b6788d7e041e1f84dff548f11e8b3da3e294971388ffbf3a073067887b1",
+      "file": "image_fetch_results/gyeongbokgung_20261002_geun_fix2/geunjeongjeon_fixed2.jpg"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 0
+}
