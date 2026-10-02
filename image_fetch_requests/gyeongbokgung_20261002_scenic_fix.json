@@ -1,0 +1,13 @@
+{
+  "request_id": "gyeongbokgung_20261002_scenic_fix",
+  "assets": [
+    {
+      "id": "geunjeongjeon_fixed",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Front_view_of_the_Eastern_side_of_the_Imperial_Throne_Hall_Geunjeongjeon_at_Gyeongbokgung_Palace_in_Seoul.jpg"
+    },
+    {
+      "id": "gyeonghoeru_fixed",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Gyeonghoeru_Pavilion_at_Gyeongbokgung_Palace.jpg"
+    }
+  ]
+}
