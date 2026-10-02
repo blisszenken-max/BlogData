@@ -111,3 +111,10 @@ jobs:
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "image fetch result ${GITHUB_SHA}"
           git push
+
+      - name: Upload correlated image result artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-fetch-results-${{ github.sha }}
+          path: image_fetch_results/
+          if-no-files-found: error
