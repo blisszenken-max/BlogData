@@ -1,0 +1,25 @@
+{
+  "request_id": "gp045_v23110_changdeokgung_run02",
+  "assets": [
+    {
+      "id": "VIEW_01_BUYONGJI_JUHAMNU",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Juhamnu-001.jpg/1280px-Juhamnu-001.jpg"
+    },
+    {
+      "id": "VIEW_02_AERYEONJEONG",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Aeryeonjeong_pavilion_%282017-04-23%29.jpg/1280px-Aeryeonjeong_pavilion_%282017-04-23%29.jpg"
+    },
+    {
+      "id": "VIEW_03_GWALLAM_JONDEOK",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Changdeokgung_-_Gwanramjeong.jpg/1280px-Changdeokgung_-_Gwanramjeong.jpg"
+    },
+    {
+      "id": "VIEW_04_YEONGYEONGDANG",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Korea-Seoul-Changdeokgung-Yeongyeongdang-01.jpg/1280px-Korea-Seoul-Changdeokgung-Yeongyeongdang-01.jpg"
+    },
+    {
+      "id": "VIEW_05_HUWON_FOREST",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Biwon_Huwon_of_Changdeokgung.jpg/1280px-Biwon_Huwon_of_Changdeokgung.jpg"
+    }
+  ]
+}
