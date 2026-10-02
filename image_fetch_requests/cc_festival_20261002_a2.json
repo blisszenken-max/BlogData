@@ -1,0 +1,25 @@
+{
+  "request_id": "cc_festival_20261002_a2",
+  "assets": [
+    {
+      "id": "cheonan",
+      "url": "https://img.seoul.co.kr/img/upload/2023/10/10/SSC_20231010114849.jpg"
+    },
+    {
+      "id": "geumsan",
+      "url": "https://cdnweb01.wikitree.co.kr/webdata/editor/202508/27/img_20250827131914_89b1f9b3.webp"
+    },
+    {
+      "id": "baekje",
+      "url": "https://dimg.donga.com/wps/ECONOMY/IMAGE/2024/09/24/130095662.2.jpg"
+    },
+    {
+      "id": "cheongwon",
+      "url": "https://cdn.jbnews.com/news/photo/202310/1410372_1224708_457.jpg"
+    },
+    {
+      "id": "goesan",
+      "url": "https://french.korea.net/upload/content/editImage/20231109100454812_OGZ9Y1EF.jpg"
+    }
+  ]
+}
