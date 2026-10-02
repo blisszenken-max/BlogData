@@ -1,0 +1,69 @@
+{
+  "request_id": "gyeongbokgung_20261002_pose_results",
+  "request_path": "image_fetch_requests/gyeongbokgung_20261002_pose_results.json",
+  "request_commit": "2fbe6468f6db0677b20df0902e1ff871993dab16",
+  "assets": [
+    {
+      "id": "pose_gwanghwamun",
+      "url": "https://assets.repress.co.kr/photos/bd7a51de071fec0c2668a0823cbd8860/original.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://assets.repress.co.kr/photos/bd7a51de071fec0c2668a0823cbd8860/original.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1500,
+      "height": 1196,
+      "size_bytes": 1878080,
+      "sha256": "03d40bbe72769ebd6b7b3b993bdfb88348da9b1d6ae447210a2a24c0b6293da8",
+      "file": "image_fetch_results/gyeongbokgung_20261002_pose_results/pose_gwanghwamun.jpg"
+    },
+    {
+      "id": "pose_geunjeongjeon",
+      "url": "https://cdn.getyourguide.com/img/tour/fa97656e75ac83c1c0f2025b1c93c97a077e410e0010a94e2b1317d62f2d3bf1.jpeg/155.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://cdn.getyourguide.com/img/tour/fa97656e75ac83c1c0f2025b1c93c97a077e410e0010a94e2b1317d62f2d3bf1.jpeg/155.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1080,
+      "height": 1080,
+      "size_bytes": 377580,
+      "sha256": "686481ac8fd02a09e4884639b42496e2b6583ac5e81dd6b432e520b608259e83",
+      "file": "image_fetch_results/gyeongbokgung_20261002_pose_results/pose_geunjeongjeon.jpg"
+    },
+    {
+      "id": "pose_gyeonghoeru",
+      "url": "https://res.klook.com/images/fl_lossy.progressive%2Cq_65/c_fill%2Cw_884%2Ch_654/w_54%2Cx_10%2Cy_10%2Cg_south_west%2Cl_Klook_water_br_trans_yhcmh3/activities/bq1uznjvrfy5h2j2bbf4/Muslim-FriendlySeoulCityandSuburbHalalDayTour.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://res.klook.com/images/fl_lossy.progressive%2Cq_65/c_fill%2Cw_884%2Ch_654/w_54%2Cx_10%2Cy_10%2Cg_south_west%2Cl_Klook_water_br_trans_yhcmh3/activities/bq1uznjvrfy5h2j2bbf4/Muslim-FriendlySeoulCityandSuburbHalalDayTour.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 884,
+      "height": 654,
+      "size_bytes": 83563,
+      "sha256": "a28723eb50dd82a7295607e69ab89a444998ddd40d28b050af2b0401c7aadf40",
+      "file": "image_fetch_results/gyeongbokgung_20261002_pose_results/pose_gyeonghoeru.jpg"
+    },
+    {
+      "id": "pose_hyangwonjeong",
+      "url": "https://www.ecomedia.co.kr/news/data/20221114/p1065602000329212_908_thum.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://www.ecomedia.co.kr/news/data/20221114/p1065602000329212_908_thum.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 700,
+      "height": 467,
+      "size_bytes": 114643,
+      "sha256": "1e5e0068264f374c5766fbfc4a95bdc3eb97e1f5eacdda8ef567aa04bffa4063",
+      "file": "image_fetch_results/gyeongbokgung_20261002_pose_results/pose_hyangwonjeong.jpg"
+    }
+  ],
+  "pass_count": 4,
+  "fail_count": 0
+}
