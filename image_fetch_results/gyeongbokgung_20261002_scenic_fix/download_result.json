@@ -1,0 +1,30 @@
+{
+  "request_id": "gyeongbokgung_20261002_scenic_fix",
+  "request_path": "image_fetch_requests/gyeongbokgung_20261002_scenic_fix.json",
+  "request_commit": "848a96b33167efa82436831dae7eff21b52211f2",
+  "assets": [
+    {
+      "id": "geunjeongjeon_fixed",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Front_view_of_the_Eastern_side_of_the_Imperial_Throne_Hall_Geunjeongjeon_at_Gyeongbokgung_Palace_in_Seoul.jpg",
+      "status": "FAIL",
+      "error": "HTTPError: 429 Client Error: Too Many Requests (015d12c) for url: https://upload.wikimedia.org/wikipedia/commons/c/c0/Front_view_of_the_Eastern_side_of_the_Imperial_Throne_Hall_Geunjeongjeon_at_Gyeongbokgung_Palace_in_Seoul.jpg"
+    },
+    {
+      "id": "gyeonghoeru_fixed",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Gyeonghoeru_Pavilion_at_Gyeongbokgung_Palace.jpg",
+      "status": "PASS",
+      "attempts": 2,
+      "redirect_hops": 1,
+      "final_url": "https://upload.wikimedia.org/wikipedia/commons/a/a0/Gyeonghoeru_Pavilion_at_Gyeongbokgung_Palace.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 4080,
+      "height": 3072,
+      "size_bytes": 2379242,
+      "sha256": "e975336aa7e25157a4a4ad407c22292b71c089af555b17b95df9b5f862254581",
+      "file": "image_fetch_results/gyeongbokgung_20261002_scenic_fix/gyeonghoeru_fixed.jpg"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 1
+}
