@@ -1,0 +1,49 @@
+{
+  "request_id": "gyeongsang_festival_20261002_final",
+  "assets": [
+    {
+      "id": "andong_poster",
+      "url": "https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/644495a7-65e3-42ef-8993-e18e2e71a8bd_57.png"
+    },
+    {
+      "id": "andong_real",
+      "url": "https://cdn.visitkorea.or.kr/kfes/upload/contents/db/644495a7-65e3-42ef-8993-e18e2e71a8bd_1.png"
+    },
+    {
+      "id": "yeongju_parade",
+      "url": "https://www.kukinews.com/data/kuk/image/2025/10/18/kuk20251018000082.jpg"
+    },
+    {
+      "id": "yeongju_market",
+      "url": "https://cdn.idaegu.co.kr/news/photo/202410/2024101501000479300029341.jpg"
+    },
+    {
+      "id": "gimcheon_poster",
+      "url": "https://news.nateimg.co.kr/orgImg/cz/2025/10/08/cz_1759870911004_575713_0.jpg"
+    },
+    {
+      "id": "gimcheon_food",
+      "url": "https://img.seoul.co.kr/img/upload/2025/10/26/SSC_20251026132216_O2.png.webp"
+    },
+    {
+      "id": "jinju",
+      "url": "https://wimg.sedaily.com/news/cms/2026/05/19/news-p.v1.20260519.0d4bf456f94b4a2da75904873211170b_P1.jpg"
+    },
+    {
+      "id": "masan",
+      "url": "https://www.knnews.co.kr/edb/nimages/2016/11/20161109.01010104000007.01L.jpg"
+    },
+    {
+      "id": "busan_fireworks",
+      "url": "https://localm.kr/data/photo/2511/20251112170637_7f61deb725ec9f85a48b5214048f5afa_nw00.jpg"
+    },
+    {
+      "id": "daegu_tteok",
+      "url": "https://www.buk.daegu.kr/cmsh/tour/images/tteokbokki_09.jpg"
+    },
+    {
+      "id": "gimcheon_crowd",
+      "url": "https://japanese.korea.net/upload/content/editImage/20241101104938725_9TQK9UUE.jpg"
+    }
+  ]
+}
