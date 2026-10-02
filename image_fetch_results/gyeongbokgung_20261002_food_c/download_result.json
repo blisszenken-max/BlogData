@@ -1,0 +1,24 @@
+{
+  "request_id": "gyeongbokgung_20261002_food_c",
+  "request_path": "image_fetch_requests/gyeongbokgung_20261002_food_c.json",
+  "request_commit": "027e693bb16fac46094f40eea97f04d5621145b8",
+  "assets": [
+    {
+      "id": "leedorim_cafe",
+      "url": "https://yukigo.tw/wp-content/uploads/2024/12/LEEDORIM-Coffee32.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://yukigo.tw/wp-content/uploads/2024/12/LEEDORIM-Coffee32.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 900,
+      "height": 675,
+      "size_bytes": 196095,
+      "sha256": "0a24f87a2b9b90ed5f553d89ce779ce2edd14a5fd55e5ac8398f7d149a369c07",
+      "file": "image_fetch_results/gyeongbokgung_20261002_food_c/leedorim_cafe.jpg"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 0
+}
