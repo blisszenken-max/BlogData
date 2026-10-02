@@ -1,0 +1,54 @@
+{
+  "request_id": "cc_festival_20261002_b",
+  "request_path": "image_fetch_requests/cc_festival_20261002_b.json",
+  "request_commit": "f44acb32e3f96b05312b8cf3820c5a8cded22a91",
+  "assets": [
+    {
+      "id": "daejeon_bread",
+      "url": "https://daejeontour.co.kr/data/editor/2510/1760402260_68e17a88a6ae4f31_01.2024%EB%8C%80%EC%A0%84%20%EB%B9%B5%EC%B6%95%EC%A0%9C%20%284%29.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://daejeontour.co.kr/data/editor/2510/1760402260_68e17a88a6ae4f31_01.2024%EB%8C%80%EC%A0%84%20%EB%B9%B5%EC%B6%95%EC%A0%9C%20%284%29.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 4000,
+      "height": 2667,
+      "size_bytes": 1879819,
+      "sha256": "dd526fffb7e990ab91d4b07fb31e888638de717206d88d0795d296ea5af85b18",
+      "file": "image_fetch_results/cc_festival_20261002_b/daejeon_bread.jpg"
+    },
+    {
+      "id": "yuseong",
+      "url": "https://dn.joongdo.co.kr/mnt/images/file/2025y/10m/15d/2025101401000692000029491.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://dn.joongdo.co.kr/mnt/images/file/2025y/10m/15d/2025101401000692000029491.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 730,
+      "height": 526,
+      "size_bytes": 161181,
+      "sha256": "d396091b91fb6323a154c60ca2ce14bf297dbb428a8f3ec902a0d6d64a941869",
+      "file": "image_fetch_results/cc_festival_20261002_b/yuseong.jpg"
+    },
+    {
+      "id": "sejong",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/44/3389444_image2_1.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://tong.visitkorea.or.kr/cms/resource/44/3389444_image2_1.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 940,
+      "height": 627,
+      "size_bytes": 87962,
+      "sha256": "384bc4f3eb83fe427dd820ef1d38bdd5b8cfa8b23d9ae1e1f37ec8919066bfcc",
+      "file": "image_fetch_results/cc_festival_20261002_b/sejong.jpg"
+    }
+  ],
+  "pass_count": 3,
+  "fail_count": 0
+}
