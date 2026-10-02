@@ -1,0 +1,21 @@
+{
+  "request_id": "autumn_capital_20261002_stage4",
+  "request_path": "image_fetch_requests/autumn_capital_20261002_stage4.json",
+  "request_commit": "ff0008229d50b27c55919c127cf44b508b4570bf",
+  "assets": [
+    {
+      "id": "V3",
+      "url": "https://gnews.gg.go.kr/OP_UPDATA/UP_DATA/_FILEZ/201511/20151103151243092744969.jpg",
+      "status": "FAIL",
+      "error": "ConnectTimeout: HTTPSConnectionPool(host='gnews.gg.go.kr', port=443): Max retries exceeded with url: /OP_UPDATA/UP_DATA/_FILEZ/201511/20151103151243092744969.jpg (Caused by ConnectTimeoutError(<HTTPSConnection(host='gnews.gg.go.kr', port=443) at 0x7f65b5090da0>, 'Connection to gnews.gg.go.kr timed out. (connect timeout=10)'))"
+    },
+    {
+      "id": "V4",
+      "url": "https://gnews.gg.go.kr/UP_FILES/_UP_BS_FILEZ/202606/1%EF%BC%8D1%20%ED%95%9C%ED%83%84%EA%B0%95%20%ED%92%88%EC%9D%80%20%EC%A0%95%EC%9B%90%EC%B6%95%EC%A0%9C%20%E2%80%982026%20%ED%8F%AC%EC%B2%9C%20%ED%95%9C%ED%83%84%EA%B0%95%20%EB%B4%84%20%EA%B0%80%EB%93%A0%ED%8E%98%EC%8A%A4%ED%83%80%E2%80%99%EF%BC%8C%2016%EB%A7%8C%20%EB%AA%85%20%EB%B0%9C%EA%B8%B8%20%EC%86%8D%20%EB%A7%88%EB%AC%B4%EB%A6%AC.jpg",
+      "status": "FAIL",
+      "error": "ConnectTimeout: HTTPSConnectionPool(host='gnews.gg.go.kr', port=443): Max retries exceeded with url: /UP_FILES/_UP_BS_FILEZ/202606/1%EF%BC%8D1%20%ED%95%9C%ED%83%84%EA%B0%95%20%ED%92%88%EC%9D%80%20%EC%A0%95%EC%9B%90%EC%B6%95%EC%A0%9C%20%E2%80%982026%20%ED%8F%AC%EC%B2%9C%20%ED%95%9C%ED%83%84%EA%B0%95%20%EB%B4%84%20%EA%B0%80%EB%93%A0%ED%8E%98%EC%8A%A4%ED%83%80%E2%80%99%EF%BC%8C%2016%EB%A7%8C%20%EB%AA%85%20%EB%B0%9C%EA%B8%B8%20%EC%86%8D%20%EB%A7%88%EB%AC%B4%EB%A6%AC.jpg (Caused by ConnectTimeoutError(<HTTPSConnection(host='gnews.gg.go.kr', port=443) at 0x7f65b5091130>, 'Connection to gnews.gg.go.kr timed out. (connect timeout=10)'))"
+    }
+  ],
+  "pass_count": 0,
+  "fail_count": 2
+}
