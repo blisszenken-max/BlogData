@@ -1,0 +1,25 @@
+{
+  "request_id": "jeolla_realphotos_20261004_b2",
+  "assets": [
+    {
+      "id": "jeongeup2",
+      "url": "https://www.domin.co.kr/news/photo/201808/1207667_331912_4615.jpg"
+    },
+    {
+      "id": "yeosu1",
+      "url": "https://cdn.newscj.com/news/photo/202411/3197094_3243429_230.jpg"
+    },
+    {
+      "id": "jangseong1",
+      "url": "https://www.ktsketch.co.kr/news/photo/202309/7715_39747_554.jpg"
+    },
+    {
+      "id": "jangseong2",
+      "url": "https://newsprime.co.kr/data/photos/cdn/20241042/art_658264_1728890662.jpg"
+    },
+    {
+      "id": "mokpo1",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/87/3498987_image2_1.jpg"
+    }
+  ]
+}
