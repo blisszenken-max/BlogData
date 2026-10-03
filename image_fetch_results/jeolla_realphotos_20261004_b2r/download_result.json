@@ -1,0 +1,75 @@
+{
+  "request_id": "jeolla_realphotos_20261004_b2r",
+  "request_path": "image_fetch_requests/jeolla_realphotos_20261004_b2r.json",
+  "request_commit": "88d76208fec5eb3cec5e7b70a32fe18fcb2a72a3",
+  "assets": [
+    {
+      "id": "jeongeup2",
+      "url": "https://www.domin.co.kr/news/photo/201808/1207667_331912_4615.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://www.domin.co.kr/news/photo/201808/1207667_331912_4615.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1400,
+      "height": 929,
+      "size_bytes": 1217996,
+      "sha256": "c17e93f42de76ecd775e24b78fa7ace67f816ceb99ff95aa86d92b765971c76a",
+      "file": "image_fetch_results/jeolla_realphotos_20261004_b2r/jeongeup2.jpg"
+    },
+    {
+      "id": "yeosu1",
+      "url": "https://cdn.newscj.com/news/photo/202411/3197094_3243429_230.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://cdn.newscj.com/news/photo/202411/3197094_3243429_230.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 600,
+      "height": 400,
+      "size_bytes": 131843,
+      "sha256": "8c655f95762e8fcc0c906bc3e534e0133cede70aa29c2133ae5329ab6383e62f",
+      "file": "image_fetch_results/jeolla_realphotos_20261004_b2r/yeosu1.jpg"
+    },
+    {
+      "id": "jangseong1",
+      "url": "https://www.ktsketch.co.kr/news/photo/202309/7715_39747_554.jpg",
+      "status": "FAIL",
+      "error": "SSLError: HTTPSConnectionPool(host='www.ktsketch.co.kr', port=443): Max retries exceeded with url: /news/photo/202309/7715_39747_554.jpg (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))"
+    },
+    {
+      "id": "jangseong2",
+      "url": "https://newsprime.co.kr/data/photos/cdn/20241042/art_658264_1728890662.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://newsprime.co.kr/data/photos/cdn/20241042/art_658264_1728890662.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 670,
+      "height": 447,
+      "size_bytes": 176735,
+      "sha256": "525d9b698507f1d38f316ba3b4bb61c177da0850c4c64e2b46038176a27403a6",
+      "file": "image_fetch_results/jeolla_realphotos_20261004_b2r/jangseong2.jpg"
+    },
+    {
+      "id": "mokpo1",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/87/3498987_image2_1.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://tong.visitkorea.or.kr/cms/resource/87/3498987_image2_1.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 940,
+      "height": 625,
+      "size_bytes": 205623,
+      "sha256": "fc6625f00774f16c075e0eb8a898d6b15385e4b41be054d5c6738f9e53ad4385",
+      "file": "image_fetch_results/jeolla_realphotos_20261004_b2r/mokpo1.jpg"
+    }
+  ],
+  "pass_count": 4,
+  "fail_count": 1
+}
