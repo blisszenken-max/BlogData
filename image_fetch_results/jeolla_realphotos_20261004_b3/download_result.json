@@ -1,0 +1,45 @@
+{
+  "request_id": "jeolla_realphotos_20261004_b3",
+  "request_path": "image_fetch_requests/jeolla_realphotos_20261004_b3.json",
+  "request_commit": "7b2c5baf3a4ab5c5465c8feac0da1532c9490098",
+  "assets": [
+    {
+      "id": "mokpo2",
+      "url": "https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/47010e81-432c-42b0-a5f7-aaac7a07dbc2_20.jpeg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/47010e81-432c-42b0-a5f7-aaac7a07dbc2_20.jpeg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 940,
+      "height": 625,
+      "size_bytes": 88473,
+      "sha256": "7b18564df7c0a8d5ec9669d17a0f7f129cbf590b27058f2f9c3b86d2fa100f37",
+      "file": "image_fetch_results/jeolla_realphotos_20261004_b3/mokpo2.jpg"
+    },
+    {
+      "id": "gwangju1",
+      "url": "https://kimchi.gwangju.go.kr/home/www/images/page/2025_festival04_01.jpg",
+      "status": "FAIL",
+      "error": "HTTPError: 404 Client Error: Not Found for url: https://kimchi.gwangju.go.kr/home/www/images/page/2025_festival04_01.jpg"
+    },
+    {
+      "id": "gwangju2",
+      "url": "https://static.wixstatic.com/media/f3f4bd_ff4e7c3410844c6aa7e6dfbf90e9552d~mv2.jpg/v1/fill/w_1000%2Ch_750%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01/f3f4bd_ff4e7c3410844c6aa7e6dfbf90e9552d~mv2.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://static.wixstatic.com/media/f3f4bd_ff4e7c3410844c6aa7e6dfbf90e9552d~mv2.jpg/v1/fill/w_1000%2Ch_750%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01/f3f4bd_ff4e7c3410844c6aa7e6dfbf90e9552d~mv2.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1000,
+      "height": 750,
+      "size_bytes": 277030,
+      "sha256": "ab9f3fd11ac6c4fac20bccd14b9cf31b31928311110b6855638718eb06b84bb8",
+      "file": "image_fetch_results/jeolla_realphotos_20261004_b3/gwangju2.jpg"
+    }
+  ],
+  "pass_count": 2,
+  "fail_count": 1
+}
