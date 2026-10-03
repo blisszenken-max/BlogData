@@ -1,0 +1,57 @@
+{
+  "request_id": "jeolla_realphotos_20261004_a",
+  "assets": [
+    {
+      "id": "jeonju1",
+      "url": "https://tour.jeonju.go.kr/images/visitjj/contents/now/2510_bibimbap/bibimbap_img01_01.jpg"
+    },
+    {
+      "id": "jeonju2",
+      "url": "https://tour.jeonju.go.kr/images/visitjj/contents/now/2510_bibimbap/bibimbap_img01_02.jpg"
+    },
+    {
+      "id": "imsil1",
+      "url": "https://www.imsilfestival.com/layouts/bluebDesign_2025N/image/sub/481/p481_1.jpg"
+    },
+    {
+      "id": "imsil2",
+      "url": "https://www.imsilfestival.com/layouts/bluebDesign_2024N/image/sub/481/p481_3.jpg"
+    },
+    {
+      "id": "jeongeup1",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/30/3411630_image2_1.JPG"
+    },
+    {
+      "id": "jeongeup2",
+      "url": "https://www.domin.co.kr/news/photo/201808/1207667_331912_4615.jpg"
+    },
+    {
+      "id": "yeosu1",
+      "url": "https://cdn.newscj.com/news/photo/202411/3197094_3243429_230.jpg"
+    },
+    {
+      "id": "jangseong1",
+      "url": "https://www.ktsketch.co.kr/news/photo/202309/7715_39747_554.jpg"
+    },
+    {
+      "id": "jangseong2",
+      "url": "https://newsprime.co.kr/data/photos/cdn/20241042/art_658264_1728890662.jpg"
+    },
+    {
+      "id": "mokpo1",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/87/3498987_image2_1.jpg"
+    },
+    {
+      "id": "mokpo2",
+      "url": "https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/47010e81-432c-42b0-a5f7-aaac7a07dbc2_20.jpeg"
+    },
+    {
+      "id": "gwangju1",
+      "url": "https://kimchi.gwangju.go.kr/home/www/images/page/2025_festival04_01.jpg"
+    },
+    {
+      "id": "gwangju2",
+      "url": "https://static.wixstatic.com/media/f3f4bd_ff4e7c3410844c6aa7e6dfbf90e9552d~mv2.jpg/v1/fill/w_1000%2Ch_750%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01/f3f4bd_ff4e7c3410844c6aa7e6dfbf90e9552d~mv2.jpg"
+    }
+  ]
+}
