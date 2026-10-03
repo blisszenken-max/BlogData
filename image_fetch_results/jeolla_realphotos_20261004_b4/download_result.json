@@ -1,0 +1,54 @@
+{
+  "request_id": "jeolla_realphotos_20261004_b4",
+  "request_path": "image_fetch_requests/jeolla_realphotos_20261004_b4.json",
+  "request_commit": "b0ff71439098ac8fd7598a8163877e20e6c1c557",
+  "assets": [
+    {
+      "id": "yeosu2",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/61/3548861_image2_1.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://tong.visitkorea.or.kr/cms/resource/61/3548861_image2_1.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 443,
+      "height": 627,
+      "size_bytes": 55911,
+      "sha256": "bac0da2e7f427b9fe7d83cef1673ce75c445f5593d14d42a101536d3c8a77fca",
+      "file": "image_fetch_results/jeolla_realphotos_20261004_b4/yeosu2.jpg"
+    },
+    {
+      "id": "jangseong3",
+      "url": "https://cdn.focus1.kr/news/photo/202309/52202_55917_2935.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://cdn.focus1.kr/news/photo/202309/52202_55917_2935.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 600,
+      "height": 400,
+      "size_bytes": 80260,
+      "sha256": "b0b5a8284c345cc8df93587927159aa4dc86498478e0e33fba7aa569b8481e17",
+      "file": "image_fetch_results/jeolla_realphotos_20261004_b4/jangseong3.jpg"
+    },
+    {
+      "id": "gwangju3",
+      "url": "https://img.khan.co.kr/yhap/2023/11/22/l_2023112301000805700081921.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://img.khan.co.kr/yhap/2023/11/22/l_2023112301000805700081921.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 700,
+      "height": 463,
+      "size_bytes": 312497,
+      "sha256": "384185f5e6318546c44d42bf7c779280184d7b56c590c2ff3fcd6d465c4e40b3",
+      "file": "image_fetch_results/jeolla_realphotos_20261004_b4/gwangju3.jpg"
+    }
+  ],
+  "pass_count": 3,
+  "fail_count": 0
+}
