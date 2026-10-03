@@ -1,0 +1,24 @@
+{
+  "request_id": "jeolla_realphotos_20261004_b5",
+  "request_path": "image_fetch_requests/jeolla_realphotos_20261004_b5.json",
+  "request_commit": "949a719c6213516da57807da4e1dc8bc8999d082",
+  "assets": [
+    {
+      "id": "gwangju4",
+      "url": "https://file2.nocutnews.co.kr/newsroom/image/2025/10/31/202510311541044929_0.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://file2.nocutnews.co.kr/newsroom/image/2025/10/31/202510311541044929_0.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 710,
+      "height": 471,
+      "size_bytes": 511953,
+      "sha256": "d4bff82ab789d0a57ab207d9b8781756e9559858a309535f8e310a17f0e7a4de",
+      "file": "image_fetch_results/jeolla_realphotos_20261004_b5/gwangju4.jpg"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 0
+}
