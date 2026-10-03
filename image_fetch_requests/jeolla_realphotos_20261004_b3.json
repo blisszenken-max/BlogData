@@ -1,0 +1,17 @@
+{
+  "request_id": "jeolla_realphotos_20261004_b3",
+  "assets": [
+    {
+      "id": "mokpo2",
+      "url": "https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/47010e81-432c-42b0-a5f7-aaac7a07dbc2_20.jpeg"
+    },
+    {
+      "id": "gwangju1",
+      "url": "https://kimchi.gwangju.go.kr/home/www/images/page/2025_festival04_01.jpg"
+    },
+    {
+      "id": "gwangju2",
+      "url": "https://static.wixstatic.com/media/f3f4bd_ff4e7c3410844c6aa7e6dfbf90e9552d~mv2.jpg/v1/fill/w_1000%2Ch_750%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01/f3f4bd_ff4e7c3410844c6aa7e6dfbf90e9552d~mv2.jpg"
+    }
+  ]
+}
