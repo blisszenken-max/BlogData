@@ -1,0 +1,25 @@
+{
+  "request_id": "jeolla_realphotos_20261004_b1r",
+  "assets": [
+    {
+      "id": "jeonju1",
+      "url": "https://tour.jeonju.go.kr/images/visitjj/contents/now/2510_bibimbap/bibimbap_img01_01.jpg"
+    },
+    {
+      "id": "jeonju2",
+      "url": "https://tour.jeonju.go.kr/images/visitjj/contents/now/2510_bibimbap/bibimbap_img01_02.jpg"
+    },
+    {
+      "id": "imsil1",
+      "url": "https://www.imsilfestival.com/layouts/bluebDesign_2025N/image/sub/481/p481_1.jpg"
+    },
+    {
+      "id": "imsil2",
+      "url": "https://www.imsilfestival.com/layouts/bluebDesign_2024N/image/sub/481/p481_3.jpg"
+    },
+    {
+      "id": "jeongeup1",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/30/3411630_image2_1.JPG"
+    }
+  ]
+}
