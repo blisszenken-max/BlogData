@@ -53,7 +53,11 @@ jobs:
           assert d['policy_sha256']=='c12d7cc5a87981d6cc6af52b92fa19c6f5e276a73a37ecf2026984a74fcb0226'
           print('health PASS', d)
           PY
-          curl -fsS -X POST "$BASE/api/overseas-gateway"             -H 'content-type: application/json'             --data "{"op":"boot","policy_sha256":"$POLICY_SHA"}"             -o /tmp/boot.json || true
+          python - <<'PY'
+          import json, os
+          json.dump({'op':'boot','policy_sha256':os.environ['POLICY_SHA']}, open('/tmp/request.json','w'))
+          PY
+          curl -sS -X POST "$BASE/api/overseas-gateway"             -H 'content-type: application/json'             --data-binary @/tmp/request.json             -o /tmp/boot.json
           python - <<'PY'
           import json
           h=json.load(open('/tmp/health.json'))
