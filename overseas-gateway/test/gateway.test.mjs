@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import { handleGateway } from '../lib/core.mjs';
+import fs from 'node:fs';
+const M=JSON.parse(fs.readFileSync(new URL('../data/manifest.json',import.meta.url),'utf8'));
+const secret='test-secret-abcdefghijklmnopqrstuvwxyz-0123456789';
+const boot=handleGateway({op:'boot',policy_sha256:M.policy_sha256},secret);
+assert.equal(boot.ok,true);
+let state=boot.state_token;
+let ins=handleGateway({op:'inspect',state_token:state},secret);
+assert.equal(ins.state.stage,'F00');
+assert.throws(()=>handleGateway({op:'grant',state_token:state,tool_class:'IMAGE_GEN',operation:'x',payload:{}},secret),/TOOL_CLASS_NOT_ALLOWED/);
+const g=handleGateway({op:'grant',state_token:state,tool_class:'DRIVE_READ',operation:'policy-read',payload:{id:'x'}},secret);
+assert.equal(handleGateway({op:'authorize',state_token:state,grant_token:g.grant_token,payload:{id:'x'}},secret).authorized,true);
+assert.throws(()=>handleGateway({op:'authorize',state_token:state,grant_token:g.grant_token,payload:{id:'y'}},secret),/REQUEST_HASH_MISMATCH/);
+assert.equal(handleGateway({op:'ready',state_token:state},secret).ready,false);
+assert.throws(()=>handleGateway({op:'commit',state_token:state,receipt:{exact_saved_byte_readback:true}},secret),/COMMIT_ONLY_AT_F15/);
+assert.throws(()=>handleGateway({op:'close_stage',state_token:state,rule_outcomes:[],metrics:{}},secret),/RULE_OUTCOME_COVERAGE_INCOMPLETE/);
+console.log('gateway tests: PASS');
