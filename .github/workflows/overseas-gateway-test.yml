@@ -1,0 +1,28 @@
+name: Overseas Gateway Test
+
+on:
+  push:
+    branches: [main, overseas-gateway-hobby-r1]
+    paths:
+      - 'overseas-gateway/**'
+      - '.github/workflows/overseas-gateway-test.yml'
+  pull_request:
+    paths:
+      - 'overseas-gateway/**'
+      - '.github/workflows/overseas-gateway-test.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: overseas-gateway
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm test
