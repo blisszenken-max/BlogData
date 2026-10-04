@@ -1,0 +1,35 @@
+name: Vercel Ready Check Once
+on:
+  push:
+    paths:
+      - '.github/workflows/vercel-ready-check-once.yml'
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check production health
+        env:
+          BASE: https://blog-data-omega.vercel.app
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 20); do
+            code=$(curl -sS -o /tmp/health.json -w '%{http_code}' "$BASE/api/overseas-health" || true)
+            if [ "$code" = "200" ]; then break; fi
+            sleep 3
+          done
+          echo "HTTP=$code"
+          cat /tmp/health.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/health.json'))
+          print('MODE='+str(d.get('mode')))
+          print('POLICY='+str(d.get('policy_version')))
+          print('STAGES='+str(d.get('stage_count')))
+          print('SECRET_CONFIGURED='+str(bool(d.get('secret_configured'))).lower())
+          assert d.get('ok') is True
+          assert d.get('mode')=='vercel-hobby-merkle-r2'
+          assert d.get('policy_version')=='v9.76'
+          assert d.get('stage_count')==19
+          PY
