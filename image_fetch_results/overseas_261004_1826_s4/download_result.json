@@ -1,0 +1,15 @@
+{
+  "request_id": "overseas_261004_1826_s4",
+  "request_path": "image_fetch_requests/overseas_261004_1826_s4.json",
+  "request_commit": "500efc196414a66bfb4715630dec6b3451f3a306",
+  "assets": [
+    {
+      "id": "V01_stage4_bag",
+      "url": "https://jaccadeaux.com/cdn/shop/files/IMG-4119.jpg?crop=center&height=1000&v=1739167522&width=1000",
+      "status": "FAIL",
+      "error": "HTTPError: 404 Client Error: Not Found for url: https://jaccadeaux.com/cdn/shop/files/IMG-4119.jpg?crop=center&height=1000&v=1739167522&width=1000"
+    }
+  ],
+  "pass_count": 0,
+  "fail_count": 1
+}
