@@ -40,7 +40,7 @@ jobs:
           if [ "${GITHUB_REF_NAME}" = "main" ]; then BASE="$PROD_URL"; else BASE="$PREVIEW_URL"; fi
           ok=0
           for i in $(seq 1 20); do
-            if curl -fsS "$BASE/api/overseas-health" -o /tmp/health.json; then ok=1; break; fi
+            if curl -LfsS --max-redirs 5 "$BASE/api/overseas-health" -o /tmp/health.json; then ok=1; break; fi
             sleep 5
           done
           test "$ok" = "1"
@@ -58,7 +58,7 @@ jobs:
           with open('/tmp/request.json','w') as f:
               json.dump({'op':'boot','policy_sha256':os.environ['POLICY_SHA']}, f)
           PY
-          HTTP_CODE=$(curl -sS -D /tmp/boot.headers -o /tmp/boot.json -w '%{http_code}' -X POST "$BASE/api/overseas-gateway"             -H 'content-type: application/json'             --data-binary @/tmp/request.json)
+          HTTP_CODE=$(curl -LsS --max-redirs 5 -D /tmp/boot.headers -o /tmp/boot.json -w '%{http_code}' -X POST "$BASE/api/overseas-gateway"             -H 'content-type: application/json'             --data-binary @/tmp/request.json)
           echo "gateway HTTP=$HTTP_CODE"
           cat /tmp/boot.headers
           echo "gateway body:"
