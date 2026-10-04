@@ -26,9 +26,10 @@ jobs:
       - run: python -m pip install requests pillow
 
       - name: Download validate and publish correlated result
+        id: fetch_assets
         run: |
           python - <<'PY'
-          import hashlib, io, ipaddress, json, pathlib, socket, subprocess, time, urllib.parse
+          import hashlib, io, ipaddress, json, os, pathlib, socket, subprocess, time, urllib.parse
           import requests
           from PIL import Image
 
@@ -46,6 +47,8 @@ jobs:
 
           outdir=pathlib.Path('image_fetch_results')/request_id
           outdir.mkdir(parents=True,exist_ok=True)
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as output:
+              output.write(f'result_dir={outdir.as_posix()}\n')
           result={'request_id':request_id,'request_path':request_path,'request_commit':head,'assets':[],'pass_count':0,'fail_count':0}
           session=requests.Session(); session.headers.update({'User-Agent':'BlogDataImageFetcher/1.2'})
 
@@ -104,10 +107,12 @@ jobs:
           PY
 
       - name: Commit result by request_id
+        env:
+          RESULT_DIR: ${{ steps.fetch_assets.outputs.result_dir }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add image_fetch_results/
+          git add -- "$RESULT_DIR"
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "image fetch result ${GITHUB_SHA}"
           git push
@@ -116,5 +121,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: image-fetch-results-${{ github.sha }}
-          path: image_fetch_results/
+          path: ${{ steps.fetch_assets.outputs.result_dir }}
           if-no-files-found: error
