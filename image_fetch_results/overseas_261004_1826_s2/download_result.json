@@ -1,0 +1,54 @@
+{
+  "request_id": "overseas_261004_1826_s2",
+  "request_path": "image_fetch_requests/overseas_261004_1826_s2.json",
+  "request_commit": "0254d600e21b32687c38660d3e48edb968a967ec",
+  "assets": [
+    {
+      "id": "V01_editorial",
+      "url": "https://cdn.mos.cms.futurecdn.net/whowhatwear/posts/279977/best-shopping-in-new-york-city-279977-1558109609639-main.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://cdn.mos.cms.futurecdn.net/whowhatwear/posts/279977/best-shopping-in-new-york-city-279977-1558109609639-main.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1200,
+      "height": 1200,
+      "size_bytes": 697110,
+      "sha256": "988649825ae2e281aaefcf8c292c8d1faabd9b3f83d4e2328564f359b0d8f13f",
+      "file": "image_fetch_results/overseas_261004_1826_s2/V01_editorial.jpg"
+    },
+    {
+      "id": "V03_Julie",
+      "url": "https://cdn.mos.cms.futurecdn.net/FGrCKvnwk45bycUzuHzkiV.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://cdn.mos.cms.futurecdn.net/FGrCKvnwk45bycUzuHzkiV.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 2048,
+      "height": 2560,
+      "size_bytes": 1294238,
+      "sha256": "d154c5bc84ce840f0a4c86d490381eebe66171113460ae8e8acb8d271dc897ef",
+      "file": "image_fetch_results/overseas_261004_1826_s2/V03_Julie.jpg"
+    },
+    {
+      "id": "V04_Emili",
+      "url": "https://cdn.mos.cms.futurecdn.net/LLi9HtNMvKgoGDkv6fkauD.jpg",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://cdn.mos.cms.futurecdn.net/LLi9HtNMvKgoGDkv6fkauD.jpg",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1080,
+      "height": 1439,
+      "size_bytes": 538183,
+      "sha256": "7c899190aafe4645a222210940375e8f88041c06c92db8efc8cdfef5a2f1336e",
+      "file": "image_fetch_results/overseas_261004_1826_s2/V04_Emili.jpg"
+    }
+  ],
+  "pass_count": 3,
+  "fail_count": 0
+}
