@@ -1,6 +1,0 @@
-{
-  "functions": {
-    "api/gateway.mjs": { "maxDuration": 10 },
-    "api/health.mjs": { "maxDuration": 5 }
-  }
-}
