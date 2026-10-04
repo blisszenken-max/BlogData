@@ -55,9 +55,16 @@ jobs:
           PY
           python - <<'PY'
           import json, os
-          json.dump({'op':'boot','policy_sha256':os.environ['POLICY_SHA']}, open('/tmp/request.json','w'))
+          with open('/tmp/request.json','w') as f:
+              json.dump({'op':'boot','policy_sha256':os.environ['POLICY_SHA']}, f)
           PY
-          curl -sS -X POST "$BASE/api/overseas-gateway"             -H 'content-type: application/json'             --data-binary @/tmp/request.json             -o /tmp/boot.json
+          HTTP_CODE=$(curl -sS -D /tmp/boot.headers -o /tmp/boot.json -w '%{http_code}' -X POST "$BASE/api/overseas-gateway"             -H 'content-type: application/json'             --data-binary @/tmp/request.json)
+          echo "gateway HTTP=$HTTP_CODE"
+          cat /tmp/boot.headers
+          echo "gateway body:"
+          cat /tmp/boot.json || true
+          echo
+          test -s /tmp/boot.json
           python - <<'PY'
           import json
           h=json.load(open('/tmp/health.json'))
