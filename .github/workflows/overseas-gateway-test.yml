@@ -5,10 +5,14 @@ on:
     branches: [main, overseas-gateway-hobby-r1]
     paths:
       - 'overseas-gateway/**'
+      - 'offmuse-site/api/overseas-*.mjs'
+      - 'offmuse-site/gateway/**'
       - '.github/workflows/overseas-gateway-test.yml'
   pull_request:
     paths:
       - 'overseas-gateway/**'
+      - 'offmuse-site/api/overseas-*.mjs'
+      - 'offmuse-site/gateway/**'
       - '.github/workflows/overseas-gateway-test.yml'
 
 permissions:
@@ -26,3 +30,38 @@ jobs:
         with:
           node-version: '22'
       - run: npm test
+
+      - name: Smoke test Vercel gateway
+        env:
+          PREVIEW_URL: https://blog-data-git-overseas-gateway-hobby-r1-blisszenken-9114.vercel.app
+          PROD_URL: https://blog-data-omega.vercel.app
+          POLICY_SHA: c12d7cc5a87981d6cc6af52b92fa19c6f5e276a73a37ecf2026984a74fcb0226
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then BASE="$PROD_URL"; else BASE="$PREVIEW_URL"; fi
+          ok=0
+          for i in $(seq 1 20); do
+            if curl -fsS "$BASE/api/overseas-health" -o /tmp/health.json; then ok=1; break; fi
+            sleep 5
+          done
+          test "$ok" = "1"
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/health.json'))
+          assert d['ok'] is True
+          assert d['policy_version']=='v9.76'
+          assert d['stage_count']==19
+          assert d['policy_sha256']=='c12d7cc5a87981d6cc6af52b92fa19c6f5e276a73a37ecf2026984a74fcb0226'
+          print('health PASS', d)
+          PY
+          curl -fsS -X POST "$BASE/api/overseas-gateway"             -H 'content-type: application/json'             --data "{"op":"boot","policy_sha256":"$POLICY_SHA"}"             -o /tmp/boot.json || true
+          python - <<'PY'
+          import json
+          h=json.load(open('/tmp/health.json'))
+          b=json.load(open('/tmp/boot.json'))
+          if h.get('secret_configured'):
+              assert b.get('ok') is True and b.get('state_token')
+              print('secret configured: signed boot PASS')
+          else:
+              assert b.get('ok') is False and b.get('error')=='GATEWAY_SECRET_NOT_CONFIGURED'
+              print('secret absent: fail-closed PASS')
+          PY
