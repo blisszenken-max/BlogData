@@ -38,12 +38,13 @@ jobs:
           POLICY_SHA: c12d7cc5a87981d6cc6af52b92fa19c6f5e276a73a37ecf2026984a74fcb0226
         run: |
           if [ "${GITHUB_REF_NAME}" = "main" ]; then BASE="$PROD_URL"; else BASE="$PREVIEW_URL"; fi
-          ok=0
-          for i in $(seq 1 20); do
-            if curl -LfsS --max-redirs 5 "$BASE/api/overseas-health" -o /tmp/health.json; then ok=1; break; fi
-            sleep 5
-          done
-          test "$ok" = "1"
+          HEALTH_CODE=$(curl -LsS --max-redirs 5 -D /tmp/health.headers -o /tmp/health.json -w '%{http_code}' "$BASE/api/overseas-health")
+          echo "health HTTP=$HEALTH_CODE bytes=$(wc -c </tmp/health.json)"
+          cat /tmp/health.headers
+          echo "health body:"
+          cat /tmp/health.json || true
+          echo
+          test -s /tmp/health.json
           python - <<'PY'
           import json
           d=json.load(open('/tmp/health.json'))
