@@ -41,7 +41,8 @@ function compare(actual,spec){
   return actual===spec;
 }
 function pct(ok,total){ return total>0 && ok===total ? '100%' : `${total?Math.round(ok*100/total):0}%`; }
-function stageContract(stage){ const c=MANIFEST.stages[stage]; if(!c) throw new Error('UNKNOWN_STAGE'); return c; }
+function stageContract(stage){ const c=MANIFEST.stages[stage]; if(!c) throw new Error('UNKNOWN_STAGE:'+stage); return c; }
+function phaseStages(phase){ const v=MANIFEST.phases?.[phase]; if(!Array.isArray(v)||v.length<1) throw new Error('UNKNOWN_PHASE:'+phase); return v; }
 function redisEnv(env){ return {url:(env.UPSTASH_REDIS_REST_URL||env.KV_REST_API_URL||'').replace(/\/$/,''),token:env.UPSTASH_REDIS_REST_TOKEN||env.KV_REST_API_TOKEN||''}; }
 export function stateStoreConfigured(env=process.env){ const r=redisEnv(env); return !!(r.url&&r.token); }
 
@@ -59,8 +60,8 @@ export class MemoryStateStore{
   async cas(k,e,n){const raw=this.map.get(k);if(raw===undefined)return 0;if(raw!==e)return -1;this.map.set(k,JSON.stringify(n));return 1;}
 }
 function stateKey(runId){return 'ogw:r3lite:run:'+runId;}
-function newState(runId,policy,now){return {schema:'overseas-run-state-r3-lite',rev:0,run_id:runId,policy_sha256:policy,stage:'F00',closed:[],terminal:'NOT_READY',chain_digest:sha('GENESIS:'+runId),created_at:now,updated_at:now};}
-function tokenFor(s,secret,now){return sign({typ:'state',v:'r3-lite',run_id:s.run_id,rev:s.rev,policy_sha256:s.policy_sha256,iat:now,exp:now+TOKEN_TTL_MS},secret);}
+function newState(runId,policy,now){return {schema:'overseas-run-state-r3-lite-phase',rev:0,run_id:runId,policy_sha256:policy,phase:MANIFEST.phase_order[0],closed:[],terminal:'NOT_READY',chain_digest:sha('GENESIS:'+runId),created_at:now,updated_at:now};}
+function tokenFor(s,secret,now){return sign({typ:'state',v:'r3-lite-phase',run_id:s.run_id,rev:s.rev,policy_sha256:s.policy_sha256,iat:now,exp:now+TOKEN_TTL_MS},secret);}
 async function loadState(token,secret,store,now){const t=verify(token,secret,'state',now);const rec=await store.get(stateKey(t.run_id));if(!rec)throw new Error('RUN_STATE_NOT_FOUND');const s=rec.value;if(s.run_id!==t.run_id||s.policy_sha256!==t.policy_sha256)throw new Error('RUN_STATE_BINDING_MISMATCH');if(s.rev!==t.rev)throw new Error('STALE_STATE_TOKEN');return {raw:rec.raw,state:s};}
 async function persist(ctx,store,now){ctx.state.rev+=1;ctx.state.updated_at=now;const r=await store.cas(stateKey(ctx.state.run_id),ctx.raw,ctx.state);if(r===-1)throw new Error('STATE_CONFLICT');if(r===0)throw new Error('RUN_STATE_NOT_FOUND');}
 const arr=v=>Array.isArray(v)?v:[];
@@ -107,6 +108,24 @@ function validateStage(stage,p,s){
   return metrics;
 }
 
+function expectedPhaseIndex(phase){const i=MANIFEST.phase_order.indexOf(phase);if(i<0)throw new Error('UNKNOWN_PHASE:'+phase);return i;}
+function validatePhasePacket(phase,packet,s){
+  if(!packet||typeof packet!=='object'||Array.isArray(packet)) throw new Error('BAD_PHASE_PACKET');
+  const expected=phaseStages(phase);
+  const stagePackets=packet.stages;
+  if(!stagePackets||typeof stagePackets!=='object'||Array.isArray(stagePackets)) throw new Error('BAD_PHASE_STAGE_SET');
+  const got=Object.keys(stagePackets).sort();
+  const need=[...expected].sort();
+  if(canonical(got)!==canonical(need)) throw new Error('PHASE_STAGE_SET_MISMATCH:'+phase);
+  const shadow={...s,closed:[...s.closed]};
+  const metrics={};
+  for(const stage of expected){
+    metrics[stage]=validateStage(stage,stagePackets[stage],shadow);
+    shadow.closed.push(stage);
+  }
+  return {metrics,closed:shadow.closed};
+}
+
 export async function handleGateway(body,env=process.env,deps={}){
   const secret=env.GATEWAY_SECRET||''; if(secret.length<24) throw new Error('GATEWAY_SECRET_NOT_CONFIGURED');
   const now=deps.now?deps.now():Date.now(); const store=deps.store||new UpstashStateStore(env); const uuid=deps.uuid||(()=>crypto.randomUUID()); const op=body?.op;
@@ -117,20 +136,22 @@ export async function handleGateway(body,env=process.env,deps={}){
     return {ok:true,manifest:publicManifestSummary(env),state_token:tokenFor(s,secret,now)};
   }
   const ctx=await loadState(body.state_token,secret,store,now),s=ctx.state;
-  if(op==='inspect') return {ok:true,state:{run_id:s.run_id,rev:s.rev,stage:s.stage,closed:s.closed,terminal:s.terminal},contract:{name:stageContract(s.stage).name,next:stageContract(s.stage).next,hard_gates:stageContract(s.stage).hard_gates}};
+  if(op==='inspect') return {ok:true,state:{run_id:s.run_id,rev:s.rev,phase:s.phase,closed:s.closed,terminal:s.terminal},contract:{phase:s.phase,stages:phaseStages(s.phase)}};
   if(op==='ready') return {ok:true,ready:s.terminal==='DONE',terminal:s.terminal,reason:s.terminal==='DONE'?'CONTROLLER_TERMINAL_DONE':'MODEL_TEXT_HAS_NO_TERMINAL_AUTHORITY'};
   if(s.terminal==='DONE') throw new Error('RUN_ALREADY_DONE');
-  if(op==='complete_stage'){
-    const stage=s.stage,c=stageContract(stage),packet=body.packet||{};
-    const metrics=validateStage(stage,packet,s);
-    const stage_digest=sha({stage,packet_digest:sha(packet),metrics,policy_sha256:MANIFEST.policy_sha256,contract_root:c.merkle_root||null,chain_before:s.chain_digest});
-    s.closed=[...s.closed,stage]; s.chain_digest=sha(s.chain_digest+'|'+stage_digest);
-    if(stage==='F18'){s.terminal='DONE';}
-    else{s.stage=c.next;}
+  if(op==='complete_phase'){
+    const phase=s.phase;
+    if(body.phase!==phase) throw new Error('PHASE_MISMATCH:expected='+phase+':got='+String(body.phase));
+    const validated=validatePhasePacket(phase,body.packet||{},s);
+    const phase_digest=sha({phase,stage_packet_digest:sha(body.packet?.stages||{}),stage_metrics:validated.metrics,policy_sha256:MANIFEST.policy_sha256,chain_before:s.chain_digest});
+    s.closed=validated.closed; s.chain_digest=sha(s.chain_digest+'|PHASE|'+phase+'|'+phase_digest);
+    const idx=expectedPhaseIndex(phase);
+    if(idx===MANIFEST.phase_order.length-1){s.terminal='DONE';}
+    else{s.phase=MANIFEST.phase_order[idx+1];}
     await persist(ctx,store,now);
-    return {ok:true,closed_stage:stage,next_stage:s.stage,terminal:s.terminal,verified_metrics:metrics,stage_digest,chain_digest:s.chain_digest,state_token:tokenFor(s,secret,now)};
+    return {ok:true,closed_phase:phase,next_phase:s.terminal==='DONE'?'DONE':s.phase,closed_stages:phaseStages(phase),terminal:s.terminal,ready:s.terminal==='DONE',verified_metrics:validated.metrics,phase_digest,chain_digest:s.chain_digest,state_token:tokenFor(s,secret,now)};
   }
   throw new Error('UNKNOWN_OPERATION');
 }
-export function publicManifestSummary(env=process.env){return {schema:'overseas-gateway-r3-lite',policy_version:MANIFEST.policy_version,policy_sha256:MANIFEST.policy_sha256,catalog_sha256:MANIFEST.catalog_sha256,stage_count:MANIFEST.stage_count,state_store_configured:stateStoreConfigured(env),execution_authority:'STAGE_CONTROL_ONLY'};}
-export const __test={canonical,sha,stateKey,deriveMetrics,validateStage,newState,tokenFor};
+export function publicManifestSummary(env=process.env){return {schema:MANIFEST.schema,policy_version:MANIFEST.policy_version,policy_sha256:MANIFEST.policy_sha256,catalog_sha256:MANIFEST.catalog_sha256,stage_count:MANIFEST.stage_count,phase_count:MANIFEST.phase_count,phase_order:MANIFEST.phase_order,state_store_configured:stateStoreConfigured(env),execution_authority:'PHASE_CONTROL_ONLY'};}
+export const __test={canonical,sha,stateKey,deriveMetrics,validateStage,validatePhasePacket,newState,tokenFor,phaseStages};
