@@ -24,7 +24,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           set -euo pipefail
-          jq -r '.issue.body // ""' "$GITHUB_EVENT_PATH" > /tmp/request.json
+          jq -j '.issue.body // ""' "$GITHUB_EVENT_PATH" > /tmp/request.json
           gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[consumed]' >/dev/null
           python - <<'PY'
           import json
