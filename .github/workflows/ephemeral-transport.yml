@@ -31,7 +31,7 @@ jobs:
           import json
           d=json.load(open('/tmp/request.json',encoding='utf-8'))
           assert isinstance(d,dict)
-          assert d.get('op') in {'boot','inspect','complete_phase','ready'}
+          assert d.get('op') in {'boot','complete_phase','final_validate','inspect','ready'}
           PY
       - name: Forward to Vercel gateway
         env:
