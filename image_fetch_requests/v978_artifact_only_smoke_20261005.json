@@ -1,0 +1,9 @@
+{
+  "request_id": "v978_artifact_only_smoke_20261005",
+  "assets": [
+    {
+      "id": "smoke_png",
+      "url": "https://raw.githubusercontent.com/github/explore/main/topics/python/python.png"
+    }
+  ]
+}
