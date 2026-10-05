@@ -1,6 +1,27 @@
 {
-  "schema": "overseas-gateway-r3-lite-phase-v3",
+  "schema": "overseas-gateway-r3-lite-final-v1",
   "stage_count": 19,
+  "stage_order": [
+    "F00",
+    "F01",
+    "F02",
+    "F03",
+    "F04",
+    "F05",
+    "F06",
+    "F07",
+    "F08",
+    "F09",
+    "F10",
+    "F11",
+    "F12",
+    "F13",
+    "F14",
+    "F15",
+    "F16",
+    "F17",
+    "F18"
+  ],
   "stages": {
     "F00": {
       "stage": "F00",
@@ -362,44 +383,10 @@
       }
     }
   },
-  "phase_count": 4,
-  "phase_order": [
-    "CONTENT",
-    "VISUAL_CONTENT",
-    "ARTIFACT",
-    "DELIVERY"
-  ],
-  "phases": {
-    "CONTENT": [
-      "F00",
-      "F01",
-      "F02",
-      "F03",
-      "F04",
-      "F05",
-      "F06",
-      "F07"
-    ],
-    "VISUAL_CONTENT": [
-      "F08",
-      "F09",
-      "F10",
-      "F11",
-      "F12"
-    ],
-    "ARTIFACT": [
-      "F13",
-      "F14"
-    ],
-    "DELIVERY": [
-      "F15",
-      "F16",
-      "F17",
-      "F18"
-    ]
-  },
-  "control_contract_id": "OVERSEAS_CONTROL_CONTRACT_V1",
+  "validation_model": "BOOT_FINAL_VALIDATE",
+  "normal_gateway_calls": 2,
+  "control_contract_id": "OVERSEAS_CONTROL_CONTRACT_V2",
   "policy_family": "OVERSEAS_TREND_BLOG",
-  "ready_rule": "DELIVERY_COMPLETE_PHASE_ALL_PASS",
-  "control_contract_sha256": "2459da88db146f41451ec8110772f60728e173a435eda571e72a993ba2386e65"
+  "ready_rule": "FINAL_VALIDATE_ALL_PASS",
+  "control_contract_sha256": "8896668c5818c03f7c700550b44dc01ffa1135388a35ce9be1c4cf04fe52a92d"
 }
