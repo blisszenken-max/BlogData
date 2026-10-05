@@ -1,0 +1,40 @@
+name: Vercel R3 Probe Once
+on:
+  push:
+    paths:
+      - '.github/workflows/vercel-r3-probe-once.yml'
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe R3 candidate
+        env:
+          BASE: https://blog-data-omega.vercel.app
+          POLICY_SHA: c12d7cc5a87981d6cc6af52b92fa19c6f5e276a73a37ecf2026984a74fcb0226
+        run: |
+          set -euo pipefail
+          h=$(curl -sS -w '\n%{http_code}' "$BASE/api/overseas-health-r3")
+          echo "$h"
+          python - <<'PY'
+          import json,urllib.request,urllib.error,os
+          base=os.environ['BASE']; policy=os.environ['POLICY_SHA']
+          health=json.loads(urllib.request.urlopen(base+'/api/overseas-health-r3').read().decode())
+          print('R3_HEALTH',health)
+          assert health['ok'] is True
+          assert health['mode']=='vercel-hobby-authoritative-r3'
+          assert health['state_store_configured'] is False
+          assert health['executor_attestation_configured'] is False
+          data=json.dumps({'op':'boot','policy_sha256':policy}).encode()
+          req=urllib.request.Request(base+'/api/overseas-gateway-r3',data=data,headers={'content-type':'application/json'},method='POST')
+          try:
+              urllib.request.urlopen(req)
+              raise AssertionError('boot unexpectedly succeeded')
+          except urllib.error.HTTPError as e:
+              body=json.loads(e.read().decode())
+              print('R3_BOOT_HTTP',e.code,body)
+              assert e.code==400
+              assert body['error']=='STATE_STORE_NOT_CONFIGURED'
+          print('R3_FAIL_CLOSED=PASS')
+          PY
