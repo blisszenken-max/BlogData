@@ -1,11 +1,10 @@
-import { publicManifestSummary } from '../gateway/core.mjs';
+import { publicManifestSummary } from '../gateway-r3-lite/core.mjs';
 
 export default function handler(req,res) {
   return res.status(200).json({
     ok:true,
     service:'overseas-trend-gateway',
-    mode:'vercel-hobby-merkle-r2',
-    secret_configured:!!process.env.GATEWAY_SECRET,
-    ...publicManifestSummary()
+    mode:'r3-lite-stage-control',
+    ...publicManifestSummary(process.env)
   });
 }
