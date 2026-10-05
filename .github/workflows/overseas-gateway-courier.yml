@@ -25,29 +25,30 @@ jobs:
           jq -r '.issue.body // ""' "$GITHUB_EVENT_PATH" > /tmp/request.json
           python - <<'PY'
           import json
-          p='/tmp/request.json'
-          d=json.load(open(p,encoding='utf-8'))
+          d=json.load(open('/tmp/request.json',encoding='utf-8'))
           assert isinstance(d,dict)
           assert d.get('op') in {'boot','inspect','complete_stage','ready'}
           print('REQUEST_OP='+d['op'])
           PY
 
           HTTP_CODE=$(curl -sS -o /tmp/gateway.json -w '%{http_code}'             -X POST "$GATEWAY_URL"             -H 'content-type: application/json'             --data-binary @/tmp/request.json)
+          export HTTP_CODE
 
           python - <<'PY'
           import json,os
-          code=int(os.environ.get('HTTP_CODE','0') or 0)
-          try:d=json.load(open('/tmp/gateway.json',encoding='utf-8'))
-          except Exception:d={'ok':False,'error':'NON_JSON_GATEWAY_RESPONSE'}
+          code=int(os.environ['HTTP_CODE'])
+          try:
+              d=json.load(open('/tmp/gateway.json',encoding='utf-8'))
+          except Exception:
+              d={'ok':False,'error':'NON_JSON_GATEWAY_RESPONSE'}
           out={'transport':'github-issue-courier-v1','http_code':code,'gateway':d}
-          open('/tmp/comment.md','w',encoding='utf-8').write('GATEWAY_RESULT\n\n```json\n'+json.dumps(out,ensure_ascii=False,separators=(',',':'))+'\n```')
+          body='GATEWAY_RESULT\n\n```json\n'+json.dumps(out,ensure_ascii=False,separators=(',',':'))+'\n```'
+          open('/tmp/comment.md','w',encoding='utf-8').write(body)
           PY
 
-          gh api "repos/$REPO/issues/$ISSUE_NUMBER/comments" -f body=@/tmp/comment.md
+          gh api "repos/$REPO/issues/$ISSUE_NUMBER/comments" -F body=@/tmp/comment.md
           gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f state=closed
 
           if [ "$HTTP_CODE" -ge 500 ]; then
             exit 1
           fi
-        env:
-          HTTP_CODE: ${{ env.HTTP_CODE }}
