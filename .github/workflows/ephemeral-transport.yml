@@ -1,0 +1,269 @@
+name: Ephemeral Overseas and Shorts Transport
+
+on:
+  issues:
+    types: [reopened]
+
+permissions:
+  contents: read
+  issues: write
+  actions: write
+
+concurrency:
+  group: ephemeral-transport-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  gateway:
+    if: github.event.issue.number == 59
+    runs-on: ubuntu-latest
+    steps:
+      - name: Capture and scrub request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          jq -r '.issue.body // ""' "$GITHUB_EVENT_PATH" > /tmp/request.json
+          gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[consumed]' >/dev/null
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/request.json',encoding='utf-8'))
+          assert isinstance(d,dict)
+          assert d.get('op') in {'boot','inspect','complete_phase','ready'}
+          PY
+      - name: Forward to Vercel gateway
+        env:
+          GATEWAY_URL: https://blog-data-omega.vercel.app/api/overseas-gateway
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/gateway-result
+          HTTP_CODE=$(curl -sS -o /tmp/gateway.json -w '%{http_code}' -X POST "$GATEWAY_URL" -H 'content-type: application/json' --data-binary @/tmp/request.json)
+          export HTTP_CODE
+          python - <<'PY'
+          import json,os
+          code=int(os.environ['HTTP_CODE'])
+          try: d=json.load(open('/tmp/gateway.json',encoding='utf-8'))
+          except Exception: d={'ok':False,'error':'NON_JSON_GATEWAY_RESPONSE'}
+          out={'transport':'github-singleton-issue-artifact-courier-v3','http_code':code,'workflow_run_id':os.environ.get('GITHUB_RUN_ID'),'gateway':d}
+          open('/tmp/gateway-result/result.json','w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,separators=(',',':')))
+          PY
+      - name: Upload one-day gateway result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: overseas-gateway-result-${{ github.run_id }}
+          path: /tmp/gateway-result/result.json
+          if-no-files-found: warn
+          retention-days: 1
+      - name: Close singleton issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[idle]' -f state=closed >/dev/null
+      - name: Fail on server or transport error
+        if: always()
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          p=pathlib.Path('/tmp/gateway-result/result.json')
+          if not p.exists(): raise SystemExit(1)
+          code=int(json.loads(p.read_text()).get('http_code',0))
+          if code>=500 or code==0: raise SystemExit(1)
+          PY
+
+  image:
+    if: github.event.issue.number == 60
+    runs-on: ubuntu-latest
+    steps:
+      - name: Capture and scrub request
+        id: request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          jq -r '.issue.body // ""' "$GITHUB_EVENT_PATH" > /tmp/request.json
+          gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[consumed]' >/dev/null
+          python - <<'PY'
+          import hashlib,json,os
+          raw=open('/tmp/request.json','rb').read(); d=json.loads(raw.decode('utf-8'))
+          rid=str(d.get('request_id') or '').strip(); assets=d.get('assets') or []
+          assert rid and 1<=len(assets)<=5
+          assert all(c in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-' for c in rid)
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              f.write('request_id='+rid+'\n'); f.write('request_payload_sha256='+hashlib.sha256(raw).hexdigest()+'\n')
+          PY
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check requests pillow
+      - name: Download and validate
+        id: fetch_assets
+        env:
+          REQUEST_ID: ${{ steps.request.outputs.request_id }}
+          REQUEST_PAYLOAD_SHA256: ${{ steps.request.outputs.request_payload_sha256 }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python - <<'PY'
+          import hashlib,io,ipaddress,json,os,pathlib,socket,time,urllib.parse
+          import requests
+          from PIL import Image
+          data=json.loads(pathlib.Path('/tmp/request.json').read_text(encoding='utf-8')); request_id=os.environ['REQUEST_ID']; assets=data.get('assets') or []
+          outdir=pathlib.Path('/tmp/image_fetch_results')/request_id; outdir.mkdir(parents=True,exist_ok=True)
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f: f.write(f'result_dir={outdir.as_posix()}\n')
+          result={'request_id':request_id,'request_payload_sha256':os.environ['REQUEST_PAYLOAD_SHA256'],'request_issue_number':int(os.environ['ISSUE_NUMBER']),'workflow_run_id':int(os.environ['GITHUB_RUN_ID']),'assets':[],'pass_count':0,'fail_count':0}
+          session=requests.Session(); session.headers.update({'User-Agent':'BlogDataImageFetcher/1.4'})
+          def public_https(url):
+              p=urllib.parse.urlparse(url)
+              if p.scheme!='https' or not p.hostname: raise ValueError('Only public https URLs allowed')
+              ips=sorted({x[4][0] for x in socket.getaddrinfo(p.hostname,p.port or 443,type=socket.SOCK_STREAM)})
+              if not ips: raise ValueError('DNS returned no address')
+              for raw in ips:
+                  if not ipaddress.ip_address(raw).is_global: raise ValueError('Non-public target blocked')
+          def get(url):
+              current=url; total=0
+              for hops in range(6):
+                  public_https(current)
+                  for attempt in range(1,4):
+                      total+=1
+                      try:
+                          r=session.get(current,timeout=(10,25),allow_redirects=False,stream=True)
+                          if r.status_code in {429,500,502,503,504} and attempt<3: r.close(); time.sleep(2*attempt); continue
+                          if 300<=r.status_code<400:
+                              loc=r.headers.get('Location')
+                              if not loc or hops>=5: raise ValueError('bad redirect')
+                              nxt=urllib.parse.urljoin(current,loc); public_https(nxt); r.close(); current=nxt; break
+                          r.raise_for_status(); return r,total,hops
+                      except (requests.Timeout,requests.ConnectionError):
+                          if attempt<3: time.sleep(2*attempt); continue
+                          raise
+                  else: continue
+                  continue
+              raise RuntimeError('redirect loop')
+          for item in assets:
+              asset_id=str(item.get('id') or item.get('asset_id') or '').strip(); url=str(item.get('url') or '').strip(); rec={'id':asset_id,'url':url,'status':'FAIL'}
+              try:
+                  if not asset_id or not url: raise ValueError('id/url missing')
+                  public_https(url); r,attempts,hops=get(url); public_https(r.url)
+                  buf=io.BytesIO(); maxb=15*1024*1024
+                  for chunk in r.iter_content(65536):
+                      if chunk:
+                          buf.write(chunk)
+                          if buf.tell()>maxb: raise ValueError('Image exceeds 15 MB')
+                  raw=buf.getvalue()
+                  if len(raw)<256: raise ValueError('too small')
+                  img=Image.open(io.BytesIO(raw)); width,height=img.size; fmt=(img.format or '').upper(); img.verify()
+                  ext={'JPEG':'.jpg','PNG':'.png','WEBP':'.webp'}.get(fmt)
+                  if not ext: raise ValueError('unsupported format')
+                  path=outdir/f'{asset_id}{ext}'; path.write_bytes(raw)
+                  rec.update(status='PASS',attempts=attempts,redirect_hops=hops,final_url=r.url,format=fmt,decode_status='PASS',width=width,height=height,size_bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest(),file=path.name); result['pass_count']+=1
+              except Exception as e:
+                  rec['error']=f'{type(e).__name__}: {e}'; result['fail_count']+=1
+              result['assets'].append(rec)
+          (outdir/'download_result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Upload one-day image result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-fetch-results-${{ github.run_id }}
+          path: ${{ steps.fetch_assets.outputs.result_dir }}
+          if-no-files-found: warn
+          retention-days: 1
+      - name: Close singleton issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[idle]' -f state=closed >/dev/null
+
+  tts:
+    if: github.event.issue.number == 61
+    runs-on: ubuntu-latest
+    steps:
+      - name: Capture and scrub request
+        id: request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          jq -r '.issue.body // ""' "$GITHUB_EVENT_PATH" > /tmp/tts_request.json
+          gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[consumed]' >/dev/null
+          python - <<'PY'
+          import hashlib,json,os
+          raw=open('/tmp/tts_request.json','rb').read(); d=json.loads(raw.decode('utf-8'))
+          rid=str(d.get('request_id') or '').strip(); text=str(d.get('text') or ''); voice=str(d.get('voice') or 'ko-KR-SunHiNeural')
+          assert rid and text and voice=='ko-KR-SunHiNeural'
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              f.write('request_id='+rid+'\n'); f.write('request_payload_sha256='+hashlib.sha256(raw).hexdigest()+'\n')
+          PY
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install TTS and audio tools
+        run: |
+          python -m pip install --disable-pip-version-check edge-tts==7.2.8
+          if ! command -v ffprobe >/dev/null 2>&1; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+      - name: Generate Korean MP3 and WordBoundary timeline
+        env:
+          REQUEST_ID: ${{ steps.request.outputs.request_id }}
+          REQUEST_PAYLOAD_SHA256: ${{ steps.request.outputs.request_payload_sha256 }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python - <<'PY'
+          import asyncio,json,os,pathlib
+          import edge_tts
+          d=json.loads(pathlib.Path('/tmp/tts_request.json').read_text(encoding='utf-8')); text=d['text']; voice=d.get('voice') or 'ko-KR-SunHiNeural'; rid=os.environ['REQUEST_ID']
+          rate='+20%'; pitch='+0Hz'; volume='+0%'; boundary='WordBoundary'; max_duration_sec=150.0
+          async def main():
+              comm=edge_tts.Communicate(text=text,voice=voice,rate=rate,pitch=pitch,volume=volume,boundary=boundary); boundaries=[]; idx=0
+              with open('narration.mp3','wb') as out:
+                  async for chunk in comm.stream():
+                      typ=chunk.get('type')
+                      if typ=='audio': out.write(chunk['data'])
+                      elif typ=='WordBoundary':
+                          off=int(chunk.get('offset',0)); dur=int(chunk.get('duration',0)); boundaries.append({'boundary_id':idx,'type':typ,'text':chunk.get('text',''),'start_sec':round(off/10_000_000,6),'end_sec':round((off+dur)/10_000_000,6),'duration_sec':round(dur/10_000_000,6),'source_offset_or_index':off}); idx+=1
+              if not boundaries: raise SystemExit('No WordBoundary metadata produced')
+              pathlib.Path('speech_timeline.json').write_text(json.dumps({'request_id':rid,'request_payload_sha256':os.environ['REQUEST_PAYLOAD_SHA256'],'request_issue_number':int(os.environ['ISSUE_NUMBER']),'workflow_run_id':int(os.environ['GITHUB_RUN_ID']),'voice':voice,'rate':rate,'pitch':pitch,'volume':volume,'boundary':boundary,'edge_tts_version':'7.2.8','max_duration_sec':max_duration_sec,'boundary_count':len(boundaries),'boundaries':boundaries},ensure_ascii=False,indent=2),encoding='utf-8')
+          asyncio.run(main())
+          pathlib.Path('request_meta.json').write_text(json.dumps({'request_id':rid,'request_payload_sha256':os.environ['REQUEST_PAYLOAD_SHA256'],'request_issue_number':int(os.environ['ISSUE_NUMBER']),'workflow_run_id':int(os.environ['GITHUB_RUN_ID']),'voice':voice,'rate':rate,'pitch':pitch,'volume':volume,'boundary':boundary,'max_duration_sec':max_duration_sec},ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Verify MP3 and timeline
+        run: |
+          set -euo pipefail
+          test -s narration.mp3 && test -s speech_timeline.json
+          ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_name,codec_type,sample_rate,channels -of json narration.mp3 | tee ffprobe.json
+          python - <<'PY'
+          import json
+          d=json.load(open('ffprobe.json',encoding='utf-8')); aud=[s for s in d.get('streams',[]) if s.get('codec_type')=='audio']; assert aud
+          duration=float(d['format']['duration']); assert 0.2<duration<=150.0; assert int(d['format']['size'])>1000
+          t=json.load(open('speech_timeline.json',encoding='utf-8')); assert t.get('voice')=='ko-KR-SunHiNeural' and t.get('rate')=='+20%' and t.get('pitch')=='+0Hz' and t.get('volume')=='+0%' and t.get('boundary')=='WordBoundary'
+          b=t.get('boundaries',[]); assert b and all(x.get('type')=='WordBoundary' for x in b); starts=[float(x['start_sec']) for x in b]; ends=[float(x['end_sec']) for x in b]; assert starts==sorted(starts) and all(e>=s for s,e in zip(starts,ends)) and max(ends)<=duration+1.0
+          PY
+      - name: Upload one-day TTS result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blog-shorts-korean-tts-${{ github.run_id }}
+          path: |
+            narration.mp3
+            speech_timeline.json
+            ffprobe.json
+            request_meta.json
+          if-no-files-found: warn
+          retention-days: 1
+      - name: Close singleton issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[idle]' -f state=closed >/dev/null
