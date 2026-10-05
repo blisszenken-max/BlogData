@@ -1,8 +1,8 @@
 {
-  "schema": "overseas-gateway-r3-lite-phase-v1",
-  "policy_version": "v9.78",
-  "policy_sha256": "7668b95514c67a0dbfa46b578884ac4622e8f2b4efd2a92bb3c22f63534c7758",
-  "catalog_sha256": "102dc9c2c237ef3fb6dec9a8a434f387aa40b3e77483190df94de747397d4720",
+  "schema": "overseas-gateway-r3-lite-phase-v2",
+  "policy_version": "v9.79",
+  "policy_sha256": "6cc23761bb515cdaf98db2902cf4e1a69c12b72642c09d14591e720aa3c5a87f",
+  "catalog_sha256": "b88e0bc70e31ac249c2cff55f58c2cb1bba3252d5b006942300ae11037a3ec04",
   "stage_count": 19,
   "stages": {
     "F00": {
@@ -11,7 +11,7 @@
       "hard_gates": {
         "policy_identity_pass": true,
         "version_coherence_pass": true,
-        "catalog_exact": true
+        "policy_revision_exact": true
       }
     },
     "F01": {
@@ -325,9 +325,20 @@
           "==",
           3
         ],
+        "handoff_named_final_docs_pass": true,
+        "handoff_naver_identity_pass": true,
+        "handoff_key_points_count": [
+          ">=",
+          3
+        ],
         "handoff_source_refs_count": [
           ">=",
           2
+        ],
+        "handoff_run_mode_allowed": true,
+        "handoff_invalid_visual_role_count": [
+          "==",
+          0
         ],
         "handoff_readback_exact": true
       }
@@ -394,5 +405,6 @@
       "F17",
       "F18"
     ]
-  }
+  },
+  "policy_drive_revision_id": "0B3FPxWO2B-DXa1lpK1l2VVgyVFgxK1dWR0ZaMHg2R3lDRU1NPQ"
 }
