@@ -1,69 +1,38 @@
 {
-  "schema": "overseas-gateway-merkle-manifest-v2",
-  "policy_version": "v9.76",
-  "policy_sha256": "c12d7cc5a87981d6cc6af52b92fa19c6f5e276a73a37ecf2026984a74fcb0226",
-  "catalog_sha256": "1f330d947587a07c95d0a563bd3417c0ee1fcb686a05de61e0534185f274a2ef",
+  "schema": "overseas-gateway-r3-lite-phase-v1",
+  "policy_version": "v9.77",
+  "policy_sha256": "4da92a00d9c77623899f2c0d67bdeac3dec8f37d05679a5686409efaccebcd69",
+  "catalog_sha256": "50b13611f35cc00c9ff00598cadf271ba366b2b79d8a56b53dc5e648ce9018ee",
   "stage_count": 19,
   "stages": {
     "F00": {
       "stage": "F00",
       "name": "POLICY_VALIDATE",
-      "next": "F01",
-      "allowed_tools": [
-        "DRIVE_READ"
-      ],
       "hard_gates": {
         "policy_identity_pass": true,
         "version_coherence_pass": true,
         "catalog_exact": true
-      },
-      "required_rule_unit_count": 176,
-      "required_clause_count": 1126,
-      "merkle_root": "18707a88812d1554d3f1044df5250ff783438cb986a481c14a3c4f3d0903a95a",
-      "batch_max": 128
+      }
     },
     "F01": {
       "stage": "F01",
       "name": "EXECUTION_PRECHECK",
-      "next": "F02",
-      "allowed_tools": [
-        "DRIVE_READ"
-      ],
       "hard_gates": {
         "execution_contract_locked": true
-      },
-      "required_rule_unit_count": 183,
-      "required_clause_count": 1128,
-      "merkle_root": "f18b1f47eeb40bc38b83c2095c331ee6b83d9a2153eec2fbfa8f6de8f27cf095",
-      "batch_max": 128
+      }
     },
     "F02": {
       "stage": "F02",
       "name": "TOPIC_ACQUIRE",
-      "next": "F03",
-      "allowed_tools": [
-        "DRIVE_READ",
-        "WEB_OPEN",
-        "WEB_SEARCH"
-      ],
       "hard_gates": {
         "topic_lock": true,
         "trend_persistence": true,
         "event_independent": true
-      },
-      "required_rule_unit_count": 228,
-      "required_clause_count": 1279,
-      "merkle_root": "0da6ce95a3ca3d9bd3577b97a9d9983dde7e6e2742b49d605d6019c0e4b638bc",
-      "batch_max": 128
+      }
     },
     "F03": {
       "stage": "F03",
       "name": "FACT_LOCK",
-      "next": "F04",
-      "allowed_tools": [
-        "WEB_OPEN",
-        "WEB_SEARCH"
-      ],
       "hard_gates": {
         "verified_material_claim_count": [
           ">=",
@@ -85,21 +54,11 @@
           ">=",
           2
         ]
-      },
-      "required_rule_unit_count": 220,
-      "required_clause_count": 1286,
-      "merkle_root": "6f62285abfa4b3f6b2f215442a7e872bce2030c956bb3757f2b5e4f7ece480bb",
-      "batch_max": 128
+      }
     },
     "F04": {
       "stage": "F04",
       "name": "READER_REQUIREMENT_LOCK",
-      "next": "F05",
-      "allowed_tools": [
-        "MODEL_WORK",
-        "WEB_OPEN",
-        "WEB_SEARCH"
-      ],
       "hard_gates": {
         "reader_situation_lock_coverage": [
           "==",
@@ -121,19 +80,11 @@
           "==",
           "100%"
         ]
-      },
-      "required_rule_unit_count": 330,
-      "required_clause_count": 1683,
-      "merkle_root": "99ef71db3339bc0579b43219760458cb0d524ba88023641673d4c3fa88c5c069",
-      "batch_max": 128
+      }
     },
     "F05": {
       "stage": "F05",
       "name": "ARTICLE_BLUEPRINT",
-      "next": "F06",
-      "allowed_tools": [
-        "MODEL_WORK"
-      ],
       "hard_gates": {
         "title_hook_candidate_count": [
           "range",
@@ -153,34 +104,18 @@
           85
         ],
         "article_blueprint_locked": true
-      },
-      "required_rule_unit_count": 286,
-      "required_clause_count": 1530,
-      "merkle_root": "8ac06c098e052a552daf78d512e5834004e4073d2c801433909b45991748cb69",
-      "batch_max": 128
+      }
     },
     "F06": {
       "stage": "F06",
       "name": "ARTICLE_WRITE",
-      "next": "F07",
-      "allowed_tools": [
-        "MODEL_WORK"
-      ],
       "hard_gates": {
         "written_draft_set_exists": true
-      },
-      "required_rule_unit_count": 346,
-      "required_clause_count": 1769,
-      "merkle_root": "3a626b9cf30b5c633237eb0524615d7bc13a664ecf315f1090fc33b461967a0b",
-      "batch_max": 128
+      }
     },
     "F07": {
       "stage": "F07",
       "name": "ARTICLE_DRAFT_QA",
-      "next": "F08",
-      "allowed_tools": [
-        "MODEL_WORK"
-      ],
       "hard_gates": {
         "architecture_candidate_count": [
           ">=",
@@ -207,19 +142,11 @@
           "==",
           0
         ]
-      },
-      "required_rule_unit_count": 346,
-      "required_clause_count": 1769,
-      "merkle_root": "3a626b9cf30b5c633237eb0524615d7bc13a664ecf315f1090fc33b461967a0b",
-      "batch_max": 128
+      }
     },
     "F08": {
       "stage": "F08",
       "name": "VISUAL_TARGET_PLAN",
-      "next": "F09",
-      "allowed_tools": [
-        "MODEL_WORK"
-      ],
       "hard_gates": {
         "visual_target_set_locked": true,
         "visual_target_content_contract_coverage": [
@@ -230,21 +157,11 @@
           "==",
           0
         ]
-      },
-      "required_rule_unit_count": 510,
-      "required_clause_count": 3248,
-      "merkle_root": "1b461f096e51db32d43a2ead80d55b50c624747624eb7ff889ecf68c04c65396",
-      "batch_max": 128
+      }
     },
     "F09": {
       "stage": "F09",
       "name": "REAL_ASSET_ACQUIRE",
-      "next": "F10",
-      "allowed_tools": [
-        "IMAGE_ASSET_DOWNLOAD",
-        "WEB_IMAGE_SEARCH",
-        "WEB_OPEN"
-      ],
       "hard_gates": {
         "required_photo_source_stage_not_executed_count": [
           "==",
@@ -254,20 +171,11 @@
           "==",
           0
         ]
-      },
-      "required_rule_unit_count": 483,
-      "required_clause_count": 3147,
-      "merkle_root": "cf7018b3569d99622e29ed9f160394857c18cfef004e150168ba75fad3c574f0",
-      "batch_max": 128
+      }
     },
     "F10": {
       "stage": "F10",
       "name": "GENERATED_VISUAL_BUILD",
-      "next": "F11",
-      "allowed_tools": [
-        "CHATGPT_NATIVE_IMAGE_GENERATION",
-        "LOCAL_INFOGRAPHIC_RENDER"
-      ],
       "hard_gates": {
         "unauthorized_generation_count": [
           "==",
@@ -277,20 +185,11 @@
           "==",
           0
         ]
-      },
-      "required_rule_unit_count": 505,
-      "required_clause_count": 3335,
-      "merkle_root": "8a24703fc18aa9dc75373358b94a98ad375025d327b0d3af3b0643e3cf58fb40",
-      "batch_max": 128
+      }
     },
     "F11": {
       "stage": "F11",
       "name": "VISUAL_ACCEPTANCE_QA",
-      "next": "F12",
-      "allowed_tools": [
-        "LOCAL_INSPECTION",
-        "MODEL_WORK"
-      ],
       "hard_gates": {
         "unresolved_visual_target_count": [
           "==",
@@ -316,19 +215,11 @@
           "==",
           0
         ]
-      },
-      "required_rule_unit_count": 512,
-      "required_clause_count": 3304,
-      "merkle_root": "ef9236b6117e69561fa1f1ac7896ec8b160048db64e751ffdac6d121d4c24609",
-      "batch_max": 128
+      }
     },
     "F12": {
       "stage": "F12",
       "name": "ARTICLE_FINAL_QA",
-      "next": "F13",
-      "allowed_tools": [
-        "MODEL_WORK"
-      ],
       "hard_gates": {
         "qa_scorecard_row_count": [
           "==",
@@ -354,19 +245,11 @@
           "==",
           0
         ]
-      },
-      "required_rule_unit_count": 303,
-      "required_clause_count": 1904,
-      "merkle_root": "d0f02290b43d56549bc35257065c12f1920397d2580492bf5ff3f6b6a04e5c8f",
-      "batch_max": 128
+      }
     },
     "F13": {
       "stage": "F13",
       "name": "PLATFORM_BUILD",
-      "next": "F14",
-      "allowed_tools": [
-        "LOCAL_DOC_BUILD"
-      ],
       "hard_gates": {
         "final_docx_count": [
           "==",
@@ -376,20 +259,11 @@
           "==",
           3
         ]
-      },
-      "required_rule_unit_count": 304,
-      "required_clause_count": 1690,
-      "merkle_root": "e309274b1240dc7e2d987546f9a6abde6410c8c066bd3d90a7128901d8807b71",
-      "batch_max": 128
+      }
     },
     "F14": {
       "stage": "F14",
       "name": "RENDER_VERIFY",
-      "next": "F15",
-      "allowed_tools": [
-        "LOCAL_DOC_BUILD",
-        "LOCAL_INSPECTION"
-      ],
       "hard_gates": {
         "final_bytes_measured_doc_count": [
           "==",
@@ -415,20 +289,11 @@
           "==",
           0
         ]
-      },
-      "required_rule_unit_count": 308,
-      "required_clause_count": 1697,
-      "merkle_root": "beb233ced152d8e835479517efebaf4d1c801f8385d265a1e0bc1225c7c1b46d",
-      "batch_max": 128
+      }
     },
     "F15": {
       "stage": "F15",
       "name": "FINAL_SAVE -> F16 HANDOFF -> F17 RESULT_SUMMARY -> F18 TERMINAL",
-      "next": "F16",
-      "allowed_tools": [
-        "DRIVE_READ",
-        "DRIVE_WRITE"
-      ],
       "hard_gates": {
         "saved_docx_count": [
           "==",
@@ -442,21 +307,11 @@
           ">=",
           1
         ]
-      },
-      "required_rule_unit_count": 177,
-      "required_clause_count": 1125,
-      "merkle_root": "3fd057375de6e5b9833f118b743bec3c4eee458c17d5f6cb3b5edbca384df669",
-      "batch_max": 128
+      }
     },
     "F16": {
       "stage": "F16",
       "name": "HANDOFF",
-      "next": "F17",
-      "allowed_tools": [
-        "DRIVE_READ",
-        "DRIVE_WRITE",
-        "LOCAL_JSON_BUILD"
-      ],
       "hard_gates": {
         "handoff_schema": [
           "==",
@@ -475,37 +330,22 @@
           2
         ],
         "handoff_readback_exact": true
-      },
-      "required_rule_unit_count": 199,
-      "required_clause_count": 1203,
-      "merkle_root": "1c4e9bcdec0979b187a76dc61c3242b3a835776bddc9440c4891a422204ad887",
-      "batch_max": 128
+      }
     },
     "F17": {
       "stage": "F17",
       "name": "RESULT_SUMMARY",
-      "next": "F18",
-      "allowed_tools": [
-        "CHATGPT_FILE_PREVIEW",
-        "DRIVE_READ"
-      ],
       "hard_gates": {
         "preview_attempted_doc_count": [
           "==",
           3
         ],
         "result_summary_emitted": true
-      },
-      "required_rule_unit_count": 196,
-      "required_clause_count": 1197,
-      "merkle_root": "8e683cd4ad9e86d0d07fb2fe7494ba175e79892aff2a4aa1efe289d44b7309fd",
-      "batch_max": 128
+      }
     },
     "F18": {
       "stage": "F18",
       "name": "TERMINAL",
-      "next": "DONE",
-      "allowed_tools": [],
       "hard_gates": {
         "all_prior_stages_closed": true,
         "pending_required_count": [
@@ -516,11 +356,43 @@
           "==",
           0
         ]
-      },
-      "required_rule_unit_count": 181,
-      "required_clause_count": 1121,
-      "merkle_root": "d178371fae082a9939cb264b71752cc66ec95aa25f4efcfa9edb0877de6d2b1f",
-      "batch_max": 128
+      }
     }
+  },
+  "phase_count": 4,
+  "phase_order": [
+    "CONTENT",
+    "VISUAL_CONTENT",
+    "ARTIFACT",
+    "DELIVERY"
+  ],
+  "phases": {
+    "CONTENT": [
+      "F00",
+      "F01",
+      "F02",
+      "F03",
+      "F04",
+      "F05",
+      "F06",
+      "F07"
+    ],
+    "VISUAL_CONTENT": [
+      "F08",
+      "F09",
+      "F10",
+      "F11",
+      "F12"
+    ],
+    "ARTIFACT": [
+      "F13",
+      "F14"
+    ],
+    "DELIVERY": [
+      "F15",
+      "F16",
+      "F17",
+      "F18"
+    ]
   }
 }
