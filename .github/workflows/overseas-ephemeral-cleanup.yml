@@ -1,6 +1,9 @@
 name: Overseas Ephemeral Cleanup
 
 on:
+  push:
+    paths:
+      - '.github/workflows/overseas-ephemeral-cleanup.yml'
   schedule:
     - cron: '17 */12 * * *'
   workflow_dispatch:
@@ -13,7 +16,7 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
-      - name: Delete overseas workflow runs older than 12 hours
+      - name: Delete transport and cleanup runs older than 12 hours
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
@@ -21,15 +24,28 @@ jobs:
         run: |
           python - <<'PY'
           import datetime, json, os, subprocess
-          now=datetime.datetime.now(datetime.timezone.utc); cutoff=now-datetime.timedelta(hours=12)
-          workflows=['ephemeral-transport.yml','overseas-ephemeral-cleanup.yml']
+          now=datetime.datetime.now(datetime.timezone.utc)
+          cutoff=now-datetime.timedelta(hours=12)
+          names={
+            'Ephemeral Overseas and Shorts Transport',
+            'Overseas Ephemeral Cleanup',
+            'Overseas Gateway Courier',
+            'Fetch Web Image Assets',
+            'Generate Blog Shorts Korean TTS 150s',
+          }
           repo=os.environ['REPO']; current=str(os.environ['CURRENT_RUN_ID'])
-          for wf in workflows:
-              raw=subprocess.check_output(['gh','api',f'repos/{repo}/actions/workflows/{wf}/runs?per_page=100'],text=True)
-              for run in json.loads(raw).get('workflow_runs',[]):
-                  rid=str(run['id'])
-                  if rid==current: continue
-                  created=datetime.datetime.fromisoformat(run['created_at'].replace('Z','+00:00'))
-                  if created <= cutoff:
-                      subprocess.run(['gh','api','-X','DELETE',f'repos/{repo}/actions/runs/{rid}'],check=False,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+          raw=subprocess.check_output([
+              'gh','api','--paginate',
+              '-H','Accept: application/vnd.github+json',
+              f'repos/{repo}/actions/runs?per_page=100',
+              '--jq','.workflow_runs[] | @json'
+          ],text=True)
+          for line in raw.splitlines():
+              if not line.strip(): continue
+              run=json.loads(line)
+              rid=str(run['id'])
+              if rid==current or run.get('name') not in names: continue
+              created=datetime.datetime.fromisoformat(run['created_at'].replace('Z','+00:00'))
+              if created <= cutoff:
+                  subprocess.run(['gh','api','-X','DELETE',f'repos/{repo}/actions/runs/{rid}'],check=False,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
           PY
