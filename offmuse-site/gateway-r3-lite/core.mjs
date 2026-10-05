@@ -60,8 +60,8 @@ export class MemoryStateStore{
   async cas(k,e,n){const raw=this.map.get(k);if(raw===undefined)return 0;if(raw!==e)return -1;this.map.set(k,JSON.stringify(n));return 1;}
 }
 function stateKey(runId){return 'ogw:r3lite:run:'+runId;}
-function newState(runId,contractHash,now){return {schema:'overseas-run-state-r3-lite-phase',rev:0,run_id:runId,control_contract_sha256:contractHash,phase:MANIFEST.phase_order[0],closed:[],terminal:'NOT_READY',chain_digest:sha('GENESIS:'+runId),created_at:now,updated_at:now};}
-function tokenFor(s,secret,now){return sign({typ:'state',v:'r3-lite-phase',run_id:s.run_id,rev:s.rev,control_contract_sha256:s.control_contract_sha256,iat:now,exp:now+TOKEN_TTL_MS},secret);}
+function newState(runId,contractHash,now){return {schema:'overseas-run-state-r3-lite-final',rev:0,run_id:runId,control_contract_sha256:contractHash,closed:[],terminal:'NOT_READY',chain_digest:sha('GENESIS:'+runId),created_at:now,updated_at:now};}
+function tokenFor(s,secret,now){return sign({typ:'state',v:'r3-lite-final',run_id:s.run_id,rev:s.rev,control_contract_sha256:s.control_contract_sha256,iat:now,exp:now+TOKEN_TTL_MS},secret);}
 async function loadState(token,secret,store,now){const t=verify(token,secret,'state',now);const rec=await store.get(stateKey(t.run_id));if(!rec)throw new Error('RUN_STATE_NOT_FOUND');const s=rec.value;if(s.run_id!==t.run_id||s.control_contract_sha256!==t.control_contract_sha256)throw new Error('RUN_STATE_BINDING_MISMATCH');if(s.rev!==t.rev)throw new Error('STALE_STATE_TOKEN');return {raw:rec.raw,state:s};}
 async function persist(ctx,store,now){ctx.state.rev+=1;ctx.state.updated_at=now;const r=await store.cas(stateKey(ctx.state.run_id),ctx.raw,ctx.state);if(r===-1)throw new Error('STATE_CONFLICT');if(r===0)throw new Error('RUN_STATE_NOT_FOUND');}
 const arr=v=>Array.isArray(v)?v:[];
@@ -98,7 +98,7 @@ function deriveMetrics(stage,p,s){
         handoff_naver_identity_pass:Boolean((naver.file_id||naver.filename)&&String(naver.sha256||'').length===64),
         handoff_key_points_count:arr(h.key_points).length,
         handoff_source_refs_count:arr(h.source_refs).length,
-        handoff_run_mode_allowed:['DISCOVERY','FIXED_TOPIC','RERUN','REWORK'].includes(h.run_mode),
+        handoff_run_mode_allowed:['DISCOVERY','FIXED_TOPIC','RERUN','REWORK','NEW_RUN'].includes(h.run_mode),
         handoff_invalid_visual_role_count:visuals.filter(x=>!allowedRoles.has(x?.role)).length,
         handoff_readback_exact:truth(h.readback_exact)
       };
@@ -144,6 +144,17 @@ function validatePhasePacket(phase,packet,s){
   return {metrics,closed:shadow.closed};
 }
 
+function validateFinalPacket(packet,s){
+  if(!packet||typeof packet!=='object'||Array.isArray(packet)) throw new Error('BAD_FINAL_PACKET');
+  const stagePackets=packet.stages;
+  if(!stagePackets||typeof stagePackets!=='object'||Array.isArray(stagePackets)) throw new Error('BAD_FINAL_STAGE_SET');
+  const got=Object.keys(stagePackets).sort(), need=[...MANIFEST.stage_order].sort();
+  if(canonical(got)!==canonical(need)) throw new Error('FINAL_STAGE_SET_MISMATCH');
+  const shadow={...s,closed:[]}; const metrics={};
+  for(const stage of MANIFEST.stage_order){ metrics[stage]=validateStage(stage,stagePackets[stage],shadow); shadow.closed.push(stage); }
+  return {metrics,closed:shadow.closed};
+}
+
 export async function handleGateway(body,env=process.env,deps={}){
   const secret=env.GATEWAY_SECRET||''; if(secret.length<24) throw new Error('GATEWAY_SECRET_NOT_CONFIGURED');
   const now=deps.now?deps.now():Date.now(); const store=deps.store||new UpstashStateStore(env); const uuid=deps.uuid||(()=>crypto.randomUUID()); const op=body?.op;
@@ -154,22 +165,18 @@ export async function handleGateway(body,env=process.env,deps={}){
     return {ok:true,manifest:publicManifestSummary(env),state_token:tokenFor(s,secret,now)};
   }
   const ctx=await loadState(body.state_token,secret,store,now),s=ctx.state;
-  if(op==='inspect') return {ok:true,state:{run_id:s.run_id,rev:s.rev,phase:s.phase,closed:s.closed,terminal:s.terminal},contract:{phase:s.phase,stages:phaseStages(s.phase)}};
+  if(op==='inspect') return {ok:true,state:{run_id:s.run_id,rev:s.rev,closed:s.closed,terminal:s.terminal},contract:{validation_model:MANIFEST.validation_model,stages:MANIFEST.stage_order}};
   if(op==='ready') return {ok:true,ready:s.terminal==='DONE',terminal:s.terminal,reason:s.terminal==='DONE'?'CONTROLLER_TERMINAL_DONE':'MODEL_TEXT_HAS_NO_TERMINAL_AUTHORITY'};
   if(s.terminal==='DONE') throw new Error('RUN_ALREADY_DONE');
-  if(op==='complete_phase'){
-    const phase=s.phase;
-    if(body.phase!==phase) throw new Error('PHASE_MISMATCH:expected='+phase+':got='+String(body.phase));
-    const validated=validatePhasePacket(phase,body.packet||{},s);
-    const phase_digest=sha({phase,stage_packet_digest:sha(body.packet?.stages||{}),stage_metrics:validated.metrics,control_contract_sha256:MANIFEST.control_contract_sha256,chain_before:s.chain_digest});
-    s.closed=validated.closed; s.chain_digest=sha(s.chain_digest+'|PHASE|'+phase+'|'+phase_digest);
-    const idx=expectedPhaseIndex(phase);
-    if(idx===MANIFEST.phase_order.length-1){s.terminal='DONE';}
-    else{s.phase=MANIFEST.phase_order[idx+1];}
+  if(op==='complete_phase') throw new Error('DEPRECATED_OPERATION_USE_FINAL_VALIDATE');
+  if(op==='final_validate'){
+    const validated=validateFinalPacket(body.packet||{},s);
+    const final_digest=sha({stage_packet_digest:sha(body.packet?.stages||{}),stage_metrics:validated.metrics,control_contract_sha256:MANIFEST.control_contract_sha256,chain_before:s.chain_digest});
+    s.closed=validated.closed; s.chain_digest=sha(s.chain_digest+'|FINAL|'+final_digest); s.terminal='DONE';
     await persist(ctx,store,now);
-    return {ok:true,closed_phase:phase,next_phase:s.terminal==='DONE'?'DONE':s.phase,closed_stages:phaseStages(phase),terminal:s.terminal,ready:s.terminal==='DONE',verified_metrics:validated.metrics,phase_digest,chain_digest:s.chain_digest,state_token:tokenFor(s,secret,now)};
+    return {ok:true,validated_stage_count:MANIFEST.stage_count,closed_stages:s.closed,terminal:s.terminal,ready:true,verified_metrics:validated.metrics,final_digest,chain_digest:s.chain_digest,state_token:tokenFor(s,secret,now)};
   }
   throw new Error('UNKNOWN_OPERATION');
 }
-export function publicManifestSummary(env=process.env){return {schema:MANIFEST.schema,control_contract_id:MANIFEST.control_contract_id,control_contract_sha256:MANIFEST.control_contract_sha256,policy_family:MANIFEST.policy_family,stage_count:MANIFEST.stage_count,phase_count:MANIFEST.phase_count,phase_order:MANIFEST.phase_order,state_ttl_seconds:STATE_TTL_SECONDS,state_store_configured:stateStoreConfigured(env),execution_authority:'PHASE_CONTROL_ONLY'};}
-export const __test={canonical,sha,stateKey,deriveMetrics,validateStage,validatePhasePacket,newState,tokenFor,phaseStages};
+export function publicManifestSummary(env=process.env){return {schema:MANIFEST.schema,control_contract_id:MANIFEST.control_contract_id,control_contract_sha256:MANIFEST.control_contract_sha256,policy_family:MANIFEST.policy_family,stage_count:MANIFEST.stage_count,validation_model:MANIFEST.validation_model,normal_gateway_calls:MANIFEST.normal_gateway_calls,state_ttl_seconds:STATE_TTL_SECONDS,state_store_configured:stateStoreConfigured(env),execution_authority:'FINAL_CONTROL_ONLY'};}
+export const __test={canonical,sha,stateKey,deriveMetrics,validateStage,validateFinalPacket,newState,tokenFor};
