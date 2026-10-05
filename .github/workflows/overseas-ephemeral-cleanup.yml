@@ -22,7 +22,7 @@ jobs:
           python - <<'PY'
           import datetime, json, os, subprocess
           now=datetime.datetime.now(datetime.timezone.utc); cutoff=now-datetime.timedelta(hours=12)
-          workflows=['overseas-gateway-courier.yml','image_asset_fetch.yml','tts_edge_blog_shorts_150s.yml','overseas-ephemeral-cleanup.yml']
+          workflows=['ephemeral-transport.yml','overseas-ephemeral-cleanup.yml']
           repo=os.environ['REPO']; current=str(os.environ['CURRENT_RUN_ID'])
           for wf in workflows:
               raw=subprocess.check_output(['gh','api',f'repos/{repo}/actions/workflows/{wf}/runs?per_page=100'],text=True)
