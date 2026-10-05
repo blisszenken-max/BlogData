@@ -60,15 +60,15 @@ export class MemoryStateStore{
   async cas(k,e,n){const raw=this.map.get(k);if(raw===undefined)return 0;if(raw!==e)return -1;this.map.set(k,JSON.stringify(n));return 1;}
 }
 function stateKey(runId){return 'ogw:r3lite:run:'+runId;}
-function newState(runId,policy,now){return {schema:'overseas-run-state-r3-lite-phase',rev:0,run_id:runId,policy_sha256:policy,phase:MANIFEST.phase_order[0],closed:[],terminal:'NOT_READY',chain_digest:sha('GENESIS:'+runId),created_at:now,updated_at:now};}
-function tokenFor(s,secret,now){return sign({typ:'state',v:'r3-lite-phase',run_id:s.run_id,rev:s.rev,policy_sha256:s.policy_sha256,iat:now,exp:now+TOKEN_TTL_MS},secret);}
-async function loadState(token,secret,store,now){const t=verify(token,secret,'state',now);const rec=await store.get(stateKey(t.run_id));if(!rec)throw new Error('RUN_STATE_NOT_FOUND');const s=rec.value;if(s.run_id!==t.run_id||s.policy_sha256!==t.policy_sha256)throw new Error('RUN_STATE_BINDING_MISMATCH');if(s.rev!==t.rev)throw new Error('STALE_STATE_TOKEN');return {raw:rec.raw,state:s};}
+function newState(runId,contractHash,now){return {schema:'overseas-run-state-r3-lite-phase',rev:0,run_id:runId,control_contract_sha256:contractHash,phase:MANIFEST.phase_order[0],closed:[],terminal:'NOT_READY',chain_digest:sha('GENESIS:'+runId),created_at:now,updated_at:now};}
+function tokenFor(s,secret,now){return sign({typ:'state',v:'r3-lite-phase',run_id:s.run_id,rev:s.rev,control_contract_sha256:s.control_contract_sha256,iat:now,exp:now+TOKEN_TTL_MS},secret);}
+async function loadState(token,secret,store,now){const t=verify(token,secret,'state',now);const rec=await store.get(stateKey(t.run_id));if(!rec)throw new Error('RUN_STATE_NOT_FOUND');const s=rec.value;if(s.run_id!==t.run_id||s.control_contract_sha256!==t.control_contract_sha256)throw new Error('RUN_STATE_BINDING_MISMATCH');if(s.rev!==t.rev)throw new Error('STALE_STATE_TOKEN');return {raw:rec.raw,state:s};}
 async function persist(ctx,store,now){ctx.state.rev+=1;ctx.state.updated_at=now;const r=await store.cas(stateKey(ctx.state.run_id),ctx.raw,ctx.state);if(r===-1)throw new Error('STATE_CONFLICT');if(r===0)throw new Error('RUN_STATE_NOT_FOUND');}
 const arr=v=>Array.isArray(v)?v:[];
 const truth=v=>v===true;
 function deriveMetrics(stage,p,s){
   switch(stage){
-    case 'F00': return {policy_identity_pass:p.policy_sha256===MANIFEST.policy_sha256,version_coherence_pass:p.policy_version===MANIFEST.policy_version,policy_revision_exact:p.policy_revision_id===MANIFEST.policy_drive_revision_id};
+    case 'F00': return {control_contract_exact:p.control_contract_sha256===MANIFEST.control_contract_sha256,policy_snapshot_locked:truth(p.policy_snapshot_locked)};
     case 'F01': return {execution_contract_locked:truth(p.execution_contract_locked)};
     case 'F02': return {topic_lock:truth(p.topic?.locked),trend_persistence:truth(p.topic?.trend_persistence),event_independent:truth(p.topic?.event_independent)};
     case 'F03': {const claims=arr(p.claims);return {verified_material_claim_count:claims.filter(x=>x?.supported===true).length,trend_evidence_source_count:arr(p.trend_sources).length,trend_anchor_source_count:arr(p.trend_anchors).length,unsupported_major_claim_count:claims.filter(x=>x?.major!==false&&x?.supported!==true).length,benchmark_eligible_count:arr(p.benchmarks).filter(x=>x?.eligible!==false).length};}
@@ -149,8 +149,8 @@ export async function handleGateway(body,env=process.env,deps={}){
   const now=deps.now?deps.now():Date.now(); const store=deps.store||new UpstashStateStore(env); const uuid=deps.uuid||(()=>crypto.randomUUID()); const op=body?.op;
   if(op==='boot'){
     if(!stateStoreConfigured(env)&&!deps.store) throw new Error('STATE_STORE_NOT_CONFIGURED');
-    if(body.policy_sha256!==MANIFEST.policy_sha256) throw new Error('POLICY_HASH_MISMATCH');
-    let s,ok=false; for(let i=0;i<3&&!ok;i++){s=newState(uuid(),body.policy_sha256,now);ok=await store.create(stateKey(s.run_id),s);} if(!ok) throw new Error('RUN_STATE_CREATE_FAILED');
+    if(body.control_contract_sha256!==MANIFEST.control_contract_sha256) throw new Error('CONTROL_CONTRACT_HASH_MISMATCH');
+    let s,ok=false; for(let i=0;i<3&&!ok;i++){s=newState(uuid(),body.control_contract_sha256,now);ok=await store.create(stateKey(s.run_id),s);} if(!ok) throw new Error('RUN_STATE_CREATE_FAILED');
     return {ok:true,manifest:publicManifestSummary(env),state_token:tokenFor(s,secret,now)};
   }
   const ctx=await loadState(body.state_token,secret,store,now),s=ctx.state;
@@ -161,7 +161,7 @@ export async function handleGateway(body,env=process.env,deps={}){
     const phase=s.phase;
     if(body.phase!==phase) throw new Error('PHASE_MISMATCH:expected='+phase+':got='+String(body.phase));
     const validated=validatePhasePacket(phase,body.packet||{},s);
-    const phase_digest=sha({phase,stage_packet_digest:sha(body.packet?.stages||{}),stage_metrics:validated.metrics,policy_sha256:MANIFEST.policy_sha256,chain_before:s.chain_digest});
+    const phase_digest=sha({phase,stage_packet_digest:sha(body.packet?.stages||{}),stage_metrics:validated.metrics,control_contract_sha256:MANIFEST.control_contract_sha256,chain_before:s.chain_digest});
     s.closed=validated.closed; s.chain_digest=sha(s.chain_digest+'|PHASE|'+phase+'|'+phase_digest);
     const idx=expectedPhaseIndex(phase);
     if(idx===MANIFEST.phase_order.length-1){s.terminal='DONE';}
@@ -171,5 +171,5 @@ export async function handleGateway(body,env=process.env,deps={}){
   }
   throw new Error('UNKNOWN_OPERATION');
 }
-export function publicManifestSummary(env=process.env){return {schema:MANIFEST.schema,policy_version:MANIFEST.policy_version,policy_sha256:MANIFEST.policy_sha256,policy_drive_revision_id:MANIFEST.policy_drive_revision_id,catalog_sha256:MANIFEST.catalog_sha256,stage_count:MANIFEST.stage_count,phase_count:MANIFEST.phase_count,phase_order:MANIFEST.phase_order,state_ttl_seconds:STATE_TTL_SECONDS,state_store_configured:stateStoreConfigured(env),execution_authority:'PHASE_CONTROL_ONLY'};}
+export function publicManifestSummary(env=process.env){return {schema:MANIFEST.schema,control_contract_id:MANIFEST.control_contract_id,control_contract_sha256:MANIFEST.control_contract_sha256,policy_family:MANIFEST.policy_family,stage_count:MANIFEST.stage_count,phase_count:MANIFEST.phase_count,phase_order:MANIFEST.phase_order,state_ttl_seconds:STATE_TTL_SECONDS,state_store_configured:stateStoreConfigured(env),execution_authority:'PHASE_CONTROL_ONLY'};}
 export const __test={canonical,sha,stateKey,deriveMetrics,validateStage,validatePhasePacket,newState,tokenFor,phaseStages};
