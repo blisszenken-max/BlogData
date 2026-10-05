@@ -2,38 +2,48 @@ name: Overseas Gateway Courier
 
 on:
   issues:
-    types: [opened]
+    types: [reopened]
 
 permissions:
   contents: read
   issues: write
 
+concurrency:
+  group: overseas-gateway-ephemeral-courier
+  cancel-in-progress: false
+
 jobs:
   courier:
-    if: startsWith(github.event.issue.title, 'GW:')
+    if: github.event.issue.number == 59
     runs-on: ubuntu-latest
     steps:
-      - name: Forward issue body to Vercel gateway
+      - name: Capture and scrub request
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          GATEWAY_URL: https://blog-data-omega.vercel.app/api/overseas-gateway
         run: |
           set -euo pipefail
-
           jq -r '.issue.body // ""' "$GITHUB_EVENT_PATH" > /tmp/request.json
+          gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[consumed]' >/dev/null
           python - <<'PY'
           import json
           d=json.load(open('/tmp/request.json',encoding='utf-8'))
           assert isinstance(d,dict)
           assert d.get('op') in {'boot','inspect','complete_phase','ready'}
-          print('REQUEST_OP='+d['op'])
           PY
 
-          HTTP_CODE=$(curl -sS -o /tmp/gateway.json -w '%{http_code}'             -X POST "$GATEWAY_URL"             -H 'content-type: application/json'             --data-binary @/tmp/request.json)
+      - name: Forward to Vercel gateway
+        env:
+          GATEWAY_URL: https://blog-data-omega.vercel.app/api/overseas-gateway
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/gateway-result
+          HTTP_CODE=$(curl -sS -o /tmp/gateway.json -w '%{http_code}' \
+            -X POST "$GATEWAY_URL" \
+            -H 'content-type: application/json' \
+            --data-binary @/tmp/request.json)
           export HTTP_CODE
-
           python - <<'PY'
           import json,os
           code=int(os.environ['HTTP_CODE'])
@@ -41,14 +51,36 @@ jobs:
               d=json.load(open('/tmp/gateway.json',encoding='utf-8'))
           except Exception:
               d={'ok':False,'error':'NON_JSON_GATEWAY_RESPONSE'}
-          out={'transport':'github-issue-courier-v1','http_code':code,'gateway':d}
-          body='GATEWAY_RESULT\n\n```json\n'+json.dumps(out,ensure_ascii=False,separators=(',',':'))+'\n```'
-          open('/tmp/comment.md','w',encoding='utf-8').write(body)
+          out={'transport':'github-singleton-issue-artifact-courier-v2','http_code':code,'workflow_run_id':os.environ.get('GITHUB_RUN_ID'),'gateway':d}
+          open('/tmp/gateway-result/result.json','w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,separators=(',',':')))
           PY
 
-          gh api "repos/$REPO/issues/$ISSUE_NUMBER/comments" -F body=@/tmp/comment.md
-          gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f state=closed
+      - name: Upload ephemeral gateway result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: overseas-gateway-result-${{ github.run_id }}
+          path: /tmp/gateway-result/result.json
+          if-no-files-found: warn
+          retention-days: 1
 
-          if [ "$HTTP_CODE" -ge 500 ]; then
-            exit 1
-          fi
+      - name: Close singleton courier issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[idle]' -f state=closed >/dev/null
+
+      - name: Fail on server/transport error
+        if: always()
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('/tmp/gateway-result/result.json')
+          if not p.exists(): raise SystemExit(1)
+          d=json.loads(p.read_text())
+          if int(d.get('http_code',0)) >= 500 or int(d.get('http_code',0)) == 0:
+              raise SystemExit(1)
+          PY
