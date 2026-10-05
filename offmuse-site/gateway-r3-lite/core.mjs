@@ -103,7 +103,7 @@ function deriveMetrics(stage,p,s){
         handoff_readback_exact:truth(h.readback_exact)
       };
     }
-    case 'F17': return {preview_attempted_doc_count:arr(p.previews).length,result_summary_emitted:truth(p.result_summary_emitted)};
+    case 'F17': return {result_summary_emitted:truth(p.result_summary_emitted)};
     case 'F18': {const expected=Array.from({length:18},(_,i)=>'F'+String(i).padStart(2,'0'));return {all_prior_stages_closed:canonical(s.closed)===canonical(expected),pending_required_count:Number(p.pending_required_count??999),failed_required_count:Number(p.failed_required_count??999)};}
     default: throw new Error('UNKNOWN_STAGE');
   }
