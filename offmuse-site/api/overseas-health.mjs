@@ -4,7 +4,7 @@ export default function handler(req,res) {
   return res.status(200).json({
     ok:true,
     service:'overseas-trend-gateway',
-    mode:'r3-lite-stage-control',
+    mode:'r3-lite-phase-control',
     ...publicManifestSummary(process.env)
   });
 }
