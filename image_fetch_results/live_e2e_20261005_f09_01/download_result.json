@@ -1,0 +1,69 @@
+{
+  "request_id": "live_e2e_20261005_f09_01",
+  "request_path": "image_fetch_requests/live_e2e_20261005_f09_01.json",
+  "request_commit": "888f0789480afca60d76d82712a92a517afe0dd0",
+  "assets": [
+    {
+      "id": "V01",
+      "url": "https://images.unsplash.com/photo-1601065732186-512e2ab8f856?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=1800",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://images.unsplash.com/photo-1601065732186-512e2ab8f856?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=1800",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1800,
+      "height": 1200,
+      "size_bytes": 264867,
+      "sha256": "a64947af4dea86c78cd3d8eb2b4e02e9e131cd9de9be53ccb408662c7a949d22",
+      "file": "image_fetch_results/live_e2e_20261005_f09_01/V01.jpg"
+    },
+    {
+      "id": "V02",
+      "url": "https://images.unsplash.com/photo-1758206523826-a65d4cf070aa?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=1800",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://images.unsplash.com/photo-1758206523826-a65d4cf070aa?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=1800",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1800,
+      "height": 1200,
+      "size_bytes": 340832,
+      "sha256": "f7ec5cc3d8ff9c02831ac55989fc8ca003fadca278923d1d989bca44ac7bfc36",
+      "file": "image_fetch_results/live_e2e_20261005_f09_01/V02.jpg"
+    },
+    {
+      "id": "V03",
+      "url": "https://images.unsplash.com/photo-1629380107944-e72da9ec91f5?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=1800",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://images.unsplash.com/photo-1629380107944-e72da9ec91f5?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=1800",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1800,
+      "height": 1200,
+      "size_bytes": 189142,
+      "sha256": "f6515f2227d68c58bdb9e0fa3009d1082248adf01465ad11d3a4f2443142693e",
+      "file": "image_fetch_results/live_e2e_20261005_f09_01/V03.jpg"
+    },
+    {
+      "id": "V04",
+      "url": "https://images.unsplash.com/photo-1772450014685-369473acebc2?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=1800",
+      "status": "PASS",
+      "attempts": 1,
+      "redirect_hops": 0,
+      "final_url": "https://images.unsplash.com/photo-1772450014685-369473acebc2?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=1800",
+      "format": "JPEG",
+      "decode_status": "PASS",
+      "width": 1800,
+      "height": 2700,
+      "size_bytes": 950710,
+      "sha256": "990c4991ea39812a60c8ca74501553a8733491b780923f012b52a239bb852601",
+      "file": "image_fetch_results/live_e2e_20261005_f09_01/V04.jpg"
+    }
+  ],
+  "pass_count": 4,
+  "fail_count": 0
+}
