@@ -24,7 +24,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           set -euo pipefail
-          jq -j '.issue.body // ""' "$GITHUB_EVENT_PATH" > /tmp/request.json
+          jq -r '.issue.body // ""' "$GITHUB_EVENT_PATH" > /tmp/request.json
           gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[consumed]' >/dev/null
           python - <<'PY'
           import json
@@ -39,10 +39,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/gateway-result
-          HTTP_CODE=$(curl -sS -o /tmp/gateway.json -w '%{http_code}' \
-            -X POST "$GATEWAY_URL" \
-            -H 'content-type: application/json' \
-            --data-binary @/tmp/request.json)
+          HTTP_CODE=$(curl -sS -o /tmp/gateway.json -w '%{http_code}'             -X POST "$GATEWAY_URL"             -H 'content-type: application/json'             --data-binary @/tmp/request.json)
           export HTTP_CODE
           python - <<'PY'
           import json,os
@@ -51,7 +48,12 @@ jobs:
               d=json.load(open('/tmp/gateway.json',encoding='utf-8'))
           except Exception:
               d={'ok':False,'error':'NON_JSON_GATEWAY_RESPONSE'}
-          out={'transport':'github-singleton-issue-artifact-courier-v2','http_code':code,'workflow_run_id':os.environ.get('GITHUB_RUN_ID'),'gateway':d}
+          out={
+            'transport':'github-singleton-issue-artifact-courier-v2',
+            'http_code':code,
+            'workflow_run_id':os.environ.get('GITHUB_RUN_ID'),
+            'gateway':d,
+          }
           open('/tmp/gateway-result/result.json','w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,separators=(',',':')))
           PY
 
@@ -73,7 +75,7 @@ jobs:
         run: |
           gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[idle]' -f state=closed >/dev/null
 
-      - name: Fail on server/transport error
+      - name: Fail on server or transport error
         if: always()
         run: |
           python - <<'PY'
@@ -81,6 +83,7 @@ jobs:
           p=pathlib.Path('/tmp/gateway-result/result.json')
           if not p.exists(): raise SystemExit(1)
           d=json.loads(p.read_text())
-          if int(d.get('http_code',0)) >= 500 or int(d.get('http_code',0)) == 0:
+          code=int(d.get('http_code',0))
+          if code >= 500 or code == 0:
               raise SystemExit(1)
           PY
