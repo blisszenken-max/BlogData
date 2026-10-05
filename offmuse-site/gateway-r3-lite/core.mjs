@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 
 const MANIFEST = JSON.parse(fs.readFileSync(new URL('./manifest.json', import.meta.url), 'utf8'));
-const STATE_TTL_SECONDS = 48 * 60 * 60;
+const STATE_TTL_SECONDS = 24 * 60 * 60;
 const TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
 
 function canonical(v) {
@@ -68,7 +68,7 @@ const arr=v=>Array.isArray(v)?v:[];
 const truth=v=>v===true;
 function deriveMetrics(stage,p,s){
   switch(stage){
-    case 'F00': return {policy_identity_pass:p.policy_sha256===MANIFEST.policy_sha256,version_coherence_pass:p.policy_version===MANIFEST.policy_version,catalog_exact:p.catalog_sha256===MANIFEST.catalog_sha256};
+    case 'F00': return {policy_identity_pass:p.policy_sha256===MANIFEST.policy_sha256,version_coherence_pass:p.policy_version===MANIFEST.policy_version,policy_revision_exact:p.policy_revision_id===MANIFEST.policy_drive_revision_id};
     case 'F01': return {execution_contract_locked:truth(p.execution_contract_locked)};
     case 'F02': return {topic_lock:truth(p.topic?.locked),trend_persistence:truth(p.topic?.trend_persistence),event_independent:truth(p.topic?.event_independent)};
     case 'F03': {const claims=arr(p.claims);return {verified_material_claim_count:claims.filter(x=>x?.supported===true).length,trend_evidence_source_count:arr(p.trend_sources).length,trend_anchor_source_count:arr(p.trend_anchors).length,unsupported_major_claim_count:claims.filter(x=>x?.major!==false&&x?.supported!==true).length,benchmark_eligible_count:arr(p.benchmarks).filter(x=>x?.eligible!==false).length};}
@@ -84,7 +84,25 @@ function deriveMetrics(stage,p,s){
     case 'F13': {const d=arr(p.docs);return {final_docx_count:d.filter(x=>x?.docx===true).length,structural_readback_doc_count:d.filter(x=>x?.structural_readback===true).length};}
     case 'F14': {const d=arr(p.docs);const coverage=d.length&&d.every(x=>Number(x?.page_coverage)===1)?'100%':`${d.length?Math.round(d.reduce((a,x)=>a+Number(x?.page_coverage||0),0)*100/d.length):0}%`;return {final_bytes_measured_doc_count:d.filter(x=>x?.final_bytes_measured===true).length,render_doc_count:d.filter(x=>x?.rendered===true).length,full_render_page_coverage:coverage,f14_final_bytes_hard_fail_count:d.filter(x=>x?.hard_fail===true).length,pending_semantic_qa_count:d.filter(x=>x?.pending_semantic_qa===true).length,pending_render_qa_count:d.filter(x=>x?.pending_render_qa===true).length};}
     case 'F15': {const d=arr(p.saved_docs);return {saved_docx_count:d.filter(x=>x?.saved===true).length,saved_bytes_mismatch_count:d.filter(x=>x?.bytes_match!==true).length,commit_receipt_count:p.commit_receipt?1:0};}
-    case 'F16': {const h=p.handoff||{};return {handoff_schema:h.schema,handoff_status:h.status,handoff_final_docs_count:arr(h.final_docs).length,handoff_source_refs_count:arr(h.source_refs).length,handoff_readback_exact:truth(h.readback_exact)};}
+    case 'F16': {
+      const h=p.handoff||{}, docs=(h.final_docs&&typeof h.final_docs==='object'&&!Array.isArray(h.final_docs))?h.final_docs:{};
+      const named=['naver','tistory','google_wp'];
+      const naver=docs.naver||{};
+      const allowedRoles=new Set(['ACTUAL_PHOTO','DIGITAL_REALISTIC','INFO_ACTUAL_PHOTO','INFO_DIGITAL_REALISTIC','INFO_EXPLAINER','INFO_HOOK']);
+      const visuals=arr(h.visuals);
+      return {
+        handoff_schema:h.schema,
+        handoff_status:h.status,
+        handoff_final_docs_count:named.filter(k=>docs[k]&&typeof docs[k]==='object').length,
+        handoff_named_final_docs_pass:named.every(k=>docs[k]&&typeof docs[k]==='object'&&String(docs[k].sha256||'').length===64),
+        handoff_naver_identity_pass:Boolean((naver.file_id||naver.filename)&&String(naver.sha256||'').length===64),
+        handoff_key_points_count:arr(h.key_points).length,
+        handoff_source_refs_count:arr(h.source_refs).length,
+        handoff_run_mode_allowed:['DISCOVERY','FIXED_TOPIC','RERUN','REWORK'].includes(h.run_mode),
+        handoff_invalid_visual_role_count:visuals.filter(x=>!allowedRoles.has(x?.role)).length,
+        handoff_readback_exact:truth(h.readback_exact)
+      };
+    }
     case 'F17': return {preview_attempted_doc_count:arr(p.previews).length,result_summary_emitted:truth(p.result_summary_emitted)};
     case 'F18': {const expected=Array.from({length:18},(_,i)=>'F'+String(i).padStart(2,'0'));return {all_prior_stages_closed:canonical(s.closed)===canonical(expected),pending_required_count:Number(p.pending_required_count??999),failed_required_count:Number(p.failed_required_count??999)};}
     default: throw new Error('UNKNOWN_STAGE');
@@ -153,5 +171,5 @@ export async function handleGateway(body,env=process.env,deps={}){
   }
   throw new Error('UNKNOWN_OPERATION');
 }
-export function publicManifestSummary(env=process.env){return {schema:MANIFEST.schema,policy_version:MANIFEST.policy_version,policy_sha256:MANIFEST.policy_sha256,catalog_sha256:MANIFEST.catalog_sha256,stage_count:MANIFEST.stage_count,phase_count:MANIFEST.phase_count,phase_order:MANIFEST.phase_order,state_store_configured:stateStoreConfigured(env),execution_authority:'PHASE_CONTROL_ONLY'};}
+export function publicManifestSummary(env=process.env){return {schema:MANIFEST.schema,policy_version:MANIFEST.policy_version,policy_sha256:MANIFEST.policy_sha256,policy_drive_revision_id:MANIFEST.policy_drive_revision_id,catalog_sha256:MANIFEST.catalog_sha256,stage_count:MANIFEST.stage_count,phase_count:MANIFEST.phase_count,phase_order:MANIFEST.phase_order,state_ttl_seconds:STATE_TTL_SECONDS,state_store_configured:stateStoreConfigured(env),execution_authority:'PHASE_CONTROL_ONLY'};}
 export const __test={canonical,sha,stateKey,deriveMetrics,validateStage,validatePhasePacket,newState,tokenFor,phaseStages};
