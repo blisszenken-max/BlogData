@@ -25,7 +25,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           set -euo pipefail
-          jq -j '.issue.body // ""' "$GITHUB_EVENT_PATH" > /tmp/request.json
+          jq -r '.issue.body // ""' "$GITHUB_EVENT_PATH" > /tmp/request.json
           gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[consumed]' >/dev/null
           python - <<'PY'
           import hashlib, json, os
@@ -57,12 +57,23 @@ jobs:
           import hashlib, io, ipaddress, json, os, pathlib, socket, time, urllib.parse
           import requests
           from PIL import Image
+
           data=json.loads(pathlib.Path('/tmp/request.json').read_text(encoding='utf-8'))
-          request_id=os.environ['REQUEST_ID']; assets=data.get('assets') or []
-          outdir=pathlib.Path('/tmp/image_fetch_results')/request_id; outdir.mkdir(parents=True,exist_ok=True)
-          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as output: output.write(f'result_dir={outdir.as_posix()}\n')
-          result={'request_id':request_id,'request_payload_sha256':os.environ['REQUEST_PAYLOAD_SHA256'],'request_issue_number':int(os.environ['ISSUE_NUMBER']),'workflow_run_id':int(os.environ['GITHUB_RUN_ID']),'assets':[],'pass_count':0,'fail_count':0}
+          request_id=os.environ['REQUEST_ID']
+          assets=data.get('assets') or []
+          outdir=pathlib.Path('/tmp/image_fetch_results')/request_id
+          outdir.mkdir(parents=True,exist_ok=True)
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as output:
+              output.write(f'result_dir={outdir.as_posix()}\n')
+          result={
+            'request_id':request_id,
+            'request_payload_sha256':os.environ['REQUEST_PAYLOAD_SHA256'],
+            'request_issue_number':int(os.environ['ISSUE_NUMBER']),
+            'workflow_run_id':int(os.environ['GITHUB_RUN_ID']),
+            'assets':[], 'pass_count':0, 'fail_count':0,
+          }
           session=requests.Session(); session.headers.update({'User-Agent':'BlogDataImageFetcher/1.3'})
+
           def public_https(url):
               p=urllib.parse.urlparse(url)
               if p.scheme!='https' or not p.hostname: raise ValueError('Only public https URLs allowed')
@@ -91,8 +102,11 @@ jobs:
                   else: continue
                   continue
               raise RuntimeError('redirect loop')
+
           for item in assets:
-              asset_id=str(item.get('id') or item.get('asset_id') or '').strip(); url=str(item.get('url') or '').strip(); rec={'id':asset_id,'url':url,'status':'FAIL'}
+              asset_id=str(item.get('id') or item.get('asset_id') or '').strip()
+              url=str(item.get('url') or '').strip()
+              rec={'id':asset_id,'url':url,'status':'FAIL'}
               try:
                   if not asset_id or not url: raise ValueError('id/url missing')
                   public_https(url); r,attempts,hops=get(url); public_https(r.url)
@@ -107,7 +121,8 @@ jobs:
                   ext={'JPEG':'.jpg','PNG':'.png','WEBP':'.webp'}.get(fmt)
                   if not ext: raise ValueError('unsupported format')
                   path=outdir/f'{asset_id}{ext}'; path.write_bytes(raw)
-                  rec.update(status='PASS',attempts=attempts,redirect_hops=hops,final_url=r.url,format=fmt,decode_status='PASS',width=width,height=height,size_bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest(),file=path.name); result['pass_count']+=1
+                  rec.update(status='PASS',attempts=attempts,redirect_hops=hops,final_url=r.url,format=fmt,decode_status='PASS',width=width,height=height,size_bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest(),file=path.name)
+                  result['pass_count']+=1
               except Exception as e:
                   rec['error']=f'{type(e).__name__}: {e}'; result['fail_count']+=1
               result['assets'].append(rec)
