@@ -1,0 +1,47 @@
+name: Default Gateway Lite Smoke Once
+on:
+  push:
+    paths:
+      - '.github/workflows/default-gateway-lite-smoke-once.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify default gateway alias
+        env:
+          BASE: https://blog-data-omega.vercel.app
+          POLICY: c12d7cc5a87981d6cc6af52b92fa19c6f5e276a73a37ecf2026984a74fcb0226
+          CATALOG: 1f330d947587a07c95d0a563bd3417c0ee1fcb686a05de61e0534185f274a2ef
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,urllib.request,urllib.error,time,os
+          base=os.environ['BASE']; policy=os.environ['POLICY']; catalog=os.environ['CATALOG']
+          def call(path,obj=None):
+              if obj is None: req=urllib.request.Request(base+path)
+              else: req=urllib.request.Request(base+path,data=json.dumps(obj,separators=(',',':')).encode(),headers={'content-type':'application/json'},method='POST')
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:return r.status,json.loads(r.read().decode())
+              except urllib.error.HTTPError as e:return e.code,json.loads(e.read().decode())
+          h=None
+          for _ in range(40):
+              code,h=call('/api/overseas-health')
+              if code==200 and h.get('mode')=='r3-lite-stage-control' and h.get('schema')=='overseas-gateway-r3-lite': break
+              time.sleep(3)
+          assert h and h.get('mode')=='r3-lite-stage-control',h
+          assert h.get('state_store_configured') is True,h
+          print('DEFAULT_HEALTH_R3_LITE=PASS')
+          code,b=call('/api/overseas-gateway',{'op':'boot','policy_sha256':policy})
+          assert code==200 and b.get('state_token'),(code,b)
+          s0=b['state_token']; print('DEFAULT_BOOT=PASS')
+          pkt={'policy_sha256':policy,'policy_version':'v9.76','catalog_sha256':catalog}
+          code,r=call('/api/overseas-gateway',{'op':'complete_stage','state_token':s0,'packet':pkt})
+          assert code==200 and r.get('closed_stage')=='F00' and r.get('next_stage')=='F01',(code,r)
+          print('DEFAULT_F00=PASS')
+          code,old=call('/api/overseas-gateway',{'op':'inspect','state_token':s0})
+          assert code==400 and old.get('error')=='STALE_STATE_TOKEN',(code,old)
+          print('DEFAULT_STALE_TOKEN=BLOCK')
+          print('DEFAULT_GATEWAY_R3_LITE=PASS')
+          PY
