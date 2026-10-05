@@ -1,0 +1,53 @@
+name: Overseas Gateway Courier
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  courier:
+    if: startsWith(github.event.issue.title, 'GW:')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Forward issue body to Vercel gateway
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GATEWAY_URL: https://blog-data-omega.vercel.app/api/overseas-gateway
+        run: |
+          set -euo pipefail
+
+          jq -r '.issue.body // ""' "$GITHUB_EVENT_PATH" > /tmp/request.json
+          python - <<'PY'
+          import json
+          p='/tmp/request.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert isinstance(d,dict)
+          assert d.get('op') in {'boot','inspect','complete_stage','ready'}
+          print('REQUEST_OP='+d['op'])
+          PY
+
+          HTTP_CODE=$(curl -sS -o /tmp/gateway.json -w '%{http_code}'             -X POST "$GATEWAY_URL"             -H 'content-type: application/json'             --data-binary @/tmp/request.json)
+
+          python - <<'PY'
+          import json,os
+          code=int(os.environ.get('HTTP_CODE','0') or 0)
+          try:d=json.load(open('/tmp/gateway.json',encoding='utf-8'))
+          except Exception:d={'ok':False,'error':'NON_JSON_GATEWAY_RESPONSE'}
+          out={'transport':'github-issue-courier-v1','http_code':code,'gateway':d}
+          open('/tmp/comment.md','w',encoding='utf-8').write('GATEWAY_RESULT\n\n```json\n'+json.dumps(out,ensure_ascii=False,separators=(',',':'))+'\n```')
+          PY
+
+          gh api "repos/$REPO/issues/$ISSUE_NUMBER/comments" -f body=@/tmp/comment.md
+          gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f state=closed
+
+          if [ "$HTTP_CODE" -ge 500 ]; then
+            exit 1
+          fi
+        env:
+          HTTP_CODE: ${{ env.HTTP_CODE }}
