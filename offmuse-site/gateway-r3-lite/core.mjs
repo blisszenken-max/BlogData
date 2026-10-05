@@ -68,7 +68,7 @@ const arr=v=>Array.isArray(v)?v:[];
 const truth=v=>v===true;
 function deriveMetrics(stage,p,s){
   switch(stage){
-    case 'F00': return {policy_identity_pass:p.policy_sha256===MANIFEST.policy_sha256,version_coherence_pass:p.policy_version===MANIFEST.policy_version,policy_revision_exact:p.policy_revision_id===MANIFEST.policy_drive_revision_id};
+    case 'F00': return {policy_identity_pass:p.policy_sha256===MANIFEST.policy_sha256,version_coherence_pass:p.policy_version===MANIFEST.policy_version,catalog_exact:p.catalog_sha256===MANIFEST.catalog_sha256,policy_revision_exact:p.policy_revision_id===MANIFEST.policy_drive_revision_id};
     case 'F01': return {execution_contract_locked:truth(p.execution_contract_locked)};
     case 'F02': return {topic_lock:truth(p.topic?.locked),trend_persistence:truth(p.topic?.trend_persistence),event_independent:truth(p.topic?.event_independent)};
     case 'F03': {const claims=arr(p.claims);return {verified_material_claim_count:claims.filter(x=>x?.supported===true).length,trend_evidence_source_count:arr(p.trend_sources).length,trend_anchor_source_count:arr(p.trend_anchors).length,unsupported_major_claim_count:claims.filter(x=>x?.major!==false&&x?.supported!==true).length,benchmark_eligible_count:arr(p.benchmarks).filter(x=>x?.eligible!==false).length};}
