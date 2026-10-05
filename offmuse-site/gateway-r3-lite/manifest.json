@@ -1,17 +1,13 @@
 {
-  "schema": "overseas-gateway-r3-lite-phase-v2",
-  "policy_version": "v9.79",
-  "policy_sha256": "8171cfaff777c86b6621cbfc3fefd1b29186edc539fe3a8a19f638730e12f63b",
-  "catalog_sha256": "876e168ac42a84efa2d675222c917760102414d00d6d48e9a21e468a82c0b2d1",
+  "schema": "overseas-gateway-r3-lite-phase-v3",
   "stage_count": 19,
   "stages": {
     "F00": {
       "stage": "F00",
       "name": "POLICY_VALIDATE",
       "hard_gates": {
-        "policy_identity_pass": true,
-        "version_coherence_pass": true,
-        "policy_revision_exact": true
+        "control_contract_exact": true,
+        "policy_snapshot_locked": true
       }
     },
     "F01": {
@@ -406,5 +402,8 @@
       "F18"
     ]
   },
-  "policy_drive_revision_id": "0B3FPxWO2B-DXRXd0RlFvV1BOKzJsdjNSMnF1RGRPeWUxS1JRPQ"
+  "control_contract_id": "OVERSEAS_CONTROL_CONTRACT_V1",
+  "policy_family": "OVERSEAS_TREND_BLOG",
+  "ready_rule": "DELIVERY_COMPLETE_PHASE_ALL_PASS",
+  "control_contract_sha256": "efc213e9d73f7ab210c34ae0ffcd68ae2ef733e33feee6327535b76e8c739244"
 }
