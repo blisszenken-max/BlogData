@@ -1,8 +1,8 @@
 {
   "schema": "overseas-gateway-r3-lite-phase-v2",
   "policy_version": "v9.79",
-  "policy_sha256": "6cc23761bb515cdaf98db2902cf4e1a69c12b72642c09d14591e720aa3c5a87f",
-  "catalog_sha256": "b88e0bc70e31ac249c2cff55f58c2cb1bba3252d5b006942300ae11037a3ec04",
+  "policy_sha256": "8171cfaff777c86b6621cbfc3fefd1b29186edc539fe3a8a19f638730e12f63b",
+  "catalog_sha256": "876e168ac42a84efa2d675222c917760102414d00d6d48e9a21e468a82c0b2d1",
   "stage_count": 19,
   "stages": {
     "F00": {
@@ -406,5 +406,5 @@
       "F18"
     ]
   },
-  "policy_drive_revision_id": "0B3FPxWO2B-DXa1lpK1l2VVgyVFgxK1dWR0ZaMHg2R3lDRU1NPQ"
+  "policy_drive_revision_id": "0B3FPxWO2B-DXRXd0RlFvV1BOKzJsdjNSMnF1RGRPeWUxS1JRPQ"
 }
