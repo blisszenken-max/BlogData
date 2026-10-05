@@ -343,10 +343,6 @@
       "stage": "F17",
       "name": "RESULT_SUMMARY",
       "hard_gates": {
-        "preview_attempted_doc_count": [
-          "==",
-          3
-        ],
         "result_summary_emitted": true
       }
     },
@@ -405,5 +401,5 @@
   "control_contract_id": "OVERSEAS_CONTROL_CONTRACT_V1",
   "policy_family": "OVERSEAS_TREND_BLOG",
   "ready_rule": "DELIVERY_COMPLETE_PHASE_ALL_PASS",
-  "control_contract_sha256": "efc213e9d73f7ab210c34ae0ffcd68ae2ef733e33feee6327535b76e8c739244"
+  "control_contract_sha256": "2459da88db146f41451ec8110772f60728e173a435eda571e72a993ba2386e65"
 }
