@@ -1,57 +1,68 @@
 name: Fetch Web Image Assets
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'image_fetch_requests/**'
+  issues:
+    types: [reopened]
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
-  group: image-fetch-${{ github.sha }}
+  group: overseas-image-fetch-singleton
   cancel-in-progress: false
 
 jobs:
   fetch-images:
+    if: github.event.issue.number == 60
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
+      - name: Capture and scrub request
+        id: request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          jq -r '.issue.body // ""' "$GITHUB_EVENT_PATH" > /tmp/request.json
+          gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[consumed]' >/dev/null
+          python - <<'PY'
+          import hashlib, json, os
+          raw=open('/tmp/request.json','rb').read()
+          d=json.loads(raw.decode('utf-8'))
+          assert isinstance(d,dict)
+          request_id=str(d.get('request_id') or '').strip()
+          assets=d.get('assets') or []
+          assert request_id and 1 <= len(assets) <= 5
+          assert all(c in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-' for c in request_id)
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              f.write('request_id='+request_id+'\n')
+              f.write('request_payload_sha256='+hashlib.sha256(raw).hexdigest()+'\n')
+          PY
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - run: python -m pip install requests pillow
 
-      - name: Download validate and publish correlated result
+      - name: Download and validate
         id: fetch_assets
+        env:
+          REQUEST_ID: ${{ steps.request.outputs.request_id }}
+          REQUEST_PAYLOAD_SHA256: ${{ steps.request.outputs.request_payload_sha256 }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           python - <<'PY'
-          import hashlib, io, ipaddress, json, os, pathlib, socket, subprocess, time, urllib.parse
+          import hashlib, io, ipaddress, json, os, pathlib, socket, time, urllib.parse
           import requests
           from PIL import Image
-
-          before=subprocess.check_output(['git','rev-parse','HEAD^'],text=True).strip()
-          head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
-          changed=subprocess.check_output(['git','diff','--name-only',before,head,'--','image_fetch_requests/*.json'],text=True).splitlines()
-          if not changed: raise SystemExit('No image_fetch_requests JSON changed')
-          request_path=changed[-1]
-          data=json.loads(pathlib.Path(request_path).read_text(encoding='utf-8'))
-          request_id=str(data.get('request_id') or '').strip()
-          assets=data.get('assets') or []
-          if not request_id or not (1 <= len(assets) <= 5): raise SystemExit('bad request')
-          if any(c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-' for c in request_id):
-              raise SystemExit('unsafe request_id')
-
-          outdir=pathlib.Path('image_fetch_results')/request_id
-          outdir.mkdir(parents=True,exist_ok=True)
-          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as output:
-              output.write(f'result_dir={outdir.as_posix()}\n')
-          result={'request_id':request_id,'request_path':request_path,'request_commit':head,'assets':[],'pass_count':0,'fail_count':0}
-          session=requests.Session(); session.headers.update({'User-Agent':'BlogDataImageFetcher/1.2'})
-
+          data=json.loads(pathlib.Path('/tmp/request.json').read_text(encoding='utf-8'))
+          request_id=os.environ['REQUEST_ID']; assets=data.get('assets') or []
+          outdir=pathlib.Path('/tmp/image_fetch_results')/request_id; outdir.mkdir(parents=True,exist_ok=True)
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as output: output.write(f'result_dir={outdir.as_posix()}\n')
+          result={'request_id':request_id,'request_payload_sha256':os.environ['REQUEST_PAYLOAD_SHA256'],'request_issue_number':int(os.environ['ISSUE_NUMBER']),'workflow_run_id':int(os.environ['GITHUB_RUN_ID']),'assets':[],'pass_count':0,'fail_count':0}
+          session=requests.Session(); session.headers.update({'User-Agent':'BlogDataImageFetcher/1.3'})
           def public_https(url):
               p=urllib.parse.urlparse(url)
               if p.scheme!='https' or not p.hostname: raise ValueError('Only public https URLs allowed')
@@ -80,36 +91,43 @@ jobs:
                   else: continue
                   continue
               raise RuntimeError('redirect loop')
-
           for item in assets:
-              asset_id=str(item.get('id') or item.get('asset_id') or '').strip()
-              url=str(item.get('url') or '').strip()
-              rec={'id':asset_id,'url':url,'status':'FAIL'}
+              asset_id=str(item.get('id') or item.get('asset_id') or '').strip(); url=str(item.get('url') or '').strip(); rec={'id':asset_id,'url':url,'status':'FAIL'}
               try:
                   if not asset_id or not url: raise ValueError('id/url missing')
                   public_https(url); r,attempts,hops=get(url); public_https(r.url)
-                  raw=b''; maxb=15*1024*1024
+                  buf=io.BytesIO(); maxb=15*1024*1024
                   for chunk in r.iter_content(65536):
                       if chunk:
-                          raw+=chunk
-                          if len(raw)>maxb: raise ValueError('Image exceeds 15 MB')
+                          buf.write(chunk)
+                          if buf.tell()>maxb: raise ValueError('Image exceeds 15 MB')
+                  raw=buf.getvalue()
                   if len(raw)<256: raise ValueError('too small')
                   img=Image.open(io.BytesIO(raw)); width,height=img.size; fmt=(img.format or '').upper(); img.verify()
                   ext={'JPEG':'.jpg','PNG':'.png','WEBP':'.webp'}.get(fmt)
                   if not ext: raise ValueError('unsupported format')
                   path=outdir/f'{asset_id}{ext}'; path.write_bytes(raw)
-                  rec.update(status='PASS',attempts=attempts,redirect_hops=hops,final_url=r.url,format=fmt,decode_status='PASS',width=width,height=height,size_bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest(),file=str(path))
-                  result['pass_count']+=1
+                  rec.update(status='PASS',attempts=attempts,redirect_hops=hops,final_url=r.url,format=fmt,decode_status='PASS',width=width,height=height,size_bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest(),file=path.name); result['pass_count']+=1
               except Exception as e:
                   rec['error']=f'{type(e).__name__}: {e}'; result['fail_count']+=1
               result['assets'].append(rec)
           (outdir/'download_result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
           PY
 
-      - name: Upload correlated image result artifact
+      - name: Upload ephemeral image result
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: image-fetch-results-${{ github.sha }}
+          name: image-fetch-results-${{ github.run_id }}
           path: ${{ steps.fetch_assets.outputs.result_dir }}
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 1
+
+      - name: Close singleton image issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh api -X PATCH "repos/$REPO/issues/$ISSUE_NUMBER" -f body='[idle]' -f state=closed >/dev/null
