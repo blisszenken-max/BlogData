@@ -176,6 +176,7 @@ export async function handleGateway(body,env=process.env,deps={}){
   if(s.terminal==='DONE') throw new Error('RUN_ALREADY_DONE');
   if(op==='complete_phase') throw new Error('DEPRECATED_OPERATION_USE_FINAL_VALIDATE');
   if(op==='final_validate'){
+    if(s.control_contract_sha256!==MANIFEST.control_contract_sha256) throw new Error('CONTROL_CONTRACT_HASH_MISMATCH');
     const validated=validateFinalPacket(body.packet||{},s);
     const final_digest=sha({stage_packet_digest:sha(body.packet?.stages||{}),stage_metrics:validated.metrics,control_contract_sha256:MANIFEST.control_contract_sha256,chain_before:s.chain_digest});
     s.closed=validated.closed; s.chain_digest=sha(s.chain_digest+'|FINAL|'+final_digest); s.terminal='DONE';
