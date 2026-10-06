@@ -16,7 +16,7 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
-      - name: Delete transport and cleanup runs older than 12 hours
+      - name: Delete image-transport and cleanup runs older than 12 hours
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
@@ -27,11 +27,8 @@ jobs:
           now=datetime.datetime.now(datetime.timezone.utc)
           cutoff=now-datetime.timedelta(hours=12)
           names={
-            'Ephemeral Overseas and Shorts Transport',
+            'Overseas Image Fetch Transport',
             'Overseas Ephemeral Cleanup',
-            'Overseas Gateway Courier',
-            'Fetch Web Image Assets',
-            'Generate Blog Shorts Korean TTS 150s',
           }
           repo=os.environ['REPO']; current=str(os.environ['CURRENT_RUN_ID'])
           raw=subprocess.check_output([
