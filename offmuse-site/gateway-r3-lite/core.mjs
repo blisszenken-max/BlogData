@@ -66,6 +66,9 @@ async function loadState(token,secret,store,now){const t=verify(token,secret,'st
 async function persist(ctx,store,now){ctx.state.rev+=1;ctx.state.updated_at=now;const r=await store.cas(stateKey(ctx.state.run_id),ctx.raw,ctx.state);if(r===-1)throw new Error('STATE_CONFLICT');if(r===0)throw new Error('RUN_STATE_NOT_FOUND');}
 const arr=v=>Array.isArray(v)?v:[];
 const truth=v=>v===true;
+const sha256ok=v=>typeof v==='string'&&/^[0-9a-f]{64}$/.test(v);
+const naverDoc=d=>d?.platform==='NAVER'&&sha256ok(d.sha256);
+const oneNaver=d=>d.length===1&&naverDoc(d[0]);
 function deriveMetrics(stage,p,s){
   switch(stage){
     case 'F00': return {control_contract_exact:p.control_contract_sha256===MANIFEST.control_contract_sha256,policy_snapshot_locked:truth(p.policy_snapshot_locked)};
@@ -81,21 +84,21 @@ function deriveMetrics(stage,p,s){
     case 'F10': {const v=arr(p.generated_assets);return {unauthorized_generation_count:v.filter(x=>x?.authorized!==true).length,paid_image_plugin_call_count:v.filter(x=>x?.paid_plugin===true).length};}
     case 'F11': {const v=arr(p.visuals);return {unresolved_visual_target_count:v.filter(x=>x?.resolved!==true).length,plain_background_infographic_count:v.filter(x=>x?.plain_background===true).length,card_only_infographic_count:v.filter(x=>x?.card_only===true).length,chart_only_infographic_count:v.filter(x=>x?.chart_only===true).length,background_unverified_or_decorative_pass_count:v.filter(x=>x?.background_verified!==true||x?.decorative_pass===true).length,visual_text_readability_fail_count:v.filter(x=>x?.text_readable!==true).length};}
     case 'F12': {const rows=arr(p.scorecard);const score=rows.reduce((a,x)=>a+Number(x?.score||0),0);return {qa_scorecard_row_count:rows.length,score_dimension_without_evidence:rows.filter(x=>arr(x?.evidence_refs).length<1).length,qa_scorecard_row_without_measured_counter_count:rows.filter(x=>x?.measured_counter===undefined||x?.measured_counter===null).length,quality_score_direct_model_assignment_count:rows.filter(x=>x?.model_assigned_score===true).length,final_qa_score:score,hard_fail_count:Number(p.hard_fail_count??999)};}
-    case 'F13': {const d=arr(p.docs);return {final_docx_count:d.filter(x=>x?.docx===true).length,structural_readback_doc_count:d.filter(x=>x?.structural_readback===true).length};}
-    case 'F14': {const d=arr(p.docs);const coverage=d.length&&d.every(x=>Number(x?.page_coverage)===1)?'100%':`${d.length?Math.round(d.reduce((a,x)=>a+Number(x?.page_coverage||0),0)*100/d.length):0}%`;return {final_bytes_measured_doc_count:d.filter(x=>x?.final_bytes_measured===true).length,render_doc_count:d.filter(x=>x?.rendered===true).length,full_render_page_coverage:coverage,f14_final_bytes_hard_fail_count:d.filter(x=>x?.hard_fail===true).length,pending_semantic_qa_count:d.filter(x=>x?.pending_semantic_qa===true).length,pending_render_qa_count:d.filter(x=>x?.pending_render_qa===true).length};}
-    case 'F15': {const d=arr(p.saved_docs);return {saved_docx_count:d.filter(x=>x?.saved===true).length,saved_bytes_mismatch_count:d.filter(x=>x?.bytes_match!==true).length,commit_receipt_count:p.commit_receipt?1:0};}
+    case 'F13': {const d=arr(p.docs);return {naver_doc_identity_pass:oneNaver(d),final_docx_count:d.filter(x=>x?.docx===true).length,structural_readback_doc_count:d.filter(x=>x?.structural_readback===true).length};}
+    case 'F14': {const d=arr(p.docs);const coverage=d.length&&d.every(x=>Number(x?.page_coverage)===1)?'100%':`${d.length?Math.round(d.reduce((a,x)=>a+Number(x?.page_coverage||0),0)*100/d.length):0}%`;return {naver_doc_identity_pass:oneNaver(d),final_bytes_measured_doc_count:d.filter(x=>x?.final_bytes_measured===true).length,render_doc_count:d.filter(x=>x?.rendered===true).length,full_render_page_coverage:coverage,f14_final_bytes_hard_fail_count:d.filter(x=>x?.hard_fail===true).length,pending_semantic_qa_count:d.filter(x=>x?.pending_semantic_qa===true).length,pending_render_qa_count:d.filter(x=>x?.pending_render_qa===true).length};}
+    case 'F15': {const d=arr(p.saved_docs);return {naver_doc_identity_pass:oneNaver(d)&&Boolean(d[0].file_id&&d[0].filename&&d[0].filename.includes('_NAVER_')),saved_docx_count:d.filter(x=>x?.saved===true).length,saved_bytes_mismatch_count:d.filter(x=>x?.bytes_match!==true).length,commit_receipt_count:p.commit_receipt?1:0};}
     case 'F16': {
       const h=p.handoff||{}, docs=(h.final_docs&&typeof h.final_docs==='object'&&!Array.isArray(h.final_docs))?h.final_docs:{};
-      const named=['naver','tistory','google_wp'];
+      const named=['naver'];
       const naver=docs.naver||{};
       const allowedRoles=new Set(['ACTUAL_PHOTO','DIGITAL_REALISTIC','INFO_ACTUAL_PHOTO','INFO_DIGITAL_REALISTIC','INFO_EXPLAINER','INFO_HOOK']);
       const visuals=arr(h.visuals);
       return {
         handoff_schema:h.schema,
         handoff_status:h.status,
-        handoff_final_docs_count:named.filter(k=>docs[k]&&typeof docs[k]==='object').length,
-        handoff_named_final_docs_pass:named.every(k=>docs[k]&&typeof docs[k]==='object'&&String(docs[k].sha256||'').length===64),
-        handoff_naver_identity_pass:Boolean((naver.file_id||naver.filename)&&String(naver.sha256||'').length===64),
+        handoff_final_docs_count:Object.keys(docs).length,
+        handoff_named_final_docs_pass:Object.keys(docs).length===1&&named.every(k=>docs[k]&&typeof docs[k]==='object'&&sha256ok(docs[k].sha256)),
+        handoff_naver_identity_pass:Boolean(naver.file_id&&naver.filename&&sha256ok(naver.sha256)),
         handoff_key_points_count:arr(h.key_points).length,
         handoff_source_refs_count:arr(h.source_refs).length,
         handoff_run_mode_allowed:['DISCOVERY','FIXED_TOPIC','RERUN','REWORK','NEW_RUN'].includes(h.run_mode),
@@ -152,6 +155,9 @@ function validateFinalPacket(packet,s){
   if(canonical(got)!==canonical(need)) throw new Error('FINAL_STAGE_SET_MISMATCH');
   const shadow={...s,closed:[]}; const metrics={};
   for(const stage of MANIFEST.stage_order){ metrics[stage]=validateStage(stage,stagePackets[stage],shadow); shadow.closed.push(stage); }
+  const d13=stagePackets.F13.docs[0], d14=stagePackets.F14.docs[0], d15=stagePackets.F15.saved_docs[0], n=stagePackets.F16.handoff.final_docs.naver;
+  if(new Set([d13.sha256,d14.sha256,d15.sha256,n.sha256]).size!==1) throw new Error('FINAL_DOC_SHA_BINDING_MISMATCH');
+  if(d15.file_id!==n.file_id||d15.filename!==n.filename) throw new Error('FINAL_DOC_IDENTITY_BINDING_MISMATCH');
   return {metrics,closed:shadow.closed};
 }
 
@@ -180,3 +186,4 @@ export async function handleGateway(body,env=process.env,deps={}){
 }
 export function publicManifestSummary(env=process.env){return {schema:MANIFEST.schema,control_contract_id:MANIFEST.control_contract_id,control_contract_sha256:MANIFEST.control_contract_sha256,policy_family:MANIFEST.policy_family,stage_count:MANIFEST.stage_count,validation_model:MANIFEST.validation_model,normal_gateway_calls:MANIFEST.normal_gateway_calls,state_ttl_seconds:STATE_TTL_SECONDS,state_store_configured:stateStoreConfigured(env),execution_authority:'FINAL_CONTROL_ONLY'};}
 export const __test={canonical,sha,stateKey,deriveMetrics,validateStage,validateFinalPacket,newState,tokenFor};
+

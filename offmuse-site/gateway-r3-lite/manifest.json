@@ -270,12 +270,13 @@
       "hard_gates": {
         "final_docx_count": [
           "==",
-          3
+          1
         ],
         "structural_readback_doc_count": [
           "==",
-          3
-        ]
+          1
+        ],
+        "naver_doc_identity_pass": true
       }
     },
     "F14": {
@@ -284,11 +285,11 @@
       "hard_gates": {
         "final_bytes_measured_doc_count": [
           "==",
-          3
+          1
         ],
         "render_doc_count": [
           "==",
-          3
+          1
         ],
         "full_render_page_coverage": [
           "==",
@@ -305,7 +306,8 @@
         "pending_render_qa_count": [
           "==",
           0
-        ]
+        ],
+        "naver_doc_identity_pass": true
       }
     },
     "F15": {
@@ -314,7 +316,7 @@
       "hard_gates": {
         "saved_docx_count": [
           "==",
-          3
+          1
         ],
         "saved_bytes_mismatch_count": [
           "==",
@@ -323,7 +325,8 @@
         "commit_receipt_count": [
           ">=",
           1
-        ]
+        ],
+        "naver_doc_identity_pass": true
       }
     },
     "F16": {
@@ -340,7 +343,7 @@
         ],
         "handoff_final_docs_count": [
           "==",
-          3
+          1
         ],
         "handoff_named_final_docs_pass": true,
         "handoff_naver_identity_pass": true,
@@ -385,8 +388,9 @@
   },
   "validation_model": "BOOT_FINAL_VALIDATE",
   "normal_gateway_calls": 2,
-  "control_contract_id": "OVERSEAS_CONTROL_CONTRACT_V2",
+  "control_contract_id": "OVERSEAS_CONTROL_CONTRACT_V3_NAVER_ONLY",
   "policy_family": "OVERSEAS_TREND_BLOG",
   "ready_rule": "FINAL_VALIDATE_ALL_PASS",
-  "control_contract_sha256": "8896668c5818c03f7c700550b44dc01ffa1135388a35ce9be1c4cf04fe52a92d"
+  "cross_stage_doc_binding": "NAVER_SHA_F13_F14_F15_F16_AND_F15_FILE_ID_FILENAME_F16",
+  "control_contract_sha256": "9f85cdd4442c4dfa2efce3ba8c1b76a067de9bb45a6dca209b3e31a47bbf0adc"
 }
