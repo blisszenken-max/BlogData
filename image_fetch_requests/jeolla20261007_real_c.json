@@ -1,0 +1,21 @@
+{
+  "request_id": "jeolla20261007_real_c",
+  "assets": [
+    {
+      "id": "gochang_real1",
+      "url": "https://newsimg.koreatimes.co.kr/2026/03/25/f45134b9-a635-4e63-907d-f1d4c8eb0aef.jpg?w=728"
+    },
+    {
+      "id": "gochang_real2",
+      "url": "https://img.newspim.com/news/2022/10/05/2210051005565520.jpg"
+    },
+    {
+      "id": "mokpo_real1",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/44/2861044_image2_1.jpg"
+    },
+    {
+      "id": "mokpo_real2",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/87/3498987_image2_1.jpg"
+    }
+  ]
+}
