@@ -1,0 +1,21 @@
+{
+  "request_id": "jeolla20261007_real_b",
+  "assets": [
+    {
+      "id": "imsil_real1",
+      "url": "https://i3n.news1.kr/system/photos/2024/10/5/6912282/high.jpg"
+    },
+    {
+      "id": "imsil_real2",
+      "url": "https://img1.newsis.com/2023/10/07/NISI20231007_0001381129_web.jpg"
+    },
+    {
+      "id": "jeongeup_real1",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/30/3411630_image2_1.JPG"
+    },
+    {
+      "id": "jeongeup_real2",
+      "url": "https://www.telltrip.com/wp-content/uploads/2025/10/jeongeup-gujeolcho-flower-festival-2025-2.webp"
+    }
+  ]
+}
