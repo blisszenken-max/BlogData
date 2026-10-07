@@ -1,0 +1,21 @@
+{
+  "request_id": "jeolla20261007_real_a",
+  "assets": [
+    {
+      "id": "chungjang_real1",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/78/3584478_image2_1.jpg"
+    },
+    {
+      "id": "chungjang_real2",
+      "url": "https://image.fnnews.com/resource/media/image/2023/03/06/202303061548084736_l.JPG"
+    },
+    {
+      "id": "naju_real1",
+      "url": "https://cdn.jnilbo.com/news/photo/202610/90000070283_594643_3311.png"
+    },
+    {
+      "id": "naju_real2",
+      "url": "https://www.betanews.net/data/beta/image/2026/09/16/beta20260916000125.jpg"
+    }
+  ]
+}
