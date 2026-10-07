@@ -1,0 +1,25 @@
+{
+  "request_id": "jeolla_refresh_20261007_b4",
+  "assets": [
+    {
+      "id": "mokpo1",
+      "url": "https://www.kukinews.com/data/kuk/image/2025/09/30/kuk20250930000106.jpg"
+    },
+    {
+      "id": "mokpo2",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/34/2539834_image2_1.jpg"
+    },
+    {
+      "id": "gangjin1",
+      "url": "https://cdnweb01.wikitree.co.kr/webdata/editor/202510/30/img_20251030035132_fca8853f.webp"
+    },
+    {
+      "id": "gangjin2",
+      "url": "https://news.nateimg.co.kr/orgImg/ck/2025/10/31/kuk20251031000321.800x.0.jpg"
+    },
+    {
+      "id": "naju3",
+      "url": "https://www.kukinews.com/data/kuk/image/2025/10/09/kuk20251009000001.800x.9.jpg"
+    }
+  ]
+}
