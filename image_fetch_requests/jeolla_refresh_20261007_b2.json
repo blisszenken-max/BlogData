@@ -1,0 +1,25 @@
+{
+  "request_id": "jeolla_refresh_20261007_b2",
+  "assets": [
+    {
+      "id": "heungbu1",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/41/2998541_image2_1.jpg"
+    },
+    {
+      "id": "heungbu2",
+      "url": "https://img1.newsis.com/2025/10/18/NISI20251018_0001969086_web.jpg?rnd=20251018145638"
+    },
+    {
+      "id": "heungbu_poster",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/56/4114556_image2_1.jpg"
+    },
+    {
+      "id": "imsil1",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/66/2949766_image2_1.jpg"
+    },
+    {
+      "id": "imsil2",
+      "url": "https://www.imsilfestival.com/files/2019/04/15/50bab9e03d7166fa153d3049d1c6770e145707.jpg"
+    }
+  ]
+}
