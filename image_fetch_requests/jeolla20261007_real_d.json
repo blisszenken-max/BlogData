@@ -1,0 +1,21 @@
+{
+  "request_id": "jeolla20261007_real_d",
+  "assets": [
+    {
+      "id": "seochang_real1",
+      "url": "https://img1.newsis.com/2025/10/20/NISI20251020_0001970104_web.jpg"
+    },
+    {
+      "id": "seochang_real2",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/17/2730017_image2_1.jpg"
+    },
+    {
+      "id": "gangjin_real1",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/76/2843776_image2_1.JPG"
+    },
+    {
+      "id": "gangjin_real2",
+      "url": "https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/e7e41e68-9d48-4c70-a918-c636f28bd6a6_28.JPG"
+    }
+  ]
+}
