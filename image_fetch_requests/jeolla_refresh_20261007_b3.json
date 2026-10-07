@@ -1,0 +1,25 @@
+{
+  "request_id": "jeolla_refresh_20261007_b3",
+  "assets": [
+    {
+      "id": "jeongeup1",
+      "url": "https://tong.visitkorea.or.kr/cms/resource/30/3411630_image2_1.JPG"
+    },
+    {
+      "id": "jeongeup2",
+      "url": "https://www.domin.co.kr/news/photo/201808/1207667_331912_4615.jpg"
+    },
+    {
+      "id": "gochang1",
+      "url": "https://newsimg.koreatimes.co.kr/2026/03/25/f45134b9-a635-4e63-907d-f1d4c8eb0aef.jpg?w=728"
+    },
+    {
+      "id": "gochang2",
+      "url": "https://flexible.img.hani.co.kr/flexible/normal/800/533/imgdb/original/2022/0929/20220929501249.jpg"
+    },
+    {
+      "id": "gochang_poster",
+      "url": "https://dn.joongdo.co.kr/mnt/images/file/2026y/09m/04d/2026090401000369600013291.jpg"
+    }
+  ]
+}
