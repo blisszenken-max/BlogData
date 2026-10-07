@@ -1,0 +1,21 @@
+{
+  "request_id": "jeolla20261007_posters",
+  "assets": [
+    {
+      "id": "chungjang_poster",
+      "url": "https://image.newdaily.co.kr/site/data/img/2026/10/02/2026100200287_0.jpg"
+    },
+    {
+      "id": "naju_program",
+      "url": "https://attv24.com/data/file/news/17908690095946.png"
+    },
+    {
+      "id": "jeongeup_poster",
+      "url": "https://img1.daumcdn.net/thumb/R658x0.q70/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fnews%2F202609%2F30%2Fsisapress%2F20260930165701161ihrx.jpg"
+    },
+    {
+      "id": "gochang_poster",
+      "url": "https://dn.joongdo.co.kr/mnt/images/file/2026y/09m/04d/2026090401000369600013291.jpg"
+    }
+  ]
+}
