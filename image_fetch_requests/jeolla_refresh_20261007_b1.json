@@ -1,0 +1,25 @@
+{
+  "request_id": "jeolla_refresh_20261007_b1",
+  "assets": [
+    {
+      "id": "chungjang1",
+      "url": "https://img.seoul.co.kr/img/upload/2026/10/01/SSC_20261001005611.jpg.webp"
+    },
+    {
+      "id": "chungjang2",
+      "url": "https://img.khan.co.kr/news/2022/09/30/news-p.v1.20220930.c6bfa46ca1e94d48b3c330ecebd5931f_P1.jpg"
+    },
+    {
+      "id": "chungjang_poster",
+      "url": "https://image.newdaily.co.kr/site/data/img/2026/10/02/2026100200287_0.jpg"
+    },
+    {
+      "id": "naju1",
+      "url": "https://img.seoul.co.kr/img/upload/2025/10/13/SSC_20251013165305_O2.jpg"
+    },
+    {
+      "id": "naju2",
+      "url": "https://img.seoul.co.kr/img/upload/2024/10/02/SSC_20241002035156.jpg"
+    }
+  ]
+}
