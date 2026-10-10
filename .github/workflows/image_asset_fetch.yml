@@ -106,6 +106,14 @@ jobs:
               result['assets'].append(rec)
           (outdir/'download_result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
           PY
+      - name: Print server-side image verification result
+        if: always()
+        run: |
+          if test -f /tmp/image_fetch_results/${{ steps.request.outputs.request_id }}/download_result.json; then
+            cat /tmp/image_fetch_results/${{ steps.request.outputs.request_id }}/download_result.json
+          else
+            echo 'download_result.json unavailable'
+          fi
       - name: Upload one-day image result
         if: always()
         uses: actions/upload-artifact@v4
