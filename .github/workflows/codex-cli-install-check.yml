@@ -1,0 +1,45 @@
+name: Codex CLI installation check
+
+# Isolated, no OpenAI API calls, no credentials, no production changes.
+on:
+  push:
+    paths:
+      - ".github/workflows/codex-cli-install-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codex-cli-install-check
+  cancel-in-progress: false
+
+jobs:
+  install-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Prepare Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install Codex CLI
+        run: npm install --global @openai/codex@latest
+
+      - name: Verify Codex CLI without any paid API calls
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v codex
+          codex --version
+          codex exec --help >/dev/null
+          {
+            echo "## Codex CLI installation"
+            echo "Status: PASS"
+            echo "Installed CLI: $(codex --version)"
+            echo "Authentication: NOT CONFIGURED"
+            echo "Image generation: NOT RUN"
+            echo "OpenAI API calls: NONE"
+            echo "Runner is ephemeral; the CLI is reinstalled on each run."
+          } >> "$GITHUB_STEP_SUMMARY"
