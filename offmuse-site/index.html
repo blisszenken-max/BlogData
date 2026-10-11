@@ -1,51 +1,62 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OFFMUSE — Blogger Automation</title>
-  <meta name="description" content="OFFMUSE Blogger Automation is a private publishing utility that connects Google Blogger with an automated publishing workflow." />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11110f">
+  <meta name="description" content="Noah & Zoe(노아지오). 글이 노래가 될 때. 사랑과 기억, 일상의 이야기를 음악으로 전합니다.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Noah & Zoe — 노아지오">
+  <meta property="og:description" content="글이 노래가 될 때. 사랑과 기억, 일상의 이야기를 음악으로 전합니다.">
+  <meta property="og:site_name" content="Noah & Zoe">
+  <meta property="og:url" content="https://offmuse.com/">
+  <title>Noah & Zoe | 노아지오</title>
   <style>
-    :root{--bg:#0d0d0f;--panel:#17171b;--text:#f5f5f3;--muted:#a6a6ad;--line:#2a2a31;--accent:#d8ff5f;}
-    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6}
-    .wrap{max-width:980px;margin:0 auto;padding:28px 22px 64px}.nav{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px}.brand{font-weight:800;letter-spacing:.12em}.nav a{color:var(--muted);text-decoration:none}.hero{padding:96px 0 72px}.eyebrow{color:var(--accent);font-size:.82rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}.hero h1{font-size:clamp(3rem,8vw,6.6rem);line-height:.95;margin:14px 0 24px;letter-spacing:-.05em}.hero p{max-width:720px;font-size:1.16rem;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}.card h2{font-size:1rem;margin:0 0 8px}.card p{margin:0;color:var(--muted);font-size:.95rem}.section{margin-top:64px}.section h2{font-size:2rem;margin-bottom:12px}.section p,.section li{color:var(--muted)}.notice{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:28px}.footer{margin-top:80px;padding-top:22px;border-top:1px solid var(--line);display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}.footer a{color:var(--text)}
-    @media(max-width:760px){.grid{grid-template-columns:1fr}.hero{padding:68px 0 52px}}
+    :root{color-scheme:dark;--bg:#11110f;--fg:#f4f0e8;--soft:#b5afa5;--line:#393833;--accent:#cfb98c}
+    *{box-sizing:border-box}
+    html{min-height:100%;scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;-webkit-font-smoothing:antialiased}
+    a{color:inherit}
+    .page{min-height:100vh;min-height:100svh;max-width:1440px;margin:auto;display:flex;flex-direction:column;padding:38px clamp(24px,6.2vw,96px) 30px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:16px}
+    .wordmark{font-size:.85rem;font-weight:740;letter-spacing:.23em;text-decoration:none}
+    .top-note{color:var(--soft);font-size:.74rem;letter-spacing:.22em}
+    main{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:86px 0 100px}
+    .eyebrow{font-size:.78rem;color:var(--accent);letter-spacing:.34em;font-weight:700;margin:0 0 24px}
+    h1{font-weight:650;letter-spacing:-.078em;font-size:clamp(4rem,12.5vw,12rem);line-height:.92;margin:0;max-width:1200px}
+    .ko{font-size:clamp(1.2rem,2.5vw,2.05rem);font-weight:470;letter-spacing:.33em;color:var(--soft);margin:26px 0 0}
+    .rule{height:1px;width:min(520px,100%);background:var(--line);margin:45px 0 37px}
+    h2{font-family:Georgia,"Noto Serif KR",serif;font-weight:400;font-size:clamp(1.6rem,3.2vw,2.65rem);letter-spacing:-.05em;line-height:1.4;margin:0}
+    .desc{color:var(--soft);font-size:clamp(.95rem,1.25vw,1.08rem);letter-spacing:-.02em;line-height:1.9;margin:13px 0 32px}
+    .cta{display:inline-flex;align-items:center;gap:26px;border:1px solid var(--accent);text-decoration:none;color:var(--fg);padding:16px 20px 16px 23px;font-size:.95rem;font-weight:650;transition:background .18s,color .18s,transform .18s}
+    .cta:hover,.cta:focus-visible{background:var(--accent);color:var(--bg);transform:translateY(-2px)}
+    .cta:focus-visible,.footer a:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+    .cta .arrow{font-size:1.15rem;line-height:1}
+    .footer{display:flex;justify-content:space-between;gap:20px;border-top:1px solid var(--line);padding-top:19px;color:var(--soft);font-size:.75rem;letter-spacing:.08em}
+    .footer a{color:var(--soft);text-decoration:none}
+    .footer a:hover{text-decoration:underline}
+    @media(max-width:700px){.page{padding:24px 24px 22px}.top-note{font-size:.65rem;letter-spacing:.1em}main{padding:100px 0}.eyebrow{font-size:.7rem}h1{font-size:clamp(3.8rem,17vw,6.6rem);letter-spacing:-.07em}.ko{font-size:1.1rem;margin-top:22px}.rule{margin:35px 0 31px}.footer{font-size:.68rem}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <nav class="nav"><div class="brand">OFFMUSE</div><a href="/privacy">Privacy</a></nav>
-
-    <section class="hero">
-      <div class="eyebrow">Private publishing utility</div>
-      <h1>Blogger, without the repetitive steps.</h1>
-      <p>OFFMUSE Blogger Automation is a private publishing workflow that connects Google Blogger to an automated content pipeline. It is designed to help the account owner prepare, create, and publish Blogger posts with fewer manual steps.</p>
-    </section>
-
-    <section class="grid" aria-label="How it works">
-      <article class="card"><h2>1. Connect</h2><p>The owner authorizes access to Google Blogger using Google OAuth.</p></article>
-      <article class="card"><h2>2. Prepare</h2><p>The workflow prepares post content and publishing metadata for a selected Blogger site.</p></article>
-      <article class="card"><h2>3. Publish</h2><p>The automation can create Blogger drafts or publish posts through the official Blogger API.</p></article>
-    </section>
-
-    <section class="section">
-      <h2>Why Google data is requested</h2>
-      <p>The OAuth application associated with this service may request the Blogger scope so it can identify Blogger accounts and managed blogs, and create or publish posts on blogs that the account owner controls. OFFMUSE does not use Blogger access for advertising, profiling, or selling user data.</p>
-      <div class="notice"><strong>OAuth app name:</strong> Blogger_자동등록_FINAL</div>
-    </section>
-
-    <section class="section">
-      <h2>Data handling at a glance</h2>
-      <ul>
-        <li>Google Blogger data is used only to operate the publishing workflow requested by the account owner.</li>
-        <li>The public OFFMUSE website does not receive or store Google OAuth access tokens.</li>
-        <li>Operational metadata such as blog IDs, post IDs, timestamps, status values, and error logs may be stored within the owner's Google Apps Script or Google Drive environment when configured.</li>
-        <li>Google user data is not sold or shared with advertisers.</li>
-      </ul>
-      <p>For full details, see the <a href="/privacy" style="color:var(--text)">Privacy Policy</a>.</p>
-    </section>
-
-    <footer class="footer"><span>© OFFMUSE</span><a href="/privacy">Privacy Policy</a></footer>
-  </main>
+  <div class="page">
+    <header class="top">
+      <a class="wordmark" href="/" aria-label="Noah & Zoe 홈">N&amp;Z</a>
+      <span class="top-note">MUSIC &amp; STORIES</span>
+    </header>
+    <main id="content">
+      <p class="eyebrow">WORDS INTO MUSIC</p>
+      <h1>NOAH<br>&amp; ZOE</h1>
+      <p class="ko">노아지오</p>
+      <div class="rule" aria-hidden="true"></div>
+      <h2>글이 노래가 될 때.</h2>
+      <p class="desc">사랑과 기억, 일상의 이야기를 음악으로 전합니다.</p>
+      <a class="cta" href="https://www.youtube.com/playlist?list=PLqTffGOChCZdmFseXRsY5553QV4U2bsfD" target="_blank" rel="noopener noreferrer" aria-label="YouTube에서 노아지오의 음악 듣기 (새 창)">
+        <span>YouTube에서 음악 듣기</span><span class="arrow" aria-hidden="true">↗</span>
+      </a>
+    </main>
+    <footer class="footer"><span>© NOAH &amp; ZOE</span><a href="/privacy/">Privacy</a></footer>
+  </div>
 </body>
 </html>
