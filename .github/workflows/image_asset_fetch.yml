@@ -122,6 +122,22 @@ jobs:
           path: ${{ steps.fetch_assets.outputs.result_dir }}
           if-no-files-found: warn
           retention-days: 1
+      - name: Publish sanitized transport receipt
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          result="/tmp/image_fetch_results/${{ steps.request.outputs.request_id }}/download_result.json"
+          if [[ -s "$result" ]]; then
+            jq -c '{request_id,request_payload_sha256,request_issue_number,workflow_run_id,pass_count,fail_count,assets:[.assets[]? | {id,status,sha256,width,height,size_bytes,file,error}]}' "$result" > /tmp/receipt.json
+          else
+            jq -cn --arg id "${{ steps.request.outputs.request_id }}" --arg run "${{ github.run_id }}" '{request_id:$id,workflow_run_id:$run,status:"HOLD",error:"RESULT_MISSING"}' > /tmp/receipt.json
+          fi
+          gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body "IMAGE_FETCH_RESULT_JSON: $(cat /tmp/receipt.json)"
       - name: Close singleton issue
         if: always()
         env:
