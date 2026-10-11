@@ -6,12 +6,12 @@
   <meta name="theme-color" content="#111715">
   <meta name="description" content="Noah & Zoe(노아지오). 글이 노래가 될 때. 사랑과 기억, 일상의 이야기를 음악으로 전합니다.">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Noah & Zoe">
+  <meta property="og:site_name" content="OFFMUSE">
   <meta property="og:title" content="Noah & Zoe · 노아지오">
   <meta property="og:description" content="글이 노래가 될 때. 사랑과 기억, 일상의 이야기를 음악으로 전합니다.">
   <meta property="og:url" content="https://offmuse.com/">
   <meta name="color-scheme" content="dark">
-  <title>Noah & Zoe | 노아지오</title>
+  <title>Noah &amp; Zoe | OFFMUSE</title>
   <style>
     :root {
       --bg: #111715; --paper: #f5f1e9; --muted: #c4c0b4;
@@ -131,6 +131,37 @@
       .foot { font-size:.64rem; }
     }
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.listen{transition:none}.listen:hover{transform:none}}
+
+/* OFFMUSE V2: single, static responsive landing; no API or database */
+.masthead{min-height:76px}
+.brand-name{letter-spacing:.23em}.brand-name small{letter-spacing:.09em;font-size:.58rem}
+.hero{grid-template-columns:minmax(0,1.4fr) minmax(320px,.8fr);gap:clamp(15px,3vw,46px)}
+h1{font-size:clamp(4.1rem,7.35vw,8rem);white-space:nowrap;line-height:1.06;letter-spacing:-.058em}
+h1 em{font-weight:400;font-style:italic;color:var(--gold)}
+.copy{margin-top:clamp(37px,5vw,60px)}.listen{min-height:62px}
+@media(max-width:1100px){h1{font-size:clamp(3.5rem,7.0vw,6.5rem)}}
+@media(max-width:800px){
+.shell{overflow-x:clip}
+.hero{position:relative;display:flex;flex-direction:column;align-items:stretch;justify-content:center;overflow:hidden;isolation:isolate;min-height:0;padding:clamp(58px,9svh,85px) 0 66px;gap:0}
+.intro{position:relative;z-index:2}
+.art{position:absolute;z-index:-1;top:45px;right:-145px;display:block;width:310px;max-width:none;margin:0;opacity:.20;pointer-events:none}
+.art .label,.art-caption{display:none}
+.eyebrow{margin-bottom:28px}h1{font-size:clamp(3.35rem,10.2vw,5.8rem);letter-spacing:-.075em;white-space:nowrap}
+.copy{margin:44px 0 26px}.copy p{max-width:350px}.vinyl{width:100%}.listen{min-height:59px}
+}
+@media(max-width:520px){
+.shell{padding:0 24px}.masthead{min-height:84px;padding:0;border-bottom:1px solid var(--rule)}
+.brand-mark{width:39px;height:39px;font-size:.76rem}
+.brand-name{font-size:.72rem;letter-spacing:.18em}.brand-name small{font-size:.58rem;letter-spacing:.045em}
+.nav-link{font-size:.68rem;letter-spacing:.07em}.hero{padding:clamp(56px,9svh,82px) 0 60px}
+.eyebrow{font-size:.64rem;letter-spacing:.21em;margin-bottom:29px}
+h1{font-size:clamp(2.9rem,11.15vw,3.8rem)}
+.korean{font-size:1.01rem;letter-spacing:.30em;margin-top:16px}
+.copy{margin:49px 0 0;padding-left:17px}.copy h2{font-size:1.5rem}.copy p{font-size:.95rem;line-height:1.9}
+.listen{width:100%;max-width:360px;margin-top:35px;padding-inline:14px;justify-content:flex-start;gap:12px;font-size:.95rem}
+.listen .exit{margin-left:auto}.foot{min-height:59px;padding-top:0;font-size:.64rem;letter-spacing:.12em}
+}
+@media(max-width:360px){.shell{padding-inline:20px}h1{font-size:clamp(2.62rem,11.05vw,3rem)}.copy h2{font-size:1.39rem}.listen{font-size:.89rem}}
   </style>
 </head>
 <body>
@@ -139,14 +170,14 @@
     <header class="masthead">
       <a href="/" class="brand" aria-label="Noah & Zoe 홈">
         <span class="brand-mark" aria-hidden="true">N·Z</span>
-        <span class="brand-name">NOAH &amp; ZOE<small>노아지오</small></span>
+        <span class="brand-name">OFFMUSE<small>MUSIC &amp; STORIES</small></span>
       </a>
       <a class="nav-link" href="https://www.youtube.com/playlist?list=PLqTffGOChCZdmFseXRsY5553QV4U2bsfD" target="_blank" rel="noopener noreferrer">YOUTUBE <span aria-hidden="true">↗</span></a>
     </header>
     <main class="hero" id="main">
       <section class="intro" aria-labelledby="hero-title">
         <p class="eyebrow">MUSIC &amp; STORIES</p>
-        <h1 id="hero-title"><span>Noah</span><span class="second"><em>&amp;</em> Zoe</span></h1>
+        <h1 id="hero-title">Noah <em>&amp;</em> Zoe</h1>
         <p class="korean">노아지오</p>
         <div class="copy">
           <h2>글이 노래가 될 때.</h2>
@@ -162,7 +193,7 @@
         <span class="art-caption">AN EVERYDAY SOUNDTRACK</span>
       </div>
     </main>
-    <footer class="foot"><span>© NOAH &amp; ZOE</span><a href="/privacy/">PRIVACY</a></footer>
+    <footer class="foot"><span>© OFFMUSE · NOAH &amp; ZOE</span><a href="/privacy/">PRIVACY</a></footer>
   </div>
 </body>
 </html>
