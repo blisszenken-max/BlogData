@@ -86,7 +86,7 @@ async function outputResults(res){const songs=await getSongs(),rows=[["song_id",
 module.exports=async function handler(req,res){
  try{
   if(req.method==="GET"){
-   if(req.query?.results==="csv"){const secret=process.env.OFFMUSE_REPORT_SECRET;if(!secret||req.headers?.authorization!=="Bearer "+secret)return reply(res,403,{ok:false,code:"REPORT_FORBIDDEN"});if(!redisEnv())return reply(res,503,{ok:false,code:"VOTING_NOT_READY"});return await outputResults(res);}
+   if(req.query?.results==="csv"){const secret=process.env.OFFMUSE_REPORT_SECRET;const bearer=req.headers?.authorization==="Bearer "+secret;const sheetKey=typeof req.query?.report_key==="string"&&req.query.report_key===secret;if(!secret||!(bearer||sheetKey))return reply(res,403,{ok:false,code:"REPORT_FORBIDDEN"});if(!redisEnv())return reply(res,503,{ok:false,code:"VOTING_NOT_READY"});return await outputResults(res);}
    const storage=storageConfiguration();if(!storage.ok)return reply(res,200,{ok:true,enabled:false,reason:storage.reason});
    try{
     const p=await redis(["PING"]);
