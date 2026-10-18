@@ -30,11 +30,22 @@ async function getSongs(){if(cached.songs&&Date.now()<cached.until)return cached
  cached={songs:map,until:Date.now()+30000};
  return map;
 }
-function redisEnv(){const url=process.env.UPSTASH_REDIS_REST_URL||process.env.KV_REST_API_URL;
- const token=process.env.UPSTASH_REDIS_REST_TOKEN||process.env.KV_REST_API_TOKEN;
- if(!url||!token)return null;
- try{const u=new URL(url);if(u.protocol!=="https:")return null;}catch{return null;}
- return{url:url.replace(/\/$/,""),token};}
+function normalizeEnv(value){
+ let v=String(value??"").trim();
+ if(v.length>1&&((v[0]==='"'&&v[v.length-1]==='"')||(v[0]==="'"&&v[v.length-1]==="'")))v=v.slice(1,-1).trim();
+ return v;
+}
+function storageConfiguration(){
+ const url=normalizeEnv(process.env.UPSTASH_REDIS_REST_URL||process.env.KV_REST_API_URL);
+ const token=normalizeEnv(process.env.UPSTASH_REDIS_REST_TOKEN||process.env.KV_REST_API_TOKEN);
+ if(!url&&!token)return {ok:false,reason:"missing_url_and_token"};
+ if(!url)return {ok:false,reason:"missing_url"};
+ if(!token)return {ok:false,reason:"missing_token"};
+ try{const u=new URL(url);if(u.protocol!=="https:"||!u.hostname)return {ok:false,reason:"invalid_url"};}
+ catch{return {ok:false,reason:"invalid_url"};}
+ return{ok:true,url:url.replace(/\/$/,""),token};
+}
+function redisEnv(){const data=storageConfiguration();return data.ok?{url:data.url,token:data.token}:null;}
 async function redis(command){const c=redisEnv();if(!c)throw Object.assign(Error("storage not configured"),{code:"STORAGE_OFFLINE"});
  const response=await fetch(c.url,{method:"POST",headers:{"Authorization":"Bearer "+c.token,"Content-Type":"application/json"},body:JSON.stringify(command),signal:AbortSignal.timeout(8000)});
  if(!response.ok)throw Error("storage request failed");
@@ -52,7 +63,7 @@ module.exports=async function handler(req,res){
  try{
   if(req.method==="GET"){
    if(req.query?.results==="csv"){const secret=process.env.OFFMUSE_REPORT_SECRET;if(!secret||req.headers?.authorization!=="Bearer "+secret)return reply(res,403,{ok:false,code:"REPORT_FORBIDDEN"});if(!redisEnv())return reply(res,503,{ok:false,code:"VOTING_NOT_READY"});return await outputResults(res);}
-   if(!redisEnv())return reply(res,200,{ok:true,enabled:false,reason:"storage_not_connected"});
+   const storage=storageConfiguration();if(!storage.ok)return reply(res,200,{ok:true,enabled:false,reason:storage.reason});
    try{const p=await redis(["PING"]);return reply(res,200,{ok:true,enabled:p==="PONG"});}
    catch{return reply(res,200,{ok:true,enabled:false,reason:"storage_unavailable"});}
   }
