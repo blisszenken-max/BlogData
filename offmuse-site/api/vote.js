@@ -41,7 +41,7 @@ async function redis(command){const c=redisEnv();if(!c)throw Object.assign(Error
  const data=await response.json();if(data.error)throw Error("storage command failed");return data.result;}
 function reply(res,code,value){res.statusCode=code;res.setHeader("Content-Type","application/json; charset=utf-8");res.setHeader("Cache-Control","no-store");res.setHeader("X-Content-Type-Options","nosniff");res.end(JSON.stringify(value));}
 function csvEscape(x){const s=String(x??"");return /[,"\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
-function counts(flat){const obj=Object.create(null);if(Array.isArray(flat))for(let i=0;i+1<flat.length;i+=2)obj[String(flat[i])]=Number(flat[i+1])||0;return obj;}
+function counts(flat){const obj=Object.create(null);if(Array.isArray(flat)){for(let i=0;i+1<flat.length;i+=2)obj[String(flat[i])]=Number(flat[i+1])||0;}else if(flat&&typeof flat==="object"){for(const [k,v]of Object.entries(flat))obj[k]=Number(v)||0;}return obj;}
 async function outputResults(res){const songs=await getSongs(),rows=[["song_id","곡명","버전","투표수","곡 총투표수","득표율"]];
  for(const [id,entry]of songs){const data=counts(await redis(["HGETALL",PREFIX+id]));
  const total=[...entry.versions].reduce((a,v)=>a+(data[v]||0),0);
@@ -51,7 +51,7 @@ async function outputResults(res){const songs=await getSongs(),rows=[["song_id",
 module.exports=async function handler(req,res){
  try{
   if(req.method==="GET"){
-   if(req.query?.results==="csv"){if(!redisEnv())return reply(res,503,{ok:false,code:"VOTING_NOT_READY"});return await outputResults(res);}
+   if(req.query?.results==="csv"){const secret=process.env.OFFMUSE_REPORT_SECRET;if(!secret||req.headers?.authorization!=="Bearer "+secret)return reply(res,403,{ok:false,code:"REPORT_FORBIDDEN"});if(!redisEnv())return reply(res,503,{ok:false,code:"VOTING_NOT_READY"});return await outputResults(res);}
    if(!redisEnv())return reply(res,200,{ok:true,enabled:false,reason:"storage_not_connected"});
    try{const p=await redis(["PING"]);return reply(res,200,{ok:true,enabled:p==="PONG"});}
    catch{return reply(res,200,{ok:true,enabled:false,reason:"storage_unavailable"});}
