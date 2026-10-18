@@ -15,6 +15,8 @@
   let lastSig = "";
   let requestedAt = 0;
   let loaded = false;
+  let votingEnabled = false;
+  let lastSongs = [];
   let waitTimer = null;
   let pendingScript = null;
 
@@ -87,6 +89,9 @@
       card.appendChild(top);
       if (song.desc) card.appendChild(elt("p", "music-lab-desc", song.desc));
       const grid = elt("div", "music-versions");
+      const status = elt("p", "music-status", votingEnabled ? "좋아하는 버전은 여러 번 투표할 수 있습니다." : "음원을 감상할 수 있습니다. 선호도 투표는 현재 연결 준비 중입니다.");
+      status.setAttribute("role","status");
+      status.setAttribute("aria-live","polite");
       for (const v of song.versions) {
         const panel = elt("div", "music-version");
         panel.appendChild(elt("span", "music-version-letter", v.version));
@@ -96,10 +101,36 @@
         a.rel = "noopener noreferrer";
         a.setAttribute("aria-label", song.title + " 버전 " + v.version + " Suno에서 듣기");
         panel.appendChild(a);
+        if (votingEnabled) {
+          const vote = elt("button", "music-version-vote", "♡ " + v.version + " 투표");
+          vote.type = "button";
+          vote.setAttribute("aria-label", song.title + " 버전 " + v.version + "에 투표하기");
+          vote.addEventListener("click", async function () {
+            vote.disabled = true;
+            status.textContent = "투표를 기록하고 있습니다…";
+            try {
+              const response = await fetch("/api/vote", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ songId: song.id, version: v.version })
+              });
+              const result = await response.json();
+              if (!response.ok || result.ok !== true || result.stored !== true) {
+                throw new Error("Vote not saved");
+              }
+              status.textContent = "버전 " + v.version + "에 투표했습니다. 원하시면 다시 투표할 수 있습니다.";
+            } catch (_) {
+              status.textContent = "투표가 저장되지 않았습니다. 잠시 후 다시 시도해 주세요.";
+            } finally {
+              vote.disabled = false;
+            }
+          });
+          panel.appendChild(vote);
+        }
         grid.appendChild(panel);
       }
       card.appendChild(grid);
-      card.appendChild(elt("p", "music-status", "음원을 감상할 수 있습니다. 선호도 투표는 별도 연결 준비 중입니다."));
+      card.appendChild(status);
       frag.appendChild(card);
     }
     root.replaceChildren(frag);
@@ -111,6 +142,7 @@
     try {
       const songs = listFromSheet(payload);
       const signature = JSON.stringify(songs.map(x => [x.id, x.title, x.desc, x.order, x.versions]));
+      lastSongs = songs;
       if (!loaded || signature !== lastSig) { draw(songs); lastSig = signature; }
       loaded = true;
       root.setAttribute("data-source", "live-google-sheet");
@@ -145,8 +177,27 @@
       }
     }, TIMEOUT_MS);
   }
+  async function checkVoteStatus() {
+    let enabled = false;
+    try {
+      const response = await fetch("/api/vote", { cache: "no-store" });
+      if (response.ok) {
+        const data = await response.json();
+        enabled = data.ok === true && data.enabled === true;
+      }
+    } catch (_) {}
+    if (enabled !== votingEnabled) {
+      votingEnabled = enabled;
+      if (loaded) {
+        draw(lastSongs);
+        lastSig = "";
+      }
+    }
+  }
   refresh();
+  checkVoteStatus();
   window.setInterval(function () {
+    checkVoteStatus();
     if (!document.hidden) refresh();
   }, POLL_MS);
 })();
