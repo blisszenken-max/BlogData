@@ -41,15 +41,39 @@ function storageConfiguration(){
  if(!url&&!token)return {ok:false,reason:"missing_url_and_token"};
  if(!url)return {ok:false,reason:"missing_url"};
  if(!token)return {ok:false,reason:"missing_token"};
- try{const u=new URL(url);if(u.protocol!=="https:"||!u.hostname)return {ok:false,reason:"invalid_url"};}
- catch{return {ok:false,reason:"invalid_url"};}
+ try{
+  const u=new URL(url);
+  if(u.protocol!=="https:"||!u.hostname)return {ok:false,reason:"invalid_url"};
+  // The Upstash REST URL is an HTTPS *.upstash.io origin, not the console or Redis TCP URL.
+  if(!u.hostname.toLowerCase().endsWith(".upstash.io")||u.username||u.password||u.pathname!=="/"||u.search||u.hash)
+   return {ok:false,reason:"wrong_rest_endpoint"};
+ }catch{return {ok:false,reason:"invalid_url"};}
  return{ok:true,url:url.replace(/\/$/,""),token};
 }
 function redisEnv(){const data=storageConfiguration();return data.ok?{url:data.url,token:data.token}:null;}
-async function redis(command){const c=redisEnv();if(!c)throw Object.assign(Error("storage not configured"),{code:"STORAGE_OFFLINE"});
- const response=await fetch(c.url,{method:"POST",headers:{"Authorization":"Bearer "+c.token,"Content-Type":"application/json"},body:JSON.stringify(command),signal:AbortSignal.timeout(8000)});
- if(!response.ok)throw Error("storage request failed");
- const data=await response.json();if(data.error)throw Error("storage command failed");return data.result;}
+function storageError(code){return Object.assign(Error(code),{code});}
+async function redis(command){
+ const c=redisEnv();if(!c)throw storageError("storage_not_configured");
+ let response;
+ try{
+  response=await fetch(c.url,{method:"POST",headers:{"Authorization":"Bearer "+c.token,"Content-Type":"application/json"},body:JSON.stringify(command),signal:AbortSignal.timeout(8000)});
+ }catch(e){throw storageError(e?.name==="TimeoutError"||e?.name==="AbortError"?"connection_timeout":"network_error");}
+ if(!response.ok){
+  if(response.status===401||response.status===403)throw storageError("authentication_failed");
+  if(response.status===404)throw storageError("endpoint_not_found");
+  if(response.status===429)throw storageError("rate_limited");
+  if(response.status>=500)throw storageError("redis_service_error");
+  throw storageError("redis_request_rejected");
+ }
+ let data;
+ try{data=await response.json();}catch{throw storageError("invalid_redis_response");}
+ if(data?.error){
+  if(/auth|token|unauthori[sz]|credential/i.test(String(data.error)))throw storageError("authentication_failed");
+  throw storageError("redis_command_error");
+ }
+ if(!data||!Object.prototype.hasOwnProperty.call(data,"result"))throw storageError("invalid_redis_response");
+ return data.result;
+}
 function reply(res,code,value){res.statusCode=code;res.setHeader("Content-Type","application/json; charset=utf-8");res.setHeader("Cache-Control","no-store");res.setHeader("X-Content-Type-Options","nosniff");res.end(JSON.stringify(value));}
 function csvEscape(x){const s=String(x??"");return /[,"\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
 function counts(flat){const obj=Object.create(null);if(Array.isArray(flat)){for(let i=0;i+1<flat.length;i+=2)obj[String(flat[i])]=Number(flat[i+1])||0;}else if(flat&&typeof flat==="object"){for(const [k,v]of Object.entries(flat))obj[k]=Number(v)||0;}return obj;}
@@ -64,8 +88,13 @@ module.exports=async function handler(req,res){
   if(req.method==="GET"){
    if(req.query?.results==="csv"){const secret=process.env.OFFMUSE_REPORT_SECRET;if(!secret||req.headers?.authorization!=="Bearer "+secret)return reply(res,403,{ok:false,code:"REPORT_FORBIDDEN"});if(!redisEnv())return reply(res,503,{ok:false,code:"VOTING_NOT_READY"});return await outputResults(res);}
    const storage=storageConfiguration();if(!storage.ok)return reply(res,200,{ok:true,enabled:false,reason:storage.reason});
-   try{const p=await redis(["PING"]);return reply(res,200,{ok:true,enabled:p==="PONG"});}
-   catch{return reply(res,200,{ok:true,enabled:false,reason:"storage_unavailable"});}
+   try{
+    const p=await redis(["PING"]);
+    return p==="PONG"?reply(res,200,{ok:true,enabled:true}):reply(res,200,{ok:true,enabled:false,reason:"unexpected_ping_result"});
+   }catch(e){
+    const known=["authentication_failed","endpoint_not_found","rate_limited","redis_service_error","redis_request_rejected","invalid_redis_response","redis_command_error","connection_timeout","network_error"];
+    return reply(res,200,{ok:true,enabled:false,reason:known.includes(e?.code)?e.code:"storage_unavailable"});
+   }
   }
   if(req.method!=="POST"){res.setHeader("Allow","GET, POST");return reply(res,405,{ok:false,code:"METHOD_NOT_ALLOWED"});}
   if(!redisEnv())return reply(res,503,{ok:false,code:"VOTING_NOT_READY"});
