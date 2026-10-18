@@ -89,25 +89,28 @@
       card.appendChild(top);
       if (song.desc) card.appendChild(elt("p", "music-lab-desc", song.desc));
       const grid = elt("div", "music-versions");
-      const status = elt("p", "music-status", votingEnabled ? "좋아하는 버전은 여러 번 투표할 수 있습니다." : "음원을 감상할 수 있습니다. 선호도 투표는 현재 연결 준비 중입니다.");
+      const status = elt("p", "music-status", votingEnabled ? "마음에 남는 버전에 👍를 눌러주세요. 여러 번 누를 수 있습니다." : "음원을 감상할 수 있습니다. 좋아요 기능은 연결 준비 중입니다.");
       status.setAttribute("role","status");
       status.setAttribute("aria-live","polite");
       for (const v of song.versions) {
         const panel = elt("div", "music-version");
         panel.appendChild(elt("span", "music-version-letter", v.version));
+        const actions = elt("div", "music-version-actions");
         const a = elt("a", "music-version-link", "Suno 듣기 ↗");
         a.href = v.url;
         a.target = "_blank";
         a.rel = "noopener noreferrer";
         a.setAttribute("aria-label", song.title + " 버전 " + v.version + " Suno에서 듣기");
-        panel.appendChild(a);
+        actions.appendChild(a);
         if (votingEnabled) {
-          const vote = elt("button", "music-version-vote", "♡ " + v.version + " 투표");
+          const vote = elt("button", "music-version-vote");
           vote.type = "button";
-          vote.setAttribute("aria-label", song.title + " 버전 " + v.version + "에 투표하기");
+          vote.title = "좋아요 · " + v.version + " 버전";
+          vote.setAttribute("aria-label", song.title + " 버전 " + v.version + " 좋아요 누르기");
+          vote.innerHTML = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>';
           vote.addEventListener("click", async function () {
             vote.disabled = true;
-            status.textContent = "투표를 기록하고 있습니다…";
+            status.textContent = "좋아요를 기록하고 있습니다…";
             try {
               const response = await fetch("/api/vote", {
                 method: "POST",
@@ -118,15 +121,17 @@
               if (!response.ok || result.ok !== true || result.stored !== true) {
                 throw new Error("Vote not saved");
               }
-              status.textContent = "버전 " + v.version + "에 투표했습니다. 원하시면 다시 투표할 수 있습니다.";
+              status.textContent = "버전 " + v.version + "에 좋아요를 보냈습니다. 다시 눌러도 됩니다.";
+              vote.classList.add("is-liked");
             } catch (_) {
-              status.textContent = "투표가 저장되지 않았습니다. 잠시 후 다시 시도해 주세요.";
+              status.textContent = "좋아요를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.";
             } finally {
               vote.disabled = false;
             }
           });
-          panel.appendChild(vote);
+          actions.appendChild(vote);
         }
+        panel.appendChild(actions);
         grid.appendChild(panel);
       }
       card.appendChild(grid);
