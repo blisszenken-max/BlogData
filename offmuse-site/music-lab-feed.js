@@ -89,18 +89,18 @@
       card.appendChild(top);
       if (song.desc) card.appendChild(elt("p", "music-lab-desc", song.desc));
       const grid = elt("div", "music-versions");
-      const status = elt("p", "music-status", votingEnabled ? "마음에 남는 버전에 👍를 눌러주세요. 여러 번 누를 수 있습니다." : "음원을 감상할 수 있습니다. 좋아요 기능은 연결 준비 중입니다.");
+      const status = elt("p", "music-status", votingEnabled ? "A · B · C 등을 눌러 음악을 듣고, 마음에 들면 👍를 눌러주세요." : "A · B · C 등을 누르면 음악을 들을 수 있습니다. 좋아요는 연결 준비 중입니다.");
       status.setAttribute("role","status");
       status.setAttribute("aria-live","polite");
       for (const v of song.versions) {
         const panel = elt("div", "music-version");
-        panel.appendChild(elt("span", "music-version-letter", v.version));
         const actions = elt("div", "music-version-actions");
-        const a = elt("a", "music-version-link", "Suno 듣기 ↗");
+        const a = elt("a", "music-version-letter", v.version);
         a.href = v.url;
         a.target = "_blank";
         a.rel = "noopener noreferrer";
-        a.setAttribute("aria-label", song.title + " 버전 " + v.version + " Suno에서 듣기");
+        a.title = "버전 " + v.version + " 듣기";
+        a.setAttribute("aria-label", song.title + " 버전 " + v.version + " 음악 듣기 (새 창)");
         actions.appendChild(a);
         if (votingEnabled) {
           const vote = elt("button", "music-version-vote");
