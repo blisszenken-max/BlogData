@@ -15,7 +15,6 @@
   let lastSig = "";
   let requestedAt = 0;
   let loaded = false;
-  let votingEnabled = false;
   let lastSongs = [];
   let waitTimer = null;
   let pendingScript = null;
@@ -156,7 +155,7 @@
       card.appendChild(top);
       if (song.desc) card.appendChild(elt("p", "music-lab-desc", song.desc));
       const grid = elt("div", "music-versions");
-      const status = elt("p", "music-status", votingEnabled ? "A · B · C 등을 눌러 음악을 듣고, 마음에 들면 👍를 눌러주세요." : "A · B · C 등을 누르면 음악을 들을 수 있습니다. 좋아요는 연결 준비 중입니다.");
+      const status = elt("p", "music-status", "A · B · C 등을 눌러 음악을 듣고, 마음에 들면 👍를 눌러주세요.");
       status.setAttribute("role","status");
       status.setAttribute("aria-live","polite");
       for (const v of song.versions) {
@@ -221,28 +220,9 @@
       }
     }, TIMEOUT_MS);
   }
-  async function checkVoteStatus() {
-    let enabled = false;
-    try {
-      const response = await fetch("/api/vote", { cache: "no-store" });
-      if (response.ok) {
-        const data = await response.json();
-        enabled = data.ok === true && data.enabled === true;
-      }
-    } catch (_) {}
-    if (enabled !== votingEnabled) {
-      votingEnabled = enabled;
-      if (loaded) {
-        draw(lastSongs);
-        lastSig = "";
-      }
-    }
-  }
   activateFallback();
   refresh();
-  checkVoteStatus();
   window.setInterval(function () {
-    checkVoteStatus();
     if (!document.hidden) refresh();
   }, POLL_MS);
 })();
