@@ -77,19 +77,34 @@
       vote.disabled = true;
       status.textContent = "좋아요를 기록하고 있습니다…";
       try {
-        const response = await fetch("/api/vote", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ songId: songId, version: version })
-        });
-        const result = await response.json();
-        if (!response.ok || result.ok !== true || result.stored !== true) {
-          throw new Error("Vote not saved");
+        let saved = false;
+        for (let attempt = 0; attempt < 2; attempt++) {
+          const response = await fetch("/api/vote", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            cache: "no-store",
+            body: JSON.stringify({ songId, version })
+          });
+          const result = await response.json();
+          if (response.ok && result.ok === true && result.stored === true) {
+            saved = true;
+            break;
+          }
+          // Retry only when the server confirms no write took place.
+          if (attempt === 0 && result.code === "MUSIC_LIST_UNAVAILABLE") continue;
+          const reason = {
+            INVALID_SELECTION: "등록된 버전 확인 실패",
+            MUSIC_LIST_UNAVAILABLE: "음악목록 연결 실패",
+            VOTE_STORE_UNAVAILABLE: "저장소 연결 실패",
+            VOTING_NOT_READY: "저장소 준비 중"
+          }[result.code] || "서버 응답 오류";
+          throw new Error(reason + (result.code ? " (" + result.code + ")" : ""));
         }
+        if (!saved) throw new Error("음악목록 연결 실패");
         status.textContent = "버전 " + version + "에 좋아요를 보냈습니다. 다시 눌러도 됩니다.";
         vote.classList.add("is-liked");
-      } catch (_) {
-        status.textContent = "좋아요를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.";
+      } catch (error) {
+        status.textContent = "버전 " + version + " 좋아요 저장 실패: " + (error.message || "네트워크 오류") + ". 잠시 후 다시 시도해 주세요.";
       } finally {
         vote.disabled = false;
       }
