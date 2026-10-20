@@ -71,6 +71,58 @@
     if (content !== undefined) e.textContent = content;
     return e;
   }
+  function attachVote(vote, songId, version, status) {
+    vote.disabled = false;
+    vote.addEventListener("click", async function () {
+      vote.disabled = true;
+      status.textContent = "좋아요를 기록하고 있습니다…";
+      try {
+        const response = await fetch("/api/vote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ songId: songId, version: version })
+        });
+        const result = await response.json();
+        if (!response.ok || result.ok !== true || result.stored !== true) {
+          throw new Error("Vote not saved");
+        }
+        status.textContent = "버전 " + version + "에 좋아요를 보냈습니다. 다시 눌러도 됩니다.";
+        vote.classList.add("is-liked");
+      } catch (_) {
+        status.textContent = "좋아요를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.";
+      } finally {
+        vote.disabled = false;
+      }
+    });
+
+  }
+  function newVote(songId, version, title, status) {
+    const vote = elt("button", "music-version-vote");
+    vote.type = "button";
+    vote.title = "좋아요 · " + version + " 버전";
+    vote.setAttribute("aria-label", title + " 버전 " + version + " 좋아요 누르기");
+    vote.innerHTML = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>';
+    attachVote(vote, songId, version, status);
+    return vote;
+  }
+  function activateFallback() {
+    const card = root.querySelector(".music-song");
+    if (!card) return;
+    const status = card.querySelector(".music-status");
+    const title = card.querySelector("h3")?.textContent?.trim() || "음악";
+    for (const versionCard of card.querySelectorAll(".music-version")) {
+      const link = versionCard.querySelector("a.music-version-letter");
+      const actions = versionCard.querySelector(".music-version-actions");
+      if (!link || !actions) continue;
+      const version = link.textContent.trim();
+      if (!/^[A-D]$/.test(version)) continue;
+      let vote = actions.querySelector(".music-version-vote");
+      if (vote) attachVote(vote, "s10-1", version, status);
+      else actions.appendChild(newVote("s10-1", version, title, status));
+    }
+    if (status) status.textContent = "A · B · C · D를 눌러 듣고, 마음에 들면 👍를 눌러주세요.";
+  }
+
   function draw(songs) {
     const frag = document.createDocumentFragment();
     if (!songs.length) {
@@ -102,35 +154,7 @@
         a.title = "버전 " + v.version + " 듣기";
         a.setAttribute("aria-label", song.title + " 버전 " + v.version + " 음악 듣기 (새 창)");
         actions.appendChild(a);
-        if (votingEnabled) {
-          const vote = elt("button", "music-version-vote");
-          vote.type = "button";
-          vote.title = "좋아요 · " + v.version + " 버전";
-          vote.setAttribute("aria-label", song.title + " 버전 " + v.version + " 좋아요 누르기");
-          vote.innerHTML = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>';
-          vote.addEventListener("click", async function () {
-            vote.disabled = true;
-            status.textContent = "좋아요를 기록하고 있습니다…";
-            try {
-              const response = await fetch("/api/vote", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ songId: song.id, version: v.version })
-              });
-              const result = await response.json();
-              if (!response.ok || result.ok !== true || result.stored !== true) {
-                throw new Error("Vote not saved");
-              }
-              status.textContent = "버전 " + v.version + "에 좋아요를 보냈습니다. 다시 눌러도 됩니다.";
-              vote.classList.add("is-liked");
-            } catch (_) {
-              status.textContent = "좋아요를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.";
-            } finally {
-              vote.disabled = false;
-            }
-          });
-          actions.appendChild(vote);
-        }
+        actions.appendChild(newVote(song.id, v.version, song.title, status));
         panel.appendChild(actions);
         grid.appendChild(panel);
       }
@@ -199,6 +223,7 @@
       }
     }
   }
+  activateFallback();
   refresh();
   checkVoteStatus();
   window.setInterval(function () {
