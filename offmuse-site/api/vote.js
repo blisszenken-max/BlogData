@@ -16,9 +16,10 @@ function parseGviz(source){const marker="google.visualization.Query.setResponse(
   const a=source.indexOf(marker);if(a<0)throw Error("invalid music feed");
   const b=source.indexOf(");",a+marker.length);if(b<0)throw Error("invalid music feed");
   const data=JSON.parse(source.slice(a+marker.length,b));if(data.status!=="ok"||!Array.isArray(data.table?.rows))throw Error("invalid music feed");return data.table.rows;}
-async function getSongs(){if(cached.songs&&Date.now()<cached.until)return cached.songs;
- const url="https://docs.google.com/spreadsheets/d/"+SHEET+"/gviz/tq?gid="+GID+"&headers=1&range=A2:H1000&tqx=out:json";
- const response=await fetch(url,{headers:{"Accept":"text/plain"},signal:AbortSignal.timeout(9000)});
+async function getSongs(forceRefresh=false){
+ if(!forceRefresh&&cached.songs&&Date.now()<cached.until)return cached.songs;
+ const url="https://docs.google.com/spreadsheets/d/"+SHEET+"/gviz/tq?gid="+GID+"&headers=1&range=A2:H1000&tqx=out:json&_="+Date.now();
+ const response=await fetch(url,{headers:{"Accept":"text/plain"},cache:"no-store",signal:AbortSignal.timeout(9000)});
  if(!response.ok)throw Error("public sheet unavailable");
  const rows=parseGviz(await response.text());const map=new Map();
  for(const row of rows){const id=txt(cell(row,0),80),title=txt(cell(row,1),100),version=txt(cell(row,2),24),
@@ -87,6 +88,13 @@ module.exports=async function handler(req,res){
  try{
   if(req.method==="GET"){
    if(req.query?.results==="csv"){const secret=process.env.OFFMUSE_REPORT_SECRET;if(!secret||req.headers?.authorization!=="Bearer "+secret)return reply(res,403,{ok:false,code:"REPORT_FORBIDDEN"});if(!redisEnv())return reply(res,503,{ok:false,code:"VOTING_NOT_READY"});return await outputResults(res);}
+   if(req.query?.check&&req.query?.version){
+    const id=txt(req.query.check,80),version=txt(req.query.version,24);
+    if(!/^[A-Za-z0-9_-]{1,80}$/.test(id)||!/^[A-Za-z0-9_-]{1,24}$/.test(version))return reply(res,400,{ok:false,code:"INVALID_SELECTION"});
+    let songs;
+    try{songs=await getSongs(true);}catch{return reply(res,503,{ok:false,code:"MUSIC_LIST_UNAVAILABLE"});}
+    return reply(res,200,{ok:true,selectable:!!(songs.has(id)&&songs.get(id).versions.has(version)),songId:id,version});
+   }
    const storage=storageConfiguration();if(!storage.ok)return reply(res,200,{ok:true,enabled:false,reason:storage.reason});
    try{
     const p=await redis(["PING"]);
@@ -103,9 +111,18 @@ module.exports=async function handler(req,res){
   if(!/^[A-Za-z0-9_-]{1,80}$/.test(songId)||!/^[A-Za-z0-9_-]{1,24}$/.test(version))
    return reply(res,400,{ok:false,code:"INVALID_SELECTION"});
   let songs;
-  try{songs=await getSongs();}catch{return reply(res,503,{ok:false,code:"MUSIC_LIST_UNAVAILABLE"});}
-  if(!songs.has(songId)||!songs.get(songId).versions.has(version))
-   return reply(res,400,{ok:false,code:"INVALID_SELECTION"});
+  try{songs=await getSongs();}catch{
+   if(!cached.songs)return reply(res,503,{ok:false,code:"MUSIC_LIST_UNAVAILABLE"});
+   songs=cached.songs;
+  }
+  const isVisible=map=>map.has(songId)&&map.get(songId).versions.has(version);
+  if(!isVisible(songs)){
+   // A fresh lookup resolves stale option membership without granting hidden options.
+   try{songs=await getSongs(true);}catch{
+    return reply(res,503,{ok:false,code:"MUSIC_LIST_UNAVAILABLE"});
+   }
+   if(!isVisible(songs))return reply(res,400,{ok:false,code:"INVALID_SELECTION"});
+  }
   try{await redis(["HINCRBY",PREFIX+songId,version,"1"]);}
   catch{return reply(res,503,{ok:false,code:"VOTE_STORE_UNAVAILABLE"});}
   return reply(res,200,{ok:true,stored:true,songId,version});
